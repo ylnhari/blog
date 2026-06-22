@@ -8,5 +8,15 @@
     "cover_image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80",
     "status": "published",
     "medium_url": null
+  },
+  {
+    "slug": "2026-06-15-example-post",
+    "title": "Example Post: Every Supported Element",
+    "date": "2026-06-15",
+    "description": "A fully annotated example post showing every supported HTML element — the reference for agents generating new posts.",
+    "tags": ["reference", "agents", "blogging"],
+    "cover_image": "https://images.unsplash.com/photo-1542435503-ec7b0f5f3a91?w=1200&q=80",
+    "status": "draft",
+    "medium_url": null
   }
 ]

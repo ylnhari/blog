@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="A fully annotated example post showing every supported HTML element — the reference for agents generating new posts.">
+  <meta property="og:title" content="Example Post: Every Supported Element">
+  <meta property="og:description" content="A fully annotated example post showing every supported HTML element — the reference for agents generating new posts.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1542435503-ec7b0f5f3a91?w=1200&q=80">
+  <title>Example Post: Every Supported Element</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  EXAMPLE POST — Reference for AI agents
+  This file demonstrates every supported HTML element with comments.
+  When generating a real post, remove all <!-- EXAMPLE: ... --> notes.
+  ═══════════════════════════════════════════════════════════════════
+-->
+
+<!-- REQUIRED: One <h1> only, at the very top, matches the <title> -->
+<h1>Example Post: Every Supported Element</h1>
+
+<!-- REQUIRED: Byline with author, date, and tags -->
+<p class="byline">By ylnhari &middot; June 15, 2026 &middot; reference, agents, blogging</p>
+
+<!-- OPTIONAL: Cover image — must be absolute HTTPS URL, no inline style -->
+<img src="https://images.unsplash.com/photo-1542435503-ec7b0f5f3a91?w=1200&q=80" alt="Laptop with code on screen — cover image">
+
+<!-- OPENING PARAGRAPH: Hook the reader in 2–3 sentences -->
+<p>This post is a living reference for AI agents writing to this blog. Every element shown here is supported by both GitHub Pages and Medium's importer. Use it as a copy-paste starting point.</p>
+
+<!-- ── SECTION HEADINGS ─────────────────────────────────────────── -->
+
+<!-- H2 = major section -->
+<h2>Text Formatting</h2>
+
+<p>Use <strong>bold</strong> for key terms and emphasis. Use <em>italic</em> for titles, foreign words, or soft emphasis. Use <code>inline code</code> for short code references like function names or CLI flags. Combine them: <strong><em>bold italic</em></strong> for maximum emphasis (use sparingly).</p>
+
+<!-- H3 = subsection, use sparingly -->
+<h3>Links</h3>
+
+<p>All links must use absolute URLs. Internal blog links: <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a>. External: <a href="https://medium.com/@ylnhari">medium.com/@ylnhari</a>. Never use relative paths like <code>../other-post/</code>.</p>
+
+<!-- ── LISTS ─────────────────────────────────────────────────────── -->
+
+<h2>Lists</h2>
+
+<p>Unordered list — use for non-sequential items:</p>
+<ul>
+  <li>First bullet point with <strong>bold emphasis</strong></li>
+  <li>Second bullet with <a href="https://github.com/ylnhari">a link</a></li>
+  <li>Third bullet with <code>inline code</code></li>
+</ul>
+
+<p>Ordered list — use for steps or rankings:</p>
+<ol>
+  <li>Install dependencies with <code>pip install -r requirements.txt</code></li>
+  <li>Configure your environment variables</li>
+  <li>Run the server: <code>python main.py</code></li>
+</ol>
+
+<!-- ── BLOCKQUOTE ─────────────────────────────────────────────────── -->
+
+<h2>Blockquotes</h2>
+
+<p>Use blockquotes for pull quotes, key insights, or attributions:</p>
+
+<blockquote>"The best code is no code at all. Every new line you willingly bring into the world is code that has to be debugged, code that has to be read and understood." — Jeff Atwood</blockquote>
+
+<!-- ── CODE BLOCK ─────────────────────────────────────────────────── -->
+
+<h2>Code Blocks</h2>
+
+<p>Always wrap multi-line code in <code>&lt;pre&gt;&lt;code&gt;</code>. Medium imports these as fenced code blocks. Note: use HTML entities for angle brackets inside code: <code>&amp;lt;</code> and <code>&amp;gt;</code>.</p>
+
+<pre><code>import anthropic
+
+client = anthropic.Anthropic()
+
+def generate_blog_post(topic: str) -> str:
+    """Generate a blog post using Claude."""
+    message = client.messages.create(
+        model="claude-opus-4-8",
+        max_tokens=4096,
+        messages=[
+            {
+                "role": "user",
+                "content": f"Write a technical blog post about: {topic}"
+            }
+        ]
+    )
+    return message.content[0].text
+
+# Example usage
+post = generate_blog_post("running LLMs locally with vLLM")
+print(post)</code></pre>
+
+<!-- ── IMAGES ─────────────────────────────────────────────────────── -->
+
+<h2>Images</h2>
+
+<p>Images must use absolute HTTPS URLs. Medium downloads and re-hosts them during import, so the source URL only needs to be live at import time.</p>
+
+<!-- Inline image with descriptive alt text -->
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80" alt="Server rack in a data center — representing GPU infrastructure">
+
+<p>Preferred image sources in order of preference:</p>
+<ol>
+  <li><strong>Unsplash</strong> — <code>https://images.unsplash.com/photo-{ID}?w=1200&amp;q=80</code></li>
+  <li><strong>Wikimedia Commons</strong> — always check the license</li>
+  <li><strong>This repo's assets</strong> — store in <code>posts/YYYY-MM-DD-slug/images/</code> and reference via raw GitHub URL</li>
+</ol>
+
+<!-- ── SEPARATOR ─────────────────────────────────────────────────── -->
+
+<h2>Section Separators</h2>
+
+<p>Use <code>&lt;hr&gt;</code> to create a visual break between major sections. The stylesheet renders it as "· · ·". Use at most 2 per post.</p>
+
+<hr>
+
+<p>Content after the separator continues here.</p>
+
+<!-- ── YOUTUBE EMBEDS ─────────────────────────────────────────────── -->
+
+<h2>YouTube Videos</h2>
+
+<p>Medium doesn't support <code>&lt;iframe&gt;</code> or <code>&lt;video&gt;</code> tags. To embed a YouTube video, put the bare URL in a paragraph. After importing to Medium, click the URL in the editor and Medium auto-converts it to an embedded player.</p>
+
+<!-- Put the YouTube URL as plain text — Medium converts it on import -->
+<p>https://www.youtube.com/watch?v=dQw4w9WgXcQ</p>
+
+<!-- ── WHAT NOT TO USE ─────────────────────────────────────────────── -->
+
+<h2>What NOT to Use</h2>
+
+<p>These elements break Medium's importer or cause save errors. Never use them:</p>
+
+<ul>
+  <li><strong>No JavaScript</strong> — <code>&lt;script&gt;</code> tags are stripped</li>
+  <li><strong>No CSS</strong> — <code>&lt;style&gt;</code> tags or <code>style="..."</code> attributes are stripped</li>
+  <li><strong>No iframes</strong> — <code>&lt;iframe&gt;</code> is stripped (use bare YouTube URLs instead)</li>
+  <li><strong>No tables</strong> — Medium has no table support; use lists instead</li>
+  <li><strong>No relative URLs</strong> — all <code>&lt;img src&gt;</code> must be absolute HTTPS</li>
+  <li><strong>No H4–H6</strong> — Medium only supports H1, H2, H3</li>
+  <li><strong>No div or span</strong> — use semantic HTML only</li>
+</ul>
+
+<!-- ── CLOSING ─────────────────────────────────────────────────────── -->
+
+<h2>Conclusion</h2>
+
+<p>This example covers every element you'll need for a production-quality blog post. Copy this file as a starting point, replace the content, update the meta tags, and run the publish workflow. The pipeline handles the rest.</p>
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>

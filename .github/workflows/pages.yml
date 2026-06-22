@@ -1,0 +1,69 @@
+name: Deploy Blog to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate posts/index.json
+        run: |
+          echo "Validating posts/index.json..."
+          python3 -c "
+          import json, sys, os
+
+          with open('posts/index.json') as f:
+              posts = json.load(f)
+
+          errors = []
+          for p in posts:
+              slug = p.get('slug', '')
+              required = ['slug', 'title', 'date', 'description', 'tags', 'cover_image', 'status']
+              missing = [k for k in required if not p.get(k)]
+              if missing:
+                  errors.append(f'{slug}: missing fields {missing}')
+              if not os.path.exists(f'posts/{slug}/index.html'):
+                  errors.append(f'{slug}: missing posts/{slug}/index.html')
+              if not os.path.exists(f'posts/{slug}/meta.json'):
+                  errors.append(f'{slug}: missing posts/{slug}/meta.json')
+              if p.get('status') not in ('draft', 'published'):
+                  errors.append(f'{slug}: status must be draft or published')
+
+          if errors:
+              print('VALIDATION ERRORS:')
+              for e in errors:
+                  print(f'  - {e}')
+              sys.exit(1)
+
+          print(f'OK — {len(posts)} post(s) validated.')
+          "
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
