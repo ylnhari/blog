@@ -1,15 +1,5 @@
 [
   {
-    "slug": "2026-06-22-ai-assisted-blogging",
-    "title": "AI-Assisted Blogging: A Technical Deep Dive",
-    "date": "2026-06-22",
-    "description": "How to automate blog creation with AI agents, GitHub Pages, and Medium's import feature — a working pipeline with zero paid APIs.",
-    "tags": ["AI", "automation", "blogging", "github"],
-    "cover_image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80",
-    "status": "published",
-    "medium_url": null
-  },
-  {
     "slug": "2026-06-15-example-post",
     "title": "Example Post: Every Supported Element",
     "date": "2026-06-15",
