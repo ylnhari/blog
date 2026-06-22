@@ -17,7 +17,7 @@
 <h1>vLLM Model Chooser: Find Your Perfect LLM for Any GPU Setup</h1>
 <p class="byline">By ylnhari &middot; June 22, 2026 &middot; vLLM, LLM, GPU, open-source, AI-tools</p>
 
-<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80" alt="Server rack in a data center — GPU infrastructure for LLM inference">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/dashboard-main.jpg" alt="vLLM Model Chooser dashboard showing the main interface: header, stats cards (108 models, 39 fit, 56 quant variants, 69 don't fit), GPU/format filter controls, and interactive model listing with feasibility indicators">
 
 <h2>The Problem: Too Many Models, Too Little Clarity</h2>
 
@@ -55,6 +55,8 @@
 </ul>
 
 <p>This means a model that fits on a B200 in NVFP4 might be 4x too large for the same model on an H100. The Chooser handles this automatically — pick your GPU, and it only shows quantization variants that actually work on that hardware.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/gpu-modal.jpg" alt="GPU &amp; Format Compatibility modal showing a detailed compatibility matrix: which quantization formats (BF16, FP8, INT4, NVFP4, MXFP4, MXFP8) are supported natively vs via software on each GPU architecture from L4 to B200">
 
 <h2>How It Works</h2>
 
