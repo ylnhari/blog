@@ -19,74 +19,68 @@
 
 <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80" alt="Workspace with laptop and automation tools">
 
-<p>This blog post was written, committed, deployed as a static page, and imported as a Medium draft — <strong>entirely by an AI agent</strong>. I didn't touch a text editor. What you're reading right now was created by a prompt: <em>"write a blog post about how this automation works"</em>.</p>
+<p>This blog post was written, committed, deployed as a static page, and imported as a Medium draft — entirely by an AI agent. No text editor was touched. What you're reading right now was created from a single prompt: <em>"write a blog post about how this automation works"</em>.</p>
 
-<p>Here's the full pipeline, the repo structure that makes it possible, and how you can clone it for your own blog.</p>
+<p>This post covers the full pipeline, the repo structure that makes it possible, and how to clone it for your own blog.</p>
 
 <h2>The Repo: <code>ylnhari/blog</code></h2>
 
-<p>Everything lives in a single GitHub repo at <a href="https://github.com/ylnhari/blog">github.com/ylnhari/blog</a>. The structure is intentionally minimal:</p>
+<p>Everything lives in a single GitHub repo at <a href="https://github.com/ylnhari/blog">github.com/ylnhari/blog</a>. The structure is minimal:</p>
 
 <ul>
   <li><strong><code>templates/post.html</code></strong> — HTML skeleton with placeholder markers. Every new post starts by copying this.</li>
   <li><strong><code>templates/meta.json</code></strong> — Metadata template: title, date, tags, status. No database, just JSON.</li>
   <li><strong><code>SETUP.md</code></strong> — Instructions for anyone who wants to fork and repurpose the repo.</li>
-  <li><strong><code>STANDARDS.md</code></strong> — The HTML contract: which tags are allowed, how to structure H1s, images must be absolute HTTPS URLs, no divs/scripts/tables. Following these rules means every post imports cleanly into Medium.</li>
-  <li><strong><code>AGENT.md</code></strong> — The step-by-step workflow for any AI agent (Claude, OpenClaw, DeepSeek, etc.) that wants to write and publish a post. It covers everything from creating the folder to importing the final draft.</li>
-  <li><strong><code>posts/YYYY-MM-DD-slug/</code></strong> — One folder per post, each containing <code>index.html</code> and <code>meta.json</code>. Optional <code>images/</code> subfolder for assets served via raw GitHub URLs.</li>
+  <li><strong><code>STANDARDS.md</code></strong> — The HTML contract: which tags are allowed, image rules, structure guidelines. Following these ensures every post imports cleanly into Medium.</li>
+  <li><strong><code>AGENT.md</code></strong> — The step-by-step workflow for any AI agent that wants to write and publish a post. It covers everything from folder creation to final draft import.</li>
+  <li><strong><code>posts/YYYY-MM-DD-slug/</code></strong> — One folder per post, each containing <code>index.html</code> and <code>meta.json</code>. An optional <code>images/</code> subfolder holds assets served via raw GitHub URLs.</li>
   <li><strong><code>posts/index.json</code></strong> — The master registry. Newest entry prepended at the top.</li>
 </ul>
 
-<p>GitHub Pages serves the whole thing at <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a> — zero infrastructure, no build tools, just static HTML pushed to <code>main</code>.</p>
+<p>GitHub Pages serves the entire blog at <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a> — zero infrastructure, no build tools, just static HTML pushed to <code>main</code>.</p>
 
 <h2>How the AI Writes Posts</h2>
 
-<p>The agent (me — Dolly) follows the <strong>OpenClaw skill</strong> defined at <code>skills/medium-blog-post-creator/SKILL.md</code>. The flow is:</p>
+<p>An AI agent like OpenClaw follows the instructions in <code>AGENT.md</code> and the HTML rules in <code>STANDARDS.md</code>, both of which live in the repo itself. The flow is:</p>
 
 <ol>
-  <li>Read the repo's <code>AGENT.md</code> and <code>STANDARDS.md</code> to understand HTML rules and the workflow.</li>
-  <li>Write the post content as static HTML — no JavaScript, no inline styles, no divs. Every element has a Medium-compatible mapping.</li>
+  <li>Read <code>AGENT.md</code> and <code>STANDARDS.md</code> to understand the workflow and HTML rules.</li>
+  <li>Write the post as static HTML — no JavaScript, no inline styles, no divs. Every element maps cleanly to Medium's editor.</li>
   <li>Create <code>posts/YYYY-MM-DD-slug/index.html</code> and <code>meta.json</code>.</li>
   <li>Prepend an entry to <code>posts/index.json</code>.</li>
-  <li>Commit all three files and push to <code>main</code>.</li>
+  <li>Commit all files and push to <code>main</code>.</li>
   <li>Wait ~90 seconds for GitHub Pages to deploy.</li>
   <li>Navigate to <code>medium.com/p/import</code>, paste the post URL, click Import.</li>
   <li>Leave it as a draft — ready for human review and publishing.</li>
 </ol>
 
-<blockquote>The agent never touches the editor. Everything is version-controlled as static files in the repo.</blockquote>
+<blockquote>The agent never touches the Medium editor. Everything is version-controlled as static files in the repo.</blockquote>
 
-<h2>Setting It Up for Yourself</h2>
+<h2>Adding the Skill to OpenClaw</h2>
 
-<p>Want to replicate this? Here's what you need:</p>
+<p>OpenClaw users can turn this workflow into a reusable skill. The skill file maps a trigger phrase like "write a blog post about X" to the full procedure. Here's how to set it up:</p>
 
-<pre><code># 1. Fork the repo or start fresh
-git clone git@github.com:YOUR_USER/blog.git
+<pre><code># 1. Create or copy the skill file into your OpenClaw workspace
+#    The skill references AGENT.md and STANDARDS.md from the blog repo.
+#    Update the local paths in the skill to point at your cloned repo.
 
-# 2. Enable GitHub Pages
-#    Repo → Settings → Pages → Deploy from main branch / (root)
+# 2. The skill's procedure mirrors AGENT.md:
+#    - Read repo files → generate HTML post → create metadata
+#    - Update index.json → commit → wait for deploy → import into Medium
+#    - Report back with draft URL
 
-# 3. Add the OpenClaw skill
-#    Place skills/medium-blog-post-creator/SKILL.md in your
-#    OpenClaw workspace. The skill references AGENT.md and
-#    STANDARDS.md from the blog repo — update paths to match
-#    your local setup.
-
-# 4. Install gog for Gmail (optional)
-#    I use gog (Google OAuth CLI) to scan inbox and ask Hari
-#    for topic confirmation before writing. The skill handles
-#    the rest.
-
-# 5. That's it. Tell your agent: "write a blog post about X"
+# 3. Fork the repo and customize AGENT.md to your voice.
+#    Since the agent reads instructions from the repo itself,
+#    changing AGENT.md changes how future posts are written.
 </code></pre>
 
-<p>You can strip or customize every file. The <code>AGENT.md</code> and <code>STANDARDS.md</code> are designed to be readable by any AI — change the rules, tone, or template structure to match your preferences.</p>
+<p>The skill works as a pre- and post-processing wrapper around the core workflow defined in <code>AGENT.md</code>. The pre-step handles topic confirmation and inbox scanning (optional, via Gmail CLI). The post-step reports the Medium draft URL. Everything in between is driven by the repo's own documentation.</p>
 
-<h2>Customizing the Agent Instructions</h2>
+<h2>Customizing the Workflow</h2>
 
-<p>The most powerful part of this setup is that the agent reads its instructions from the repo itself. If you want to change the HTML rules, the commit format, the image sourcing policy, or the deployment flow — edit <code>AGENT.md</code> and <code>STANDARDS.md</code>. The next time your agent writes a post, it reads the updated instructions and follows them.</p>
+<p>The most powerful aspect of this setup is that the agent reads its publishing instructions from the repo itself. Want different HTML rules? Edit <code>STANDARDS.md</code>. Want a different commit format or deployment flow? Edit <code>AGENT.md</code>.</p>
 
-<p>For OpenClaw users specifically, the skill file (<code>SKILL.md</code>) maps the trigger phrase ("blog about X") to a full procedure. You can fork that skill, change the repo path to yours, and add your own custom steps — like posting to Dev.to or checking with Gmail first.</p>
+<p>The skill file in OpenClaw acts as the entry point — it triggers on a phrase and delegates the actual work to the repo's documented workflow. Fork the repo, adjust the agent instructions to match your writing style, and OpenClaw handles the rest.</p>
 
 <h2>Why This Works</h2>
 
@@ -94,17 +88,17 @@ git clone git@github.com:YOUR_USER/blog.git
 
 <ul>
   <li><strong>Static HTML + GitHub Pages = zero ops.</strong> No CMS, no database, no hosting fees. Push and it's live.</li>
-  <li><strong>Medium import from URL = no API keys.</strong> No Medium API tokens needed. The import tool ingests any public URL and converts HTML to Medium's editor format.</li>
-  <li><strong>Agent reads its instructions from the repo = self-documenting.</strong> The workflow lives in version control alongside the content. Forking the repo forks the entire publishing pipeline.</li>
+  <li><strong>Medium import from URL = no API keys.</strong> Medium's import tool ingests any public URL and converts HTML to its editor format. No Medium API tokens needed.</li>
+  <li><strong>Agent reads instructions from the repo = self-documenting.</strong> The workflow lives in version control alongside the content. Forking the repo forks the entire publishing pipeline.</li>
 </ul>
 
-<p>The result: I prompt "write a blog post about X", and a few minutes later a Medium draft appears ready for review. No manual steps between the idea and the draft.</p>
+<p>The result: a single prompt produces a Medium draft in minutes. No manual steps between idea and draft.</p>
 
 <hr>
 
 <h2>Conclusion</h2>
 
-<p>The blog automation repo lives at <a href="https://github.com/ylnhari/blog">github.com/ylnhari/blog</a>. The OpenClaw skill is at <code>.openclaw/workspace/skills/medium-blog-post-creator/SKILL.md</code>. Fork it, customize the AGENT.md to your voice, and let your AI handle the publishing pipeline.</p>
+<p>The blog automation repo is at <a href="https://github.com/ylnhari/blog">github.com/ylnhari/blog</a>. Fork it, customize <code>AGENT.md</code> to match your voice, wire it as an OpenClaw skill, and let your AI handle the publishing pipeline.</p>
 
 <p>This post was one prompt. Yours can be too.</p>
 
