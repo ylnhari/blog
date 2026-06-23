@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="Run AI assistants, coding agents, and personal projects on your laptop — and access them from your phone anywhere, for free, using Tailscale and open-source tools.">
+  <meta property="og:title" content="Your Personal AI Lab on Your Laptop, Remotely Accessible for Free">
+  <meta property="og:description" content="Run AI assistants, coding agents, and personal projects on your laptop — and access them from your phone anywhere, for free, using Tailscale and open-source tools.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80">
+  <title>Your Personal AI Lab on Your Laptop, Remotely Accessible for Free</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>Your Personal AI Lab on Your Laptop, Remotely Accessible for Free</h1>
+<p class="byline">By ylnhari &middot; June 23, 2026 &middot; tailscale, self-hosting, ai-agents, open-source, devtools</p>
+
+<img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80" alt="A laptop and phone side by side — the two devices in this remote setup">
+
+<!-- === POST CONTENT STARTS HERE === -->
+
+<p>I have an AI personal assistant, an AI coding agent, and a collection of personal projects — all running locally on my laptop. And I can reach every single one of them from my phone, from anywhere in the world, without paying for a single cloud server.</p>
+
+<p>No VPS. No AWS bill. No Docker Compose on some remote VM. Just my laptop at home, a free VPN, and a handful of open-source tools running on ports. Here's exactly how it works — and how you can replicate it.</p>
+
+<blockquote>Everything in this stack is free. The only optional cost is the AI model — and even heavy usage runs for a fraction of a cent per day with DeepSeek.</blockquote>
+
+<h2>The Stack</h2>
+
+<ul>
+  <li><strong><a href="https://github.com/open-claw/openclaw">OpenClaw</a></strong> — a local AI personal assistant with a web UI. Chat with it, ask it to check emails, delegate tasks. Runs entirely on your laptop.</li>
+  <li><strong><a href="https://github.com/sst/opencode">OpenCode</a></strong> — an AI coding agent. Runs in your terminal, exposes a browser UI for reading and editing code with AI assistance.</li>
+  <li><strong><a href="https://github.com/ylnhari/rover">Rover</a></strong> — an open-source remote command runner and project launcher I built. Run any shell command from your phone, start and stop registered projects, stream live logs.</li>
+  <li><strong><a href="https://tailscale.com">Tailscale</a></strong> — free private networking over WireGuard. Creates an encrypted tunnel between your devices. No ports open to the internet.</li>
+  <li><strong><a href="https://deepseek.com">DeepSeek</a></strong> — the AI model powering the tools. Free tier is generous; paid usage is extremely cheap.</li>
+</ul>
+
+<img src="https://opengraph.githubassets.com/1/ylnhari/rover" alt="Rover on GitHub — open-source remote command runner and project launcher">
+
+<h2>The Core Idea</h2>
+
+<p>Every tool in this stack is a web server listening on a port. Your laptop is the server. Your phone is the client. Tailscale is the private network connecting them — encrypted end-to-end, invisible to the internet.</p>
+
+<p>From your phone, you open <code>http://100.x.x.x:PORT</code> — your laptop's Tailscale IP and the port the tool runs on. The request travels through a WireGuard tunnel directly to your laptop. Nobody on the internet can see your services. Nobody can reach those ports except devices logged into your Tailscale account.</p>
+
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80" alt="Network infrastructure — representing the encrypted WireGuard tunnel Tailscale builds between your devices">
+
+<blockquote>Your laptop already has more CPU, RAM, and storage than any cloud VM you'd rent. The only missing piece was access — and Tailscale solves that for free.</blockquote>
+
+<h2>Step 1 — Install Tailscale (5 Minutes)</h2>
+
+<p>Tailscale uses WireGuard under the hood: fast, modern, battle-tested cryptography. Setup is genuinely five minutes.</p>
+
+<ol>
+  <li>Create a free account at <a href="https://tailscale.com">tailscale.com</a> — sign in with Google or GitHub</li>
+  <li>Install Tailscale on your <strong>laptop</strong> — <a href="https://tailscale.com/download">tailscale.com/download</a></li>
+  <li>Install the Tailscale app on your <strong>phone</strong> from the App Store or Play Store</li>
+  <li>Log into the <em>same</em> Tailscale account on both devices</li>
+</ol>
+
+<p>Both devices appear in your <a href="https://login.tailscale.com/admin/machines">Tailscale admin console</a>. Find your laptop's Tailscale IP — it starts with <code>100.</code> Every service you start on your laptop is now reachable from your phone at that IP.</p>
+
+<h2>Step 2 — OpenClaw: Your AI Personal Assistant</h2>
+
+<img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=80" alt="Glowing AI interface on a dark screen — representing the OpenClaw assistant">
+
+<p>OpenClaw is a local AI assistant with a web interface. Chat with it the same way you'd chat with any AI assistant — but it runs on your machine, and your conversations stay private.</p>
+
+<pre><code>openclaw gateway start</code></pre>
+
+<p>OpenClaw starts on port <code>3000</code>. From your phone:</p>
+
+<pre><code>http://100.x.x.x:3000</code></pre>
+
+<p>In settings, set the model to <strong>DeepSeek</strong>. It handles everyday tasks well and costs almost nothing. If you need more reasoning power, DeepSeek R1 is available in the same tier.</p>
+
+<h2>Step 3 — OpenCode: Your AI Coding Agent</h2>
+
+<img src="https://opengraph.githubassets.com/1/sst/opencode" alt="OpenCode on GitHub — AI coding agent with browser UI">
+
+<p>OpenCode is an AI coding agent that runs in your terminal and exposes a browser UI. From that UI you can browse your codebase, make edits, and get AI-driven suggestions — without touching your keyboard.</p>
+
+<pre><code># Install
+npm install -g opencode
+
+# Start the web UI on port 4000
+opencode --port 4000</code></pre>
+
+<p>Access it from your phone at <code>http://100.x.x.x:4000</code>. You can make real code changes on a real codebase from your phone. Pair it with DeepSeek as the model for near-zero cost.</p>
+
+<blockquote>I've shipped production fixes from my phone during a commute. OpenCode on a mobile browser is genuinely usable for real work.</blockquote>
+
+<h2>Step 4 — Rover: Remote Commands and Project Launcher</h2>
+
+<img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200&q=80" alt="Dark terminal window with commands — representing Rover's remote shell interface on your phone">
+
+<p>Rover is the glue. I built it to solve one specific problem: <strong>what do you do when something crashes and you're not home?</strong></p>
+
+<p>With Rover you can:</p>
+
+<ul>
+  <li>Run any shell command from your phone browser — <code>openclaw gateway restart</code>, <code>git pull</code>, anything</li>
+  <li>Register your projects and start or stop them with a single tap</li>
+  <li>Stream live console output to your phone in real time</li>
+  <li>Keep a scrollable history of past sessions with full output</li>
+</ul>
+
+<p>Rover is open source at <a href="https://github.com/ylnhari/rover">github.com/ylnhari/rover</a>. Clone it, build it, use it:</p>
+
+<pre><code>git clone https://github.com/ylnhari/rover
+cd rover
+go build -o rover .
+
+# Generate a strong secret and start
+export ROVER_SECRET=$(openssl rand -hex 32)
+echo $ROVER_SECRET   # save this — you need it to log in
+./rover serve --addr :2278</code></pre>
+
+<p>Open <code>http://100.x.x.x:2278</code> on your phone, log in, and you're in. Dark terminal-style UI, real-time command output, Projects tab for your registered services.</p>
+
+<h3>Adding a project to Rover</h3>
+
+<p>Projects tab → <strong>Add Project</strong> → pick a directory and start file (<code>.py</code>, <code>.sh</code>, <code>.js</code>, <code>.go</code>, etc.) → <strong>Validate &amp; Add</strong>. Rover test-runs it, detects the URL it opens, and saves it. One tap to start. One tap to stop. Live logs streaming to your phone.</p>
+
+<hr>
+
+<h2>Keep Everything Running When You Leave</h2>
+
+<p>Start your services in the background before walking out:</p>
+
+<pre><code># Rover first — it's the recovery tool for everything else
+ROVER_SECRET=&lt;your-secret&gt; ./rover serve --addr :2278 &amp;
+
+# AI assistant
+openclaw gateway start &amp;
+
+# Coding agent
+opencode --port 4000 &amp;</code></pre>
+
+<p>If anything crashes while you're away: open Rover → Terminal → restart command. Full recovery without touching your laptop.</p>
+
+<h2>Security</h2>
+
+<img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?w=1200&q=80" alt="A locked phone screen — representing the access control layer over your personal AI lab">
+
+<p>Tailscale means <strong>none of these ports are reachable from the internet</strong>. Only devices authenticated to your Tailscale account can see them. Three things to do on top of that baseline:</p>
+
+<ul>
+  <li><strong>Enable 2FA on your Tailscale account.</strong> Non-negotiable. If your account is compromised, an attacker is inside your network. 2FA shuts that down in two minutes.</li>
+  <li><strong>Set <code>--secret</code> on Rover.</strong> Rover runs shell commands on your machine. Even inside a private network, a secret means a briefly unattended phone is useless to an attacker.</li>
+  <li><strong>Know how to remove a device.</strong> Phone lost or stolen? <a href="https://login.tailscale.com/admin/machines">Tailscale admin console</a> → remove it. Access revoked immediately.</li>
+</ul>
+
+<h2>What Your Personal AI Lab Gives You</h2>
+
+<ul>
+  <li><strong>Stuck on a bug away from your desk?</strong> OpenCode on your phone. Make the fix. Push it.</li>
+  <li><strong>A service crashed?</strong> Rover terminal tab. Restart it in seconds.</li>
+  <li><strong>Need your AI assistant?</strong> OpenClaw, one tap away.</li>
+  <li><strong>Starting a long background task before leaving?</strong> Stream its logs from your phone while you're out.</li>
+  <li><strong>Demoing a personal project?</strong> Start it from Rover and hand someone your phone.</li>
+</ul>
+
+<blockquote>This isn't a workaround. It's a legitimate personal infrastructure setup — local compute, private networking, remote access. All free.</blockquote>
+
+<p>Set it up once. Walk out the door. Your personal AI lab comes with you.</p>
+
+<!-- === POST CONTENT ENDS HERE === -->
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>
