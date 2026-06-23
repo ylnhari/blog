@@ -131,11 +131,11 @@ echo $ROVER_SECRET   # save this — you need it to log in
 <pre><code># Rover first — it's the recovery tool for everything else
 ROVER_SECRET=&lt;your-secret&gt; ./rover serve --addr :2278 &amp;
 
-# AI assistant
+# AI assistant — see OpenClaw docs for the exact start command
 openclaw gateway start &amp;
 
 # Coding agent
-opencode --port 4000 &amp;</code></pre>
+opencode web --hostname 0.0.0.0 --port 4096 --mdns &amp;</code></pre>
 
 <p>If anything crashes while you're away: open Rover → Terminal → restart command. Full recovery without touching your laptop.</p>
 
