@@ -66,15 +66,11 @@
 
 <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=80" alt="Glowing AI interface on a dark screen — representing the OpenClaw assistant">
 
-<p>OpenClaw is a local AI assistant with a web interface. Chat with it the same way you'd chat with any AI assistant — but it runs on your machine, and your conversations stay private.</p>
+<p>OpenClaw is a full-featured local AI personal assistant that runs as a web server on your laptop. It handles chat, email, task delegation, custom skills, and more — all from a browser UI, all running on your machine.</p>
 
-<pre><code>openclaw gateway start</code></pre>
+<p>OpenClaw has extensive setup documentation covering installation, model configuration, skills, and integrations. Follow the <a href="https://github.com/open-claw/openclaw">official OpenClaw docs</a> to get it running. Once it's up, you'll have a local URL — replace <code>localhost</code> with your Tailscale IP and it's immediately accessible from your phone.</p>
 
-<p>OpenClaw starts on port <code>3000</code>. From your phone:</p>
-
-<pre><code>http://100.x.x.x:3000</code></pre>
-
-<p>In settings, set the model to <strong>DeepSeek</strong>. It handles everyday tasks well and costs almost nothing. If you need more reasoning power, DeepSeek R1 is available in the same tier.</p>
+<p>Set the model to <strong>DeepSeek</strong> in OpenClaw's settings. It handles everyday assistant tasks well and costs almost nothing.</p>
 
 <h2>Step 3 — OpenCode: Your AI Coding Agent</h2>
 
@@ -85,10 +81,12 @@
 <pre><code># Install
 npm install -g opencode
 
-# Start the web UI on port 4000
-opencode --port 4000</code></pre>
+# Start the web UI — accessible on the network with mDNS discovery
+opencode web --hostname 0.0.0.0 --port 4096 --mdns</code></pre>
 
-<p>Access it from your phone at <code>http://100.x.x.x:4000</code>. You can make real code changes on a real codebase from your phone. Pair it with DeepSeek as the model for near-zero cost.</p>
+<p>The <code>--hostname 0.0.0.0</code> flag makes it listen on all interfaces (not just localhost), so your phone can reach it. <code>--mdns</code> advertises it as <code>opencode.local</code> on the network. From your phone, access it at <code>http://100.x.x.x:4096</code> using your Tailscale IP.</p>
+
+<p>You can make real code changes on a real codebase from your phone. Pair it with DeepSeek as the model for near-zero cost.</p>
 
 <blockquote>I've shipped production fixes from my phone during a commute. OpenCode on a mobile browser is genuinely usable for real work.</blockquote>
 
