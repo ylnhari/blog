@@ -4,7 +4,7 @@
   "author": "ylnhari",
   "description": "An interactive tool to find the optimal vLLM-compatible LLM for any GPU setup — L4 to B200, multi-GPU, quantization-aware model selection for 108+ models.",
   "tags": ["vllm", "llm", "gpu", "open-source", "ai-tools"],
-  "status": "draft",
+  "status": "published",
   "medium_url": null,
   "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80"
 }

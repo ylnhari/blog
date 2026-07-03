@@ -4,7 +4,7 @@
   "author": "ylnhari",
   "description": "Run AI assistants, coding agents, and personal projects on your laptop — and access them from your phone anywhere, for free, using Tailscale and open-source tools.",
   "tags": ["tailscale", "self-hosting", "ai-agents", "open-source", "devtools"],
-  "status": "draft",
+  "status": "published",
   "medium_url": null,
   "cover_image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"
 }
