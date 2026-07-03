@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="I rebuilt the modern LLM inference stack — a trainable GPT, KV-cache, RoPE, paged attention, speculative decoding, and continuous batching — from scratch in pure NumPy, and proved every optimization correct.">
+  <meta property="og:title" content="Rebuilding the LLM Inference Stack From Scratch in NumPy">
+  <meta property="og:description" content="I rebuilt the modern LLM inference stack — a trainable GPT, KV-cache, RoPE, paged attention, speculative decoding, and continuous batching — from scratch in pure NumPy, and proved every optimization correct.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80">
+  <title>Rebuilding the LLM Inference Stack From Scratch in NumPy</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>Rebuilding the LLM Inference Stack From Scratch in NumPy</h1>
+<p class="byline">By ylnhari · July 3, 2026 · llm, transformers, inference, numpy, from-scratch</p>
+
+<!-- === POST CONTENT STARTS HERE === -->
+
+<p>If you deploy large language models for a living, you know the tools: vLLM, TensorRT-LLM, TGI. You know the words that make them fast — KV-cache, paged attention, speculative decoding, continuous batching. But knowing the words is not the same as knowing the machine. So I set out to build the whole thing from scratch, in pure NumPy, with one rule: <strong>every optimization has to come with a proof that it did not change the model's output.</strong></p>
+
+<p>The result is a small, readable library where you can trace every matrix and every gradient by hand — a trainable GPT and the five techniques that turn it into a serving engine. This post is the tour.</p>
+
+<blockquote>An optimization you cannot prove correct is a bug you have not found yet. Every step below ships with a numerical check that pins its output to the ground truth.</blockquote>
+
+<img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80" alt="Rows of servers in a data center">
+
+<h2>Step 1 — A GPT you can actually train, with backprop by hand</h2>
+
+<p>Most from-scratch transformer tutorials stop at the forward pass — they show you attention as a matrix operation and call it a day. That teaches the <em>mechanism</em>, not the <em>model</em>. The interesting part is learning, and learning is backpropagation.</p>
+
+<p>So the first piece is a full decoder-only GPT — token and positional embeddings, pre-norm blocks, causal multi-head attention, an MLP, and a softmax cross-entropy head — with the backward pass written out by hand for every layer. No autograd. Each layer has a <code>forward</code> and a mirror-image <code>backward</code>; chain them in reverse and you have gradients.</p>
+
+<p>Hand-derived gradients are easy to get subtly wrong, so before trusting them I check them numerically: nudge each parameter by a tiny amount, measure how the loss changes, and compare to the analytic gradient.</p>
+
+<pre><code>gradient check (max relative error): 1.55e-05
+step    0  loss 2.6860
+step  300  loss 0.0848
+sample: 'to be or not to be that is the question. to be'</code></pre>
+
+<p>A relative error of ~1e-5 means the math is right. The loss falling from 2.69 (a random guess over the vocabulary) to under 0.1, and the model generating coherent text, means it learned. That gradient check is the template for everything that follows: <strong>prove it, then trust it.</strong></p>
+
+<h2>Step 2 — The KV-cache: from O(n²) to O(n)</h2>
+
+<p>Naive autoregressive generation is wasteful. To produce token <em>t</em>, the model recomputes attention over the entire prefix — including the keys and values for tokens it already processed on every previous step. Those never change. Generating <em>n</em> tokens costs O(n²) when it should cost O(n).</p>
+
+<p>The fix is the KV-cache: store each layer's keys and values, and on each step compute Q, K, and V for <em>only</em> the new token, attending against the cache. A subtle bonus falls out — you never build a causal mask, because the cache only ever holds the past.</p>
+
+<p>Does it change the output? It must not. So I run a full forward and the step-by-step cached path and compare the logits at every position:</p>
+
+<pre><code>equivalence check (max |logit diff| cached vs full): 8.88e-15
+naive    131.4 ms
+cached    20.5 ms   (~6x faster, byte-identical text)</code></pre>
+
+<p>Identical to machine precision, several times faster. The cache changed the speed, not the answer.</p>
+
+<h2>Step 3 — RoPE: position as rotation</h2>
+
+<p>The learned positional embeddings in Step 1 have two problems: they cap context at the table size, and they encode <em>absolute</em> position when language mostly cares about <em>relative</em> position. Rotary Position Embeddings (RoPE) — used by Llama, Mistral, Qwen, and most modern open models — fix both with one elegant idea: instead of <em>adding</em> a position vector, <strong>rotate</strong> each query and key by an angle proportional to its position.</p>
+
+<p>Because rotating <em>q</em> at position <em>i</em> and <em>k</em> at position <em>j</em> and then taking their dot product leaves a dependence only on the difference <em>(i − j)</em>, the attention score becomes a pure function of relative distance. And since it is defined by a formula rather than a lookup table, it works at <em>any</em> position. The proof is that the score stays constant when you slide a fixed offset along absolute positions:</p>
+
+<pre><code>relative-position check (max spread at fixed offset): 9.33e-15
+applied RoPE at position 100000 with no lookup table — OK</code></pre>
+
+<h2>Step 4 — Paged attention and speculative decoding</h2>
+
+<p>Two ideas power modern serving, and both are provably output-preserving.</p>
+
+<p><strong>Paged KV-cache</strong> is vLLM's core trick. A contiguous cache per sequence fragments memory when you serve many requests of different lengths. Paging stores the cache in fixed-size blocks — like an operating system handing out memory pages — with a block table per sequence. The attention step still sees a normal contiguous view, so it is completely transparent:</p>
+
+<pre><code>paged-vs-contiguous cache (max |logit diff|): 0.00e+00</code></pre>
+
+<p>Exactly zero — paging changes <em>where</em> the keys and values live, not their values.</p>
+
+<p><strong>Speculative decoding</strong> attacks latency. A big model needs one forward pass per token and is memory-bound. So a small, cheap <em>draft</em> model proposes the next few tokens, and the big <em>target</em> model verifies all of them in a single forward. With greedy decoding you accept every proposed token that matches the target's own choice and stop at the first disagreement — which yields <em>exactly</em> the target's greedy output, using far fewer expensive forwards:</p>
+
+<pre><code>speculative output == target greedy: True
+target forwards: greedy=60  speculative=27  (2.22x fewer)</code></pre>
+
+<h2>Step 5 — Continuous batching: keep the batch full</h2>
+
+<p>The last piece is scheduling. Real requests have wildly different lengths — a reply might be 8 tokens or 200. <strong>Static</strong> batching runs a fixed group until its longest member finishes, so short requests leave their slots idle while everyone waits. <strong>Continuous</strong> batching treats the batch as rolling slots: the instant a sequence finishes, it is evicted and a waiting request takes its place. The batch stays full.</p>
+
+<p>The scheduler changes <em>when</em> tokens are computed, never <em>what</em> they are — so every request's output must match generating it alone. On a workload with deliberately varied lengths:</p>
+
+<pre><code>every request's output == standalone greedy: True
+static     : 71% slot utilization
+continuous : 100% slot utilization  (1.41x fewer slot-steps for the same work)</code></pre>
+
+<h2>Why build what you can pip install?</h2>
+
+<p>Because there is a difference between operating a system and understanding it — and that difference is exactly what separates a framework <em>user</em> from a framework <em>builder</em>. I deploy these systems in production; rebuilding them from first principles is how I learned to explain <em>why</em> they are fast, not just <em>that</em> they are.</p>
+
+<p>The other reason is the discipline the whole project is built around: every single step is pinned to a numerical proof — a gradient check, an equivalence check, a utilization measurement. That habit — never trust an optimization you have not verified against ground truth — travels far beyond this toy code.</p>
+
+<p>The full, heavily commented source, with a teaching notebook for each concept, is public here: <a href="https://github.com/ylnhari/learning">github.com/ylnhari/learning</a>. It is written to be read top to bottom and run cell by cell. If you have ever wanted to see the LLM inference stack with nothing hidden, clone it and turn the knobs — break the residual connections, remove the causal mask, shrink the draft model — and watch what happens. That is where understanding stops being words and becomes intuition.</p>
+
+<!-- === POST CONTENT ENDS HERE === -->
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline · <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>

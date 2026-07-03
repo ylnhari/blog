@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-07-03-llm-inference-stack-from-scratch",
+    "title": "Rebuilding the LLM Inference Stack From Scratch in NumPy",
+    "date": "2026-07-03",
+    "description": "A trainable GPT, KV-cache, RoPE, paged attention, speculative decoding, and continuous batching — rebuilt from scratch in pure NumPy, with every optimization proven correct.",
+    "tags": ["llm", "transformers", "inference", "numpy", "from-scratch"],
+    "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80",
+    "status": "draft",
+    "medium_url": null
+  },
+  {
     "slug": "2026-06-23-personal-ai-lab-laptop-remotely-accessible-free",
     "title": "Your Personal AI Lab on Your Laptop, Remotely Accessible for Free",
     "date": "2026-06-23",
