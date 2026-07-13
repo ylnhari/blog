@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="GPT-5.6 vs GPT-5.5: the flagship did not get smarter. What actually changed is the shape of the offering — three tiers, a price ladder, and better agentic behaviour at the same cost.">
+  <meta property="og:title" content="GPT-5.6 vs GPT-5.5: The Upgrade That Isn't About Intelligence">
+  <meta property="og:description" content="GPT-5.6 vs GPT-5.5: the flagship did not get smarter. What actually changed is the shape of the offering — three tiers, a price ladder, and better agentic behaviour at the same cost.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80">
+  <title>GPT-5.6 vs GPT-5.5: The Upgrade That Isn't About Intelligence</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>GPT-5.6 vs GPT-5.5: The Upgrade That Isn't About Intelligence</h1>
+<p class="byline">By ylnhari &middot; July 13, 2026 &middot; llm, openai, gpt, benchmarks, cost-engineering</p>
+
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80" alt="Circuit board macro photograph representing model architecture">
+
+<p>OpenAI shipped GPT-5.6 on July 9, 2026, and the number went up, so the reflex is to assume the intelligence did too. It did not. On the one benchmark built specifically to measure raw capability, the new flagship scores <em>one point lower</em> than the model it replaces.</p>
+
+<p>That sounds like a story about a disappointing release. It is the opposite. GPT-5.6 is a significant upgrade — it just isn't an upgrade along the axis everyone instinctively looks at. Understanding <em>which</em> axis moved is the whole point, because it changes how you should actually use these models and what you should stop paying for.</p>
+
+<p>This is a companion to my <a href="https://ylnhari.github.io/blog/posts/2026-07-13-claude-fable-5-vs-gpt-5-5/">earlier comparison of Claude Fable 5 and GPT-5.5</a>. That post is now describing the previous generation of OpenAI's line. Here is what the new one changed.</p>
+
+<h2>First, the thing nobody wants to say</h2>
+
+<p>Artificial Analysis maintains an Intelligence Index — a composite designed to measure raw reasoning capability across many tasks. Here is GPT-5.5 against the new flagship, GPT-5.6 Sol, both at their maximum reasoning setting.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/02-flat-top.png" alt="Bar chart: GPT-5.5 scores 60 on the Artificial Analysis Intelligence Index, GPT-5.6 Sol scores 59. The new flagship is one point lower.">
+
+<p>Sixty versus fifty-nine. One point, in the wrong direction, comfortably inside measurement noise. The honest reading is not "GPT-5.6 is worse" — it is that <strong>raw intelligence at the top of the line is flat.</strong> OpenAI did not spend this release cycle making the smartest model meaningfully smarter.</p>
+
+<p>If you were waiting for GPT-5.6 because you needed your hardest reasoning tasks to get better, stop waiting. That is not what this release is. Once you accept that, everything else about GPT-5.6 comes into focus, because the improvements are real and they are large — they are simply somewhere else.</p>
+
+<h2>What did improve: agentic behaviour, at the same price</h2>
+
+<p>Hold the flagship price constant — Sol costs $5 input / $30 output per million tokens, identical to GPT-5.5 — and look at what a fixed dollar now buys on the benchmarks that measure <em>doing</em> rather than <em>knowing</em>.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/01-generational-gains.png" alt="Grouped bar chart of GPT-5.6 Sol versus GPT-5.5: ExploitBench +25.6, DeepSWE +5.7, SWE-bench Pro +5.2, Terminal-Bench 2.1 +3.2, AA Coding Agent Index +3.6.">
+
+<p>Every agentic and coding measure moved up. Terminal-Bench, DeepSWE, SWE-bench Pro, the composite Coding Agent Index — all a few points better for the same money. And on <strong>ExploitBench, a cybersecurity evaluation, the jump is 25.6 points</strong> — from 47.9% to 73.5%. That is not a tuning improvement, that is a different capability class, and it is precisely why GPT-5.6's rollout was initially a restricted preview at the request of the US government.</p>
+
+<blockquote>The intelligence ceiling held flat while the agentic floor rose. GPT-5.6 is not a smarter model. It is a more <em>capable</em> one — better at using its intelligence to get things done.</blockquote>
+
+<p>There is a subtler win hiding in these numbers: GPT-5.6 reaches those higher scores while <em>spending fewer tokens</em>.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/05-token-efficiency.png" alt="Bar chart: GPT-5.5 uses 16,000 output tokens per Intelligence Index task, GPT-5.6 Sol uses 15,000.">
+
+<p>Roughly 6% fewer output tokens on this particular measure, with OpenAI claiming 10–15% in general. Because you pay per output token, a model that is equally smart but more concise is quietly cheaper on every single call — a discount that never shows up on the price sheet.</p>
+
+<h2>The actual headline: GPT-5.5 was one model, GPT-5.6 is three</h2>
+
+<p>This is the change that matters, and it is structural rather than numerical. GPT-5.5 was a single model you steered with a <code>reasoning_effort</code> dial. GPT-5.6 replaces that with three purpose-built models — <strong>Sol</strong> (flagship), <strong>Terra</strong> (balanced), and <strong>Luna</strong> (cost-efficient) — each sitting at a different, deliberate point on the cost-versus-capability curve.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/03-price-ladder.png" alt="Scatter plot of Intelligence Index against output price. GPT-5.5 and GPT-5.6 Sol both at $30, scoring 60 and 59. GPT-5.6 Terra at $15 scoring 55, GPT-5.6 Luna at $6 scoring 51, forming a dashed price ladder.">
+
+<p>With GPT-5.5, if you wanted to spend less you turned the effort dial down and hoped the quality held. With GPT-5.6 you pick a model whose <em>entire design</em> targets your price point. Terra delivers most of Sol's capability at half the price. Luna gives you a genuinely usable model at a fifth of it.</p>
+
+<p>The cost consequences are not marginal.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/04-cost-per-task.png" alt="Bar chart of cost to run one Intelligence Index task: GPT-5.6 Luna $0.21, Terra $0.55, Sol $1.04.">
+
+<p>Luna runs the same evaluation for $0.21 that Sol runs for $1.04. If your workload is high-volume and not intelligence-critical — classification, extraction, routing, first-draft generation — you were previously paying flagship-adjacent rates on GPT-5.5 for work that did not need them. GPT-5.6 gives you a model built for exactly that job, and the saving is roughly 5x.</p>
+
+<h2>The trap inside the ladder</h2>
+
+<p>A cheaper tier is only a bargain if it is actually good enough for what you point it at, and here GPT-5.6's tiers are <em>not</em> uniformly scaled-down versions of the flagship. On long-context recall, the gap between them is a cliff.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/06-long-context.png" alt="Bar chart of MRCR long-context recall: GPT-5.6 Sol 91.5 percent, Terra 89.6 percent, GPT-5.5 74.0 percent, GPT-5.6 Luna 41.3 percent.">
+
+<p>Two things are happening in this chart at once. First, the genuine win: <strong>Sol scores 91.5% against GPT-5.5's 74.0%</strong> — a 17.5-point jump, the single largest generational improvement I found anywhere. Long-context reliability is meaningfully better at the top.</p>
+
+<p>Second, the trap: <strong>Luna scores 41.3%.</strong> The cheap tier does not degrade gracefully on long documents — it falls off a cliff. Luna is competitive on short agentic tasks and near-useless once the context gets long. If you downgrade to Luna to save money without checking your context lengths, you are not trading away "a few points of quality." You are trading away long-context reliability entirely, and you will find out in production.</p>
+
+<p>This is the discipline the three-tier model demands: you now have to know your own workload. Which tier is correct is no longer a dial you can leave on "medium" — it is a decision, and Luna's long-context collapse is the sharpest reason to make it deliberately.</p>
+
+<h2>Two features that quietly change the economics</h2>
+
+<p>Beyond the tiers, GPT-5.6 ships two changes that do not appear on any benchmark but affect real bills.</p>
+
+<p><strong>Programmatic tool calling in the Responses API.</strong> The model can now write JavaScript that runs in an isolated V8 sandbox with no network access, orchestrating tool calls in code rather than round-tripping each one through the model's context. For agents that chain many tool calls, this cuts both latency and token spend, because the intermediate results never have to pass back through the model.</p>
+
+<p><strong>Prompt caching changed in both directions.</strong> GPT-5.6 adds explicit cache breakpoints and a 30-minute minimum cache life, which makes caching far more predictable to engineer around. But it also — for the first time on OpenAI's line — charges for cache <em>writes</em>, at 1.25x the input rate. Cache reads keep their 90% discount. If you cache aggressively this is a net win; if you were relying on free cache writes, your bill moved. It is worth noting this makes OpenAI's caching economics converge on Anthropic's, which has charged a write premium for a while.</p>
+
+<h2>Ultra mode: paying 3x for the last three points</h2>
+
+<p>GPT-5.6 introduces a parallel-agent mode called Ultra that, by default, coordinates four agents at once. It is the closest thing to a raw-capability increase in this release — and it is a spend decision, not a free upgrade.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/08-ultra-mode.png" alt="Scatter plot: single-agent Sol at $1.70 per task scoring 88.8 percent on Terminal-Bench, Sol Ultra with four agents at $5.00 scoring 91.9 percent. Three times the cost for 3.1 points.">
+
+<p>Ultra lifts Terminal-Bench 2.1 from 88.8% to 91.9% and pushes BrowseComp to a state-of-the-art 92.2%. But it does it by running four agents in parallel, at roughly 3x the cost per task, for a 3.1-point gain. Whether that trade is worth it is entirely a function of what a failure costs you: for an autonomous overnight job where a wrong answer wastes a morning, three points of reliability is cheap at any price; for a high-volume pipeline, it is a rounding error you should not pay for.</p>
+
+<h2>The quiet casualty: GPT-5.5 Pro</h2>
+
+<p>One model comes out of this release looking obsolete, and it is not GPT-5.5 — it is GPT-5.5 <em>Pro</em>.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-gpt-5-6-vs-gpt-5-5/images/07-price.png" alt="Grouped bar chart of input and output prices: GPT-5.6 Luna $1/$6, Terra $2.50/$15, Sol $5/$30, GPT-5.5 $5/$30, GPT-5.5 Pro $30/$180.">
+
+<p>GPT-5.5 Pro was the "hardest single-shot questions" tier at $30 / $180 — six times Sol's output price. But Sol now matches or beats it on agentic and coding work while costing a sixth as much, and Ultra mode covers the genuinely-need-more case at a third of Pro's price. Unless you have a specific workload where Pro still measurably wins, GPT-5.6 has quietly stranded it.</p>
+
+<h2>So should you upgrade from GPT-5.5?</h2>
+
+<p>Not "is GPT-5.6 better" — it is, on the axes that moved — but "does the axis that moved match your workload." Three cases:</p>
+
+<ol>
+<li><strong>You run agents, tools, or coding workflows.</strong> Upgrade. Same flagship price, several points of agentic capability, fewer tokens per task, plus programmatic tool calling. This is the release's target and you are its target user.</li>
+<li><strong>You run high-volume, cost-sensitive work.</strong> Upgrade, and move down the ladder. Terra at half the price or Luna at a fifth is the real saving here — provided you check the long-context trap before landing on Luna.</li>
+<li><strong>You need the smartest possible answer to hard reasoning problems.</strong> There is little here for you. The intelligence ceiling is flat. Staying on GPT-5.5 costs you nothing on that axis, and the migration effort buys you agentic gains you may not use.</li>
+</ol>
+
+<h2>What this release actually tells you</h2>
+
+<p>The interesting thing about GPT-5.6 is not any single number. It is that the frontier has stopped being a single point and become a curve you choose from. The old question — "how smart is the new model?" — quietly stopped being the right one. The new questions are "how much capability do I actually need," "how long is my context," and "what does a failure cost me" — and the model family is now shaped to let you answer them separately.</p>
+
+<p>The flagship staying flat while the whole ladder got cheaper and more capable is not a stumble. It is what a maturing product line looks like: the ceiling is hard to raise, so the value moves to giving you the right amount of intelligence at the right price, instead of selling everyone the maximum.</p>
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>
