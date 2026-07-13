@@ -1,0 +1,480 @@
+<title>The Price of Intelligence — Interactive Frontier</title>
+<style>
+  :root {
+    --bg-0: #f3f2ec;
+    --bg-1: #fbfaf6;
+    --glow: rgba(47,111,237,.10);
+    --ink: #14161c;
+    --ink-2: #4a4e59;
+    --ink-3: #83879333;
+    --ink-3s: #7c808c;
+    --panel: rgba(255,255,255,.72);
+    --panel-brd: rgba(20,22,28,.10);
+    --hair: #e2dfd6;
+    --grid: rgba(20,22,28,.07);
+    --paid: #2f6fed;
+    --open: #e07d2f;
+    --paid-glow: rgba(47,111,237,.45);
+    --open-glow: rgba(224,125,47,.45);
+    --frontier: #9aa2b3;
+    --node: rgba(70,90,130,.5);
+    --seg: rgba(20,22,28,.06);
+    --shadow: 0 2px 6px rgba(20,22,28,.06), 0 24px 60px rgba(20,22,28,.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-0: #0b0e18;
+      --bg-1: #161d2e;
+      --glow: rgba(91,143,245,.24);
+      --ink: #f3f3ee;
+      --ink-2: #b6bac6;
+      --ink-3: #ffffff14;
+      --ink-3s: #868c9c;
+      --panel: rgba(20,24,34,.55);
+      --panel-brd: rgba(255,255,255,.09);
+      --hair: #262b38;
+      --grid: rgba(255,255,255,.06);
+      --paid: #5b8ff5;
+      --open: #f29a55;
+      --paid-glow: rgba(91,143,245,.55);
+      --open-glow: rgba(242,154,85,.5);
+      --frontier: #7f899e;
+      --node: rgba(120,150,210,.42);
+      --seg: rgba(255,255,255,.07);
+      --shadow: 0 2px 6px rgba(0,0,0,.4), 0 30px 70px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg-0: #f3f2ec; --bg-1: #fbfaf6; --glow: rgba(47,111,237,.10);
+    --ink: #14161c; --ink-2: #4a4e59; --ink-3: #83879333; --ink-3s: #7c808c;
+    --panel: rgba(255,255,255,.72); --panel-brd: rgba(20,22,28,.10); --hair: #e2dfd6;
+    --grid: rgba(20,22,28,.07); --paid: #2f6fed; --open: #e07d2f;
+    --paid-glow: rgba(47,111,237,.45); --open-glow: rgba(224,125,47,.45);
+    --frontier: #9aa2b3; --node: rgba(70,90,130,.5); --seg: rgba(20,22,28,.06);
+    --shadow: 0 2px 6px rgba(20,22,28,.06), 0 24px 60px rgba(20,22,28,.12);
+  }
+  :root[data-theme="dark"] {
+    --bg-0: #070910; --bg-1: #10141f; --glow: rgba(91,143,245,.16);
+    --ink: #f3f3ee; --ink-2: #b6bac6; --ink-3: #ffffff14; --ink-3s: #868c9c;
+    --panel: rgba(20,24,34,.55); --panel-brd: rgba(255,255,255,.09); --hair: #262b38;
+    --grid: rgba(255,255,255,.06); --paid: #5b8ff5; --open: #f29a55;
+    --paid-glow: rgba(91,143,245,.55); --open-glow: rgba(242,154,85,.5);
+    --frontier: #7f899e; --node: rgba(120,150,210,.42); --seg: rgba(255,255,255,.07);
+    --shadow: 0 2px 6px rgba(0,0,0,.4), 0 30px 70px rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1100px 620px at 74% -8%, var(--glow), transparent 60%),
+      linear-gradient(178deg, var(--bg-1), var(--bg-0) 62%);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 52px 24px 72px; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--ink-2); font-weight: 600; margin: 0 0 16px;
+  }
+  .eyebrow .pip { width: 7px; height: 7px; border-radius: 50%; background: var(--open); box-shadow: 0 0 12px var(--open-glow); }
+  h1 {
+    font-size: clamp(34px, 6vw, 66px); line-height: .98; letter-spacing: -.028em;
+    font-weight: 800; margin: 0 0 18px; text-wrap: balance;
+  }
+  h1 .em { font-style: italic; font-weight: 700; }
+  .lede { font-size: clamp(16px, 2.1vw, 18.5px); color: var(--ink-2); max-width: 60ch; margin: 0 0 34px; }
+
+  .panel {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--panel-brd);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 22px 22px 12px;
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+  }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-bottom: 6px; }
+  .ctl-label { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3s); font-weight: 700; }
+  .segmented { display: inline-flex; background: var(--seg); border-radius: 11px; padding: 3px; gap: 2px; }
+  .segmented button {
+    font: inherit; font-size: 13px; font-weight: 600;
+    border: 0; background: transparent; color: var(--ink-2);
+    padding: 8px 14px; border-radius: 8px; cursor: pointer;
+    transition: background .18s, color .18s, box-shadow .18s;
+  }
+  .segmented button[aria-pressed="true"] {
+    background: var(--panel); color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.18), inset 0 0 0 1px var(--panel-brd);
+  }
+  .segmented button:hover { color: var(--ink); }
+  .segmented button:focus-visible { outline: 2px solid var(--paid); outline-offset: 2px; }
+
+  .legend { display: flex; gap: 18px; margin-left: auto; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); font-weight: 500; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.paid { background: var(--paid); box-shadow: 0 0 10px var(--paid-glow); }
+  .dot.open { background: var(--open); box-shadow: 0 0 10px var(--open-glow); }
+
+  .chart-holder { position: relative; }
+  canvas#c { display: block; width: 100%; height: auto; touch-action: none; }
+
+  .tip {
+    position: absolute; pointer-events: none; opacity: 0; transform: translate(-50%, -118%) scale(.96);
+    background: color-mix(in srgb, var(--ink) 92%, transparent); color: var(--bg-0);
+    border-radius: 11px; padding: 10px 13px; font-size: 12.5px; line-height: 1.4; white-space: nowrap;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35); z-index: 6; font-variant-numeric: tabular-nums;
+    transition: opacity .14s, transform .14s;
+  }
+  .tip.on { opacity: 1; transform: translate(-50%, -118%) scale(1); }
+  .tip b { font-size: 14px; }
+  .tip .row { opacity: .74; }
+  .tip .tag { display: inline-block; font-size: 10px; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; padding: 2px 7px; border-radius: 5px; margin-top: 5px; }
+  .tip .tag.paid { background: var(--paid); color: #fff; }
+  .tip .tag.open { background: var(--open); color: #1a1205; }
+
+  .foot { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: space-between; align-items: baseline; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hair); }
+  .foot p { margin: 0; font-size: 12.5px; color: var(--ink-3s); }
+  .foot a { color: var(--paid); text-decoration: none; font-weight: 600; }
+  .foot a:hover { text-decoration: underline; }
+
+  .takeaway { margin: 34px auto 0; font-size: clamp(15px, 2vw, 16.5px); color: var(--ink-2); max-width: 66ch; }
+  .takeaway b { color: var(--ink); font-weight: 700; }
+
+  @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
+</style>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; July 2026</p>
+  <h1>The <span class="em">price</span> of intelligence</h1>
+  <p class="lede">Every frontier model, plotted by what it charges against how capable it is. Open weights own the cheap end of the curve; the very top stays paid. Hover any point to read its exact coordinates — toggle the axis to see what a dollar actually buys.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <span class="ctl-label">Show</span>
+      <div class="segmented" role="group" aria-label="Filter models">
+        <button data-filter="all" aria-pressed="true">All</button>
+        <button data-filter="open" aria-pressed="false">Open only</button>
+        <button data-filter="paid" aria-pressed="false">Paid only</button>
+      </div>
+      <span class="ctl-label">Y-axis</span>
+      <div class="segmented" role="group" aria-label="Choose vertical axis">
+        <button data-mode="index" aria-pressed="true">Intelligence</button>
+        <button data-mode="perdollar" aria-pressed="false">Value per $</button>
+      </div>
+      <div class="legend">
+        <span><i class="dot paid"></i>Paid / closed</span>
+        <span><i class="dot open"></i>Open weight</span>
+      </div>
+    </div>
+
+    <div class="chart-holder">
+      <canvas id="c" role="img" aria-label="Interactive scatter plot of frontier language models by price and capability"></canvas>
+      <div class="tip" id="tip"></div>
+    </div>
+
+    <div class="foot">
+      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: output price per million tokens, log scale. Data July 2026.</p>
+      <p><a href="https://medium.com/p/554b5e8fd5e8">Read the full analysis on Medium</a></p>
+    </div>
+  </div>
+
+  <p class="takeaway">The dashed line is the <b>efficient frontier</b> — the most intelligence available at each price. Open-weight models sit right on it: nobody, open or closed, gives you their capability for less. <b>GLM-5.2 even matches GPT-5.6 Luna at a lower price.</b> Switch to the value axis and the point sharpens — every open model returns several times more capability per dollar than any paid one. What the premium still buys is the ceiling: index 56 and up is closed-only.</p>
+</div>
+
+<script>
+"use strict";
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- ambient node field ---------- */
+const bg = document.getElementById("bg"), bx = bg.getContext("2d");
+let bw = 0, bh = 0, bdpr = 1, nodes = [];
+function initBg() {
+  bdpr = Math.min(window.devicePixelRatio || 1, 2);
+  bw = window.innerWidth; bh = window.innerHeight;
+  bg.width = bw * bdpr; bg.height = bh * bdpr;
+  bx.setTransform(bdpr, 0, 0, bdpr, 0, 0);
+  const count = Math.round(Math.min(64, Math.max(30, bw / 26)));
+  nodes = Array.from({ length: count }, () => ({
+    x: Math.random() * bw, y: Math.random() * bh,
+    vx: (Math.random() - .5) * .16, vy: (Math.random() - .5) * .16,
+    r: Math.random() * 1.6 + .6, warm: Math.random() < .32
+  }));
+}
+function drawBg() {
+  bx.clearRect(0, 0, bw, bh);
+  const nc = css("--node"), paid = css("--paid"), open = css("--open");
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    for (let j = i + 1; j < nodes.length; j++) {
+      const b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+      if (d2 < 20000) {
+        bx.globalAlpha = (1 - d2 / 20000) * .12;
+        bx.strokeStyle = nc; bx.lineWidth = 1;
+        bx.beginPath(); bx.moveTo(a.x, a.y); bx.lineTo(b.x, b.y); bx.stroke();
+      }
+    }
+  }
+  bx.globalAlpha = 1;
+  for (const a of nodes) {
+    bx.beginPath(); bx.arc(a.x, a.y, a.r, 0, 7);
+    bx.fillStyle = a.warm ? open : paid; bx.globalAlpha = .34;
+    bx.fill();
+  }
+  bx.globalAlpha = 1;
+}
+function stepBg() {
+  for (const a of nodes) {
+    a.x += a.vx; a.y += a.vy;
+    if (a.x < -10) a.x = bw + 10; if (a.x > bw + 10) a.x = -10;
+    if (a.y < -10) a.y = bh + 10; if (a.y > bh + 10) a.y = -10;
+  }
+}
+let bgRAF = 0;
+function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
+
+/* ---------- data ---------- */
+const MODELS = [
+  { name: "Claude Fable 5",  kind: "paid", idx: 60.0, out: 50.0 },
+  { name: "GPT-5.6 Sol",     kind: "paid", idx: 58.9, out: 30.0 },
+  { name: "Claude Opus 4.8", kind: "paid", idx: 55.7, out: 25.0 },
+  { name: "GPT-5.6 Terra",   kind: "paid", idx: 55.0, out: 15.0 },
+  { name: "Grok 4.5",        kind: "paid", idx: 53.8, out: 6.0 },
+  { name: "GPT-5.6 Luna",    kind: "paid", idx: 51.2, out: 6.0 },
+  { name: "GLM-5.2",         kind: "open", idx: 51.1, out: 4.4 },
+  { name: "DeepSeek V4 Pro", kind: "open", idx: 44.3, out: 3.48 },
+  { name: "Kimi K2.6",       kind: "open", idx: 44.2, out: 4.0 },
+  { name: "Qwen3.5",         kind: "open", idx: 33.8, out: 3.6 },
+];
+MODELS.forEach(m => m.per = m.idx / m.out);
+
+/* ---------- chart ---------- */
+const cvs = document.getElementById("c"), ctx = cvs.getContext("2d");
+const tip = document.getElementById("tip"), holder = cvs.parentElement;
+let W = 0, H = 0, dpr = 1, filter = "all", mode = "index";
+let placed = [], hover = -1, intro = 0, introRAF = 0;
+const pad = { l: 66, r: 30, t: 30, b: 56 };
+const X_MIN = 3, X_MAX = 95, lx = v => Math.log10(v);
+
+function shown(m) { return filter === "all" || m.kind === filter; }
+function yDomain() {
+  if (mode === "index") return [31, 62.5];
+  return [0, Math.max(...MODELS.map(m => m.per)) * 1.12];
+}
+function yVal(m) { return mode === "index" ? m.idx : m.per; }
+function sx(p) { return pad.l + (lx(p) - lx(X_MIN)) / (lx(X_MAX) - lx(X_MIN)) * (W - pad.l - pad.r); }
+function sy(v) { const [a, b] = yDomain(); return H - pad.b - (v - a) / (b - a) * (H - pad.t - pad.b); }
+
+function resize() {
+  const w = holder.clientWidth, h = Math.max(430, Math.min(580, w * 0.6));
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cvs.width = w * dpr; cvs.height = h * dpr; cvs.style.height = h + "px";
+  W = w; H = h; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
+}
+function frontierPoints() {
+  const vis = MODELS.filter(shown).slice().sort((a, b) => a.out - b.out);
+  const fr = []; let best = -Infinity;
+  for (const m of vis) if (yVal(m) > best) { best = yVal(m); fr.push(m); }
+  return fr;
+}
+function niceTicks(a, b) {
+  const step = (b - a) / 5, mag = Math.pow(10, Math.floor(Math.log10(step)));
+  const s = Math.ceil(step / mag) * mag, out = [];
+  for (let v = 0; v <= b; v += s) if (v >= a) out.push(v);
+  return out;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const cInk = css("--ink"), cInk3 = css("--ink-3s"), cGrid = css("--grid");
+  const cPaid = css("--paid"), cOpen = css("--open"), cFront = css("--frontier");
+  const cPg = css("--paid-glow"), cOg = css("--open-glow");
+  const [ya, yb] = yDomain();
+
+  // ceiling band (index mode)
+  if (mode === "index") {
+    const g = ctx.createLinearGradient(0, sy(62.5), 0, sy(56.3));
+    g.addColorStop(0, cOg); g.addColorStop(1, "transparent");
+    ctx.globalAlpha = .16; ctx.fillStyle = g;
+    ctx.fillRect(pad.l, sy(62.5), W - pad.l - pad.r, sy(56.3) - sy(62.5));
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = cOpen; ctx.font = "700 11px ui-sans-serif, system-ui, sans-serif";
+    ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillText("THE CEILING — paid only", pad.l + 10, sy(60.9));
+  }
+
+  // grid + y labels
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  ctx.font = "12px ui-sans-serif, system-ui, sans-serif";
+  const yt = mode === "index" ? [35, 40, 45, 50, 55, 60] : niceTicks(ya, yb);
+  for (const v of yt) {
+    const y = sy(v);
+    ctx.strokeStyle = cGrid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.fillStyle = cInk3; ctx.fillText(mode === "index" ? v : v.toFixed(0), pad.l - 11, y);
+  }
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  for (const v of [3, 5, 10, 20, 30, 50]) { ctx.fillStyle = cInk3; ctx.fillText("$" + v, sx(v), H - pad.b + 11); }
+
+  // axis titles
+  ctx.fillStyle = cInk3; ctx.font = "600 12px ui-sans-serif, system-ui, sans-serif";
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  ctx.fillText("Output price — $ / million tokens  (log)", (pad.l + W - pad.r) / 2, H - 20);
+  ctx.save(); ctx.translate(17, (pad.t + H - pad.b) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textBaseline = "middle"; ctx.fillText(mode === "index" ? "Intelligence Index" : "Index points per $", 0, 0);
+  ctx.restore();
+
+  // frontier (draws in with intro)
+  const fr = frontierPoints();
+  if (fr.length) {
+    ctx.save();
+    ctx.strokeStyle = cFront; ctx.lineWidth = 1.8; ctx.setLineDash([6, 5]);
+    ctx.globalAlpha = Math.min(1, intro * 1.1);
+    const endX = pad.l + (W - pad.l - pad.r) * intro;
+    ctx.beginPath(); ctx.moveTo(sx(fr[0].out), sy(yVal(fr[0])));
+    for (let i = 1; i < fr.length; i++) { ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i - 1]))); ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i]))); }
+    ctx.lineTo(W - pad.r, sy(yVal(fr[fr.length - 1])));
+    ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, endX, H); ctx.clip();
+    ctx.strokeStyle = cFront; ctx.lineWidth = 1.8; ctx.setLineDash([6, 5]);
+    ctx.globalAlpha = Math.min(1, intro * 1.1);
+    ctx.beginPath(); ctx.moveTo(sx(fr[0].out), sy(yVal(fr[0])));
+    for (let i = 1; i < fr.length; i++) { ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i - 1]))); ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i]))); }
+    ctx.lineTo(W - pad.r, sy(yVal(fr[fr.length - 1]))); ctx.stroke(); ctx.restore();
+    if (intro > .85) {
+      ctx.globalAlpha = (intro - .85) / .15;
+      ctx.fillStyle = cFront; ctx.font = "italic 11px ui-sans-serif, system-ui, sans-serif";
+      ctx.textAlign = "right"; ctx.textBaseline = "bottom";
+      ctx.fillText("efficient frontier", W - pad.r - 6, sy(yVal(fr[fr.length - 1])) - 7);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // hover droplines
+  placed = [];
+  MODELS.forEach((m, i) => placed.push({ i, x: sx(m.out), y: sy(yVal(m)), vis: shown(m) }));
+  if (hover >= 0 && shown(MODELS[hover])) {
+    const p = placed.find(q => q.i === hover), m = MODELS[hover];
+    const col = m.kind === "paid" ? cPaid : cOpen;
+    ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = .5; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, H - pad.b); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pad.l, p.y); ctx.stroke();
+    ctx.restore();
+    // axis readouts
+    ctx.setLineDash([]); ctx.font = "700 11.5px ui-sans-serif, system-ui, sans-serif";
+    ctx.fillStyle = col; ctx.textAlign = "center"; ctx.textBaseline = "top";
+    pill(ctx, "$" + m.out, p.x, H - pad.b + 10, col);
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    pill(ctx, (mode === "index" ? m.idx.toFixed(1) : m.per.toFixed(1)), pad.l - 8, p.y, col, true);
+  }
+
+  // points (rise + fade in on intro, staggered by price)
+  MODELS.forEach((m, i) => {
+    if (!shown(m)) return;
+    const p = placed.find(q => q.i === i);
+    const t = introEased(i);
+    if (t <= 0) return;
+    const rise = (1 - t) * 26;
+    const x = p.x, y = p.y + rise;
+    const col = m.kind === "paid" ? cPaid : cOpen;
+    const glow = m.kind === "paid" ? cPg : cOg;
+    const r = (hover === i ? 10.5 : 7.6);
+    ctx.globalAlpha = t;
+    // glow
+    ctx.save(); ctx.shadowColor = glow; ctx.shadowBlur = hover === i ? 26 : 15;
+    ctx.beginPath(); ctx.arc(x, y, r + 2.6, 0, 7); ctx.fillStyle = css("--bg-0"); ctx.globalAlpha = t * .9; ctx.fill();
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = col; ctx.globalAlpha = t; ctx.fill();
+    ctx.restore();
+    if (hover === i) { ctx.beginPath(); ctx.arc(x, y, r + 5, 0, 7); ctx.strokeStyle = col; ctx.globalAlpha = t * .5; ctx.lineWidth = 1.6; ctx.stroke(); }
+    // label
+    ctx.globalAlpha = t;
+    ctx.fillStyle = cInk; ctx.font = (hover === i ? "700 " : "500 ") + "12px ui-sans-serif, system-ui, sans-serif";
+    ctx.textBaseline = "middle";
+    const ly = y + (m.name === "Kimi K2.6" ? 17 : 0);   // drop Kimi's label clear of DeepSeek
+    const right = x + r + 8;
+    if (right + ctx.measureText(m.name).width < W - pad.r) { ctx.textAlign = "left"; ctx.fillText(m.name, right, ly); }
+    else { ctx.textAlign = "right"; ctx.fillText(m.name, x - r - 8, ly); }
+    ctx.globalAlpha = 1;
+  });
+}
+function pill(c, txt, x, y, col, left) {
+  c.save(); c.font = "700 11.5px ui-sans-serif, system-ui, sans-serif";
+  const w = c.measureText(txt).width + 14, h = 19;
+  let px = x - w / 2; if (left) px = x - w;
+  const py = y - h / 2;
+  c.fillStyle = col; c.globalAlpha = .95;
+  rr(c, px, py, w, h, 6); c.fill();
+  c.globalAlpha = 1; c.fillStyle = "#fff"; c.textAlign = "center"; c.textBaseline = "middle";
+  c.fillText(txt, px + w / 2, py + h / 2 + .5); c.restore();
+}
+function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+
+function introEased(i) {
+  if (REDUCED) return 1;
+  const start = i * 0.06, span = 0.5;
+  return Math.max(0, Math.min(1, (intro - start) / span));
+}
+function runIntro() {
+  if (REDUCED) { intro = 1; draw(); return; }
+  const t0 = performance.now();
+  function step(now) {
+    intro = Math.min(1, (now - t0) / 1350);
+    draw();
+    if (intro < 1) introRAF = requestAnimationFrame(step);
+  }
+  introRAF = requestAnimationFrame(step);
+}
+
+/* ---------- interaction ---------- */
+function onMove(e) {
+  const r = cvs.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+  let best = -1, bd = 24 * 24;
+  for (const p of placed) { if (!p.vis) continue; const d = (p.x - mx) ** 2 + (p.y - my) ** 2; if (d < bd) { bd = d; best = p.i; } }
+  if (best !== hover) { hover = best; draw(); }
+  if (best >= 0) {
+    const m = MODELS[best], p = placed.find(q => q.i === best);
+    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + m.idx.toFixed(1) + " &middot; $" + m.out + "/M out</span><br><span class='row'>" + m.per.toFixed(1) + " pts per $</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
+    tip.style.left = p.x + "px"; tip.style.top = p.y + "px"; tip.classList.add("on");
+    cvs.style.cursor = "pointer";
+  } else { tip.classList.remove("on"); cvs.style.cursor = "default"; }
+}
+cvs.addEventListener("pointermove", onMove);
+cvs.addEventListener("pointerleave", () => { hover = -1; tip.classList.remove("on"); draw(); });
+
+document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => {
+  filter = b.dataset.filter;
+  document.querySelectorAll("[data-filter]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  draw();
+}));
+document.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => {
+  mode = b.dataset.mode;
+  document.querySelectorAll("[data-mode]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  if (!REDUCED) { intro = 0; runIntro(); } else draw();
+}));
+
+new MutationObserver(() => { draw(); drawBg(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { draw(); drawBg(); });
+window.addEventListener("resize", () => { initBg(); resize(); });
+let settled = false;
+function settle() { settled = true; if (bgRAF) { cancelAnimationFrame(bgRAF); bgRAF = 0; } }
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { cancelAnimationFrame(bgRAF); bgRAF = 0; }
+  else if (!bgRAF && !REDUCED && !settled) loopBg();
+});
+
+initBg();
+if (REDUCED) { drawBg(); } else { loopBg(); setTimeout(settle, 5200); }
+resize();
+runIntro();
+</script>
