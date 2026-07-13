@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="Open-weight LLMs now match the paid mid-tier at a fraction of the cost, but the frontier ceiling is still closed-only. A price-versus-intelligence map of DeepSeek, GLM, Kimi, Qwen against Opus, Fable, GPT-5.6 and Grok.">
+  <meta property="og:title" content="The Price of Intelligence: Open-Weight vs Paid Frontier Models in 2026">
+  <meta property="og:description" content="Open-weight LLMs now match the paid mid-tier at a fraction of the cost, but the frontier ceiling is still closed-only. A price-versus-intelligence map.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80">
+  <title>The Price of Intelligence: Open-Weight vs Paid Frontier Models in 2026</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>The Price of Intelligence: Open-Weight vs Paid Frontier Models in 2026</h1>
+<p class="byline">By ylnhari &middot; July 13, 2026 &middot; llm, open-source, benchmarks, cost-engineering, deepseek</p>
+
+<img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80" alt="A glowing network of connected nodes over a dark globe, representing distributed open models">
+
+<p>The usual way people compare open-source and paid AI models is to line up benchmark scores and declare a winner. That comparison is almost useless, because it answers a question nobody is actually asking. You don't choose a model in a vacuum — you choose it against a price. The real question is not "which model is smartest" but "how much intelligence does a dollar buy, and where does paying more stop being worth it."</p>
+
+<p>So this post has one central chart, and everything else supports it. I took every frontier model I could get consistent numbers for — the paid flagships (Claude Opus 4.8, Claude Fable 5, OpenAI's GPT-5.6 family, xAI's Grok 4.5) and the top open-weight models (DeepSeek V4 Pro, GLM-5.2, Kimi K2.6, Qwen3.5) — and plotted what each one charges against how capable it is.</p>
+
+<p>The answer is more interesting than either camp's slogan. Open weights have not "caught up," and they have not "stayed behind." They have caught up in one specific place — the middle — and the paid premium has retreated to the top.</p>
+
+<h2>The one chart</h2>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/01-price-intelligence-frontier.png" alt="Scatter plot of Artificial Analysis Intelligence Index against output price on a log scale. Open-weight models (orange) cluster in the cheap region up to index ~51; paid models (blue) extend up to index 60 at much higher prices. GLM-5.2 sits at the same intelligence as GPT-5.6 Luna for less money.">
+
+<p>Read it like an economist reads a cost curve. The vertical axis is the <a href="https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index">Artificial Analysis Intelligence Index</a> — a composite that, in its current version, weights agentic and coding tasks heavily. The horizontal axis is output-token price, on a log scale so that $4 and $50 both read clearly. The dashed line is the efficient frontier: the best intelligence available at each price. Anything below and to the right of it is paying more for less.</p>
+
+<p>Three things fall out immediately.</p>
+
+<p><strong>The open models own the cheap end of the frontier.</strong> DeepSeek V4 Pro and GLM-5.2 sit right on the efficient line — you cannot get their level of capability for less money from anyone, open or closed. <a href="https://benchlm.ai/benchmarks/artificialAnalysis">GLM-5.2 scores 51.1</a> on the index at roughly <a href="https://deepinfra.com/blog/deepseek-v4-pro-pricing-guide-2026-providers-cost-analysis">$4.40 per million output tokens</a>.</p>
+
+<p><strong>An open model quietly dominates a paid one.</strong> GLM-5.2's 51.1 essentially matches <a href="https://benchlm.ai/benchmarks/artificialAnalysis">GPT-5.6 Luna's 51.2</a> — at a lower price. That is not "open is competitive," that is an open-weight model beating a frontier lab's product on both axes at once. If you were reaching for Luna for a cost-sensitive job, GLM-5.2 is strictly the better deal.</p>
+
+<p><strong>But the ceiling is closed-only.</strong> Look at the top of the chart. Everything above index 56 — GPT-5.6 Sol at <a href="https://artificialanalysis.ai/models/gpt-5-6-sol">58.9</a>, Claude Fable 5 at <a href="https://artificialanalysis.ai/articles/gpt-5-6-has-landed">60</a> — is paid, and there is no open-weight model anywhere near it. The best open model tops out around 51. That gap is real, and it is where your money still goes.</p>
+
+<blockquote>Open weights didn't catch the frontier. They caught the mid-tier — and made the mid-tier cheap. What you now pay a premium for is the last nine index points at the very top.</blockquote>
+
+<h2>The middle is a tie; the top is not</h2>
+
+<p>Stack the same intelligence scores vertically and the structure of the market is obvious.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/02-mid-vs-ceiling.png" alt="Horizontal bar chart of AA Intelligence Index for all ten models, colored by open versus paid. Open weights top out around index 51 while paid models extend to 60.">
+
+<p>There is a band from roughly index 51 to 55 — GPT-5.6 Luna, GLM-5.2, Grok 4.5, GPT-5.6 Terra — where open and paid models are genuinely interchangeable on capability. Above that band, from 56 to 60, it is paid-only: Claude Opus 4.8, GPT-5.6 Sol, and Claude Fable 5, with nothing open to challenge them.</p>
+
+<p>One important caveat, stated plainly because it cuts against the open-source story: this index is <a href="https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-1">weighted toward agentic workloads</a> — long chains of tool calls, multi-step autonomy. That is exactly the kind of task where the paid labs have poured in the most reinforcement learning, and exactly where open weights lag most. On narrower measures the gap shrinks dramatically: DeepSeek V4 Pro posts <a href="https://benchlm.ai/blog/posts/best-open-source-llm">around 80.6% on SWE-bench Verified</a>, within a couple of points of the paid frontier on raw coding. So "the gap is nine points" is true for autonomous agents and misleading for everything else. Which benchmark you weight is which decision you're making.</p>
+
+<h2>What a dollar actually buys</h2>
+
+<p>Flip the axes and ask the buyer's question directly: per dollar of output tokens, how many index points do you get?</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/03-intelligence-per-dollar.png" alt="Horizontal bar chart of intelligence index divided by output price. DeepSeek V4 Pro leads at 12.7, Claude Fable 5 trails at 1.2 — roughly a tenfold spread.">
+
+<p>DeepSeek V4 Pro returns about <strong>12.7 index points per dollar</strong>; Claude Fable 5 returns <strong>1.2</strong>. That is a tenfold difference in raw efficiency. Every open model beats every paid model on this measure, and it is not close.</p>
+
+<p>This is the number that should reframe how you budget. If your workload lives in that interchangeable 51–55 band — most extraction, classification, summarization, first-draft generation, and a lot of everyday coding — you are paying a 5-to-10x premium for index points you would have gotten anyway. The paid tax only earns its keep when you genuinely need the top of the chart.</p>
+
+<p>One honest asterisk on this chart: it measures <em>sticker</em> efficiency. It assumes every model spends the same number of tokens to finish a task, and they don't — which brings us to the one place the paid side fights back.</p>
+
+<h2>The catch: sticker price isn't task price</h2>
+
+<p>Cheaper per token does not always mean cheaper per job, because verbose models burn more tokens to reach the same answer. The sharpest example runs the other way — a paid model that is cheap <em>and</em> terse.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/05-effective-cost.png" alt="Bar chart comparing effective cost per task. Claude Opus 4.8 is the baseline at 1.0; Grok 4.5 completes the same task at roughly 0.06 of the cost, being both cheaper per token and far more token-efficient.">
+
+<p>Grok 4.5 is priced at <a href="https://pricepertoken.com/pricing-page/provider/xai">$2 input / $6 output</a>, and xAI reports it solves a task with <a href="https://chatforest.com/builders-log/grok-45-launch-pricing-benchmarks-cursor-training-builder-evaluation-july-2026/">roughly 4.2x fewer tokens than Opus 4.8</a>. Multiply the two effects together and a finished task can cost a small fraction of the Opus equivalent. Token efficiency is a hidden axis that sticker-price charts miss entirely — and it can flip the ranking. The same caution applies to open models: some of them are notably verbose, which quietly erodes their per-token advantage on real jobs. Always measure cost per completed task on your own workload, not cost per token on a price sheet.</p>
+
+<h2>The map, and the decision</h2>
+
+<p>Put price and intelligence together as a positioning map and the strategy writes itself.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/04-positioning-map.png" alt="Two-by-two positioning map of price versus intelligence. Open-weight models occupy the value zone (capable and cheap); paid flagships occupy the premium tier (top of the chart, high price).">
+
+<p>Open weights own the value zone. The paid flagships own the premium tier. And a couple of paid mid-tier models (Luna, Terra) sit awkwardly in between, now undercut on capability-per-dollar by open alternatives. So:</p>
+
+<ol>
+<li><strong>High-volume, cost-sensitive, everyday work</strong> — extraction, classification, routine coding, first drafts. Use an open model. DeepSeek V4 Pro or GLM-5.2 give you paid-mid-tier capability at a fraction of the price, and you can self-host for data control. This is where most tokens are actually spent, and paying frontier prices here is waste.</li>
+<li><strong>Hard, autonomous, long-horizon agentic work</strong> — the multi-step tool-use tasks the index rewards. Pay for the ceiling: GPT-5.6 Sol or Claude Fable 5. The nine-point gap is real here, and on work where a failure is expensive, it is worth every cent.</li>
+<li><strong>Cost-sensitive but latency- or efficiency-critical</strong> — look hard at Grok 4.5. Its token efficiency can make it the cheapest <em>per task</em> even against models with lower sticker prices.</li>
+</ol>
+
+<h2>What you're actually paying for</h2>
+
+<p>When you pay the frontier premium in mid-2026, you are not buying raw intelligence in the abstract — open weights have made that cheap. You are buying four specific things: the last nine index points at the very top of the capability curve, the agentic reliability that comes with them, the managed API and tooling around them, and someone else's responsibility for safety and uptime.</p>
+
+<p>For a large fraction of real workloads, none of those four is worth a 5-to-10x markup, and an open model is simply the correct engineering choice. For the hardest autonomous work, all four still matter, and the paid frontier earns its price. The mistake — the expensive, common mistake — is paying premium-tier prices for value-zone work out of habit, because the benchmark headline said the paid model was "better."</p>
+
+<p>Better at what, and worth how much more? Those are the only two questions, and the chart at the top answers both.</p>
+
+<h2>An interactive version</h2>
+
+<p>The price-versus-intelligence map works best when you can poke at it — filter open versus paid, or re-rank by efficiency. Static images can't do that inside a Medium post, so I built a live, interactive version of the frontier chart as a separate hosted page. The link is with this post on <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a>.</p>
+
+<h2>Sources &amp; caveats</h2>
+
+<p>Every number here traces to one of the sources below. Two honest caveats. First, third-party benchmark aggregators disagree at the margins and open-model version numbers move fast (GLM-5.1 vs 5.2, Kimi K2.6 vs K2.7) — I used a single consistent leaderboard snapshot for the intelligence scores so the comparison is internally coherent, but treat individual figures as accurate-as-of-July-2026, not eternal. Second, the intelligence index is agentic-weighted; a coding-only or reasoning-only index would narrow the open-vs-paid gap considerably, and I've said so where it matters.</p>
+
+<ul>
+<li><a href="https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index">Artificial Analysis — Intelligence Index</a> (the capability axis, methodology)</li>
+<li><a href="https://benchlm.ai/benchmarks/artificialAnalysis">BenchLM — Artificial Analysis Index leaderboard, July 2026</a> (per-model index scores)</li>
+<li><a href="https://benchlm.ai/blog/posts/best-open-source-llm">BenchLM — Best open-source LLM 2026</a> (open-model rankings, SWE-bench)</li>
+<li><a href="https://deepinfra.com/blog/deepseek-v4-pro-pricing-guide-2026-providers-cost-analysis">DeepInfra — DeepSeek V4 Pro pricing guide</a> and <a href="https://pricepertoken.com/pricing-page/provider/xai">Price Per Token — xAI / Grok pricing</a> (open + Grok token costs)</li>
+<li><a href="https://artificialanalysis.ai/articles/gpt-5-6-has-landed">Artificial Analysis — GPT-5.6 has landed</a> (GPT-5.6 tier scores and pricing)</li>
+<li><a href="https://chatforest.com/builders-log/grok-45-launch-pricing-benchmarks-cursor-training-builder-evaluation-july-2026/">Grok 4.5 builder evaluation</a> (token-efficiency claim; xAI-sourced, directional)</li>
+</ul>
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>
