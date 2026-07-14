@@ -4,128 +4,132 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="ylnhari">
-  <meta name="description" content="An interactive tool to find the optimal vLLM-compatible LLM for any GPU setup — L4 to B200, multi-GPU, quantization-aware model selection for 108+ models.">
-  <meta property="og:title" content="vLLM Model Chooser: Find Your Perfect LLM for Any GPU Setup">
-  <meta property="og:description" content="An interactive tool to find the optimal vLLM-compatible LLM for any GPU setup — L4 to B200, multi-GPU, quantization-aware model selection for 108+ models.">
+  <meta name="description" content="An interactive tool that answers &quot;will this LLM actually fit on my GPUs?&quot; — weights, KV cache from real attention geometry, and quantization support, for 108 models from L4 to B200.">
+  <meta property="og:title" content="vLLM Model Chooser: Will This LLM Actually Fit on Your GPUs?">
+  <meta property="og:description" content="An interactive tool that answers &quot;will this LLM actually fit on my GPUs?&quot; — weights, KV cache from real attention geometry, and quantization support, for 108 models from L4 to B200.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80">
-  <title>vLLM Model Chooser: Find Your Perfect LLM for Any GPU Setup</title>
+  <title>vLLM Model Chooser: Will This LLM Actually Fit on Your GPUs?</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
 <article>
 
-<h1>vLLM Model Chooser: Find Your Perfect LLM for Any GPU Setup</h1>
-<p class="byline">By ylnhari &middot; June 22, 2026 &middot; vLLM, LLM, GPU, open-source, AI-tools</p>
+<h1>vLLM Model Chooser: Will This LLM Actually Fit on Your GPUs?</h1>
+<p class="byline">By ylnhari &middot; June 22, 2026 (updated July 14, 2026) &middot; vLLM, LLM, GPU, open-source, AI-tools</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/dashboard-main.jpg" alt="vLLM Model Chooser dashboard showing the main interface: header, stats cards (108 models, 39 fit, 56 quant variants, 69 don't fit), GPU/format filter controls, and interactive model listing with feasibility indicators">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/dashboard-main.jpg" alt="vLLM Model Chooser dashboard: stats cards, GPU and KV-cache filter controls, and model cards each showing a stacked memory bar split into weights and KV cache against the selected GPU budget">
 
-<h2>The Problem: Too Many Models, Too Little Clarity</h2>
+<h2>The Problem: Parameter Count Tells You Nothing</h2>
 
-<p>If you've ever tried to run an LLM on your own GPU hardware, you've hit this wall: a model's parameter count tells you nothing about whether it'll actually fit on your GPU. A 70B model in BF16 needs ~140 GB of VRAM — but in FP8 it needs ~70 GB, and in NVFP4 it squeezes into ~35 GB. That's four wildly different answers for the same model, depending entirely on which quantization format your GPU supports.</p>
+<p>If you've ever tried to serve an LLM on your own GPUs, you've hit this wall: a model's parameter count tells you almost nothing about whether it will actually fit. A 70B model in BF16 wants ~140 GB of weights — but in FP8 it's ~70 GB, and in NVFP4 it squeezes into ~35 GB. That's three wildly different answers for the same model, and which of them you're allowed to use depends on whether your GPU has tensor cores for that format at all.</p>
 
-<p>The deeper problem? NVFP4 is native on Blackwell (B100/B200), completely absent on Ada Lovelace (L4). MXFP8 works on Blackwell via vLLM SW support but doesn't exist on Hopper. There's no single place to check "which models fit MY hardware" — until now.</p>
+<p>And weights are only half the story. The other half is the <strong>KV cache</strong>, which grows with context length and concurrency, and which vLLM greedily fills with whatever memory is left after the weights load. A model whose weights "fit" in 74 GB with 4 GB to spare doesn't fit in any useful sense — you have nowhere to put the conversation.</p>
 
 <h2>Introducing vLLM Model Chooser</h2>
 
-<p><strong>vLLM Model Chooser</strong> is a single-file interactive web tool that tells you exactly which vLLM-compatible models run on your GPU setup — with zero configuration, no installation, and instant results. It ships as a standalone <code>index.html</code> that you can open in any browser or serve locally.</p>
+<p><strong>vLLM Model Chooser</strong> is an interactive web tool that tells you which vLLM-compatible models actually run on your GPU setup — weights, KV cache, and format support together — with zero configuration and no installation.</p>
 
 <ul>
-  <li><strong>6 GPU types:</strong> L4, A100, H100, H200, B100, B200 — with 1/2/4/8x multi-GPU</li>
-  <li><strong>108 models</strong> with detailed specs: params, VRAM, context length, quantization variants, benchmarks</li>
-  <li><strong>VRAM + quantization dual check:</strong> filters by BOTH weight VRAM AND quantization format compatibility</li>
-  <li><strong>GPU info modal:</strong> full specs, Native HW vs vLLM SW support table, quantization compatibility matrix</li>
-  <li><strong>vLLM Recipe &amp; HuggingFace links</strong> per model</li>
+  <li><strong>6 GPU types:</strong> L4, A100, H100, H200, B100, B200 — at any count from 1 to 8</li>
+  <li><strong>108 models</strong> with params, active params (for MoE), weight-only VRAM, context length and quantization variants</li>
+  <li><strong>A real memory budget:</strong> physical VRAM × <code>--gpu-memory-utilization</code> − activation reserve = what's actually usable for weights + KV</li>
+  <li><strong>KV-cache estimate from each model's real attention geometry</strong> — read from its HuggingFace <code>config.json</code>, sliding windows included</li>
+  <li><strong>Quantization × GPU matrix:</strong> native tensor-core support vs. vLLM's software path, per architecture</li>
+  <li><strong>Provenance on every number</strong> — the tool tells you which figures are measured-from-source and which are estimates</li>
 </ul>
 
-<p>The tool is open-source under MIT license: <a href="https://github.com/ylnhari/vllm-model-chooser">github.com/ylnhari/vllm-model-chooser</a></p>
+<p>It's open-source under MIT: <a href="https://github.com/ylnhari/vllm-model-chooser">github.com/ylnhari/vllm-model-chooser</a></p>
 
-<blockquote>"There's no single place to check which models fit MY hardware — until now."</blockquote>
+<blockquote>"Weights tell you whether the model loads. The KV cache tells you whether you can serve anyone."</blockquote>
 
-<h2>Why Quantization Awareness Matters</h2>
+<h2>The Memory Budget, the Way vLLM Actually Accounts For It</h2>
 
-<p>The landscape of quantization formats has exploded in the last year. vLLM supports BF16, FP8, INT4/AWQ/GPTQ, NVFP4, MXFP4, and MXFP8 — but not every GPU supports every format:</p>
+<p>The heart of the tool is a memory budget that mirrors vLLM's own accounting rather than hand-waving at "VRAM needed". Open any model and you get the whole chain, itemized:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/memory-budget.jpg" alt="Model detail view for Llama-3.3-70B-Instruct on 2x H100: memory budget breakdown from 160 GB physical down to a 78 GB KV cache pool, plus per-GPU-count feasibility list">
+
+<p>Take Llama-3.3-70B on 2× H100 80GB, in FP8, at 32K context:</p>
 
 <ul>
-  <li><strong>BF16:</strong> Native on all GPUs from Ada to Blackwell</li>
-  <li><strong>FP8:</strong> Native on Hopper and Blackwell; software emulation on Ampere via vLLM</li>
-  <li><strong>INT4/AWQ/GPTQ:</strong> Software support on all architectures via vLLM</li>
-  <li><strong>NVFP4:</strong> Native on Blackwell only — completely absent on L4, A100, and H100</li>
-  <li><strong>MXFP4:</strong> Native on Blackwell, software on Hopper</li>
-  <li><strong>MXFP8:</strong> Software on Blackwell only</li>
+  <li><strong>160 GB</strong> physical across the two cards</li>
+  <li><strong>× 0.95</strong> memory utilization → 152 GB (vLLM's own default is 0.90–0.92; 0.95 is the optimistic end, and it's a control you can change)</li>
+  <li><strong>− 4 GB</strong> activation / CUDA-graph reserve → <strong>148 GB usable</strong></li>
+  <li><strong>− 70 GB</strong> FP8 weights → <strong>78 GB KV cache pool</strong></li>
+  <li>≈ <strong>7 concurrent requests</strong> if every one of them fills the full 32K context</li>
 </ul>
 
-<p>This means a model that fits on a B200 in NVFP4 might be 4x too large for the same model on an H100. The Chooser handles this automatically — pick your GPU, and it only shows quantization variants that actually work on that hardware.</p>
+<p>That last number is the one that changes decisions. "It fits" and "it fits, and you can serve seven simultaneous long-context requests" are different sentences, and only the second one is a deployment plan. (It's deliberately a floor: real traffic is mostly shorter than max context, and PagedAttention shares prefix blocks, so you'll usually do better.)</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/gpu-modal.jpg" alt="GPU &amp; Format Compatibility modal showing a detailed compatibility matrix: which quantization formats (BF16, FP8, INT4, NVFP4, MXFP4, MXFP8) are supported natively vs via software on each GPU architecture from L4 to B200">
+<h2>The KV Cache Is Computed, Not Guessed</h2>
 
-<h2>How It Works</h2>
+<p>Most VRAM calculators estimate the KV cache as some multiple of parameter count. That's wrong in both directions: it ignores grouped-query and multi-head-latent attention, which shrink the cache dramatically, and it over-counts MoE models, whose experts add parameters but no attention state.</p>
 
-<p>The interface is simple but powerful:</p>
+<p>So the Chooser doesn't guess. A generator script pulls each model's <code>config.json</code> from HuggingFace and computes bytes-per-token from the actual geometry — layers, KV heads, head dimension, and, crucially, <strong>sliding-window attention</strong>: layers that cap their cache at a fixed window instead of growing with context. That's why some models here show a startlingly small KV footprint. It isn't a bug; it's the architecture, and it's the same file vLLM itself reads at startup.</p>
 
-<ol>
-  <li><strong>Select your GPU</strong> — L4, A100, H100, H200, B100, or B200</li>
-  <li><strong>Choose GPU count</strong> — 1, 2, 4, or 8 GPUs</li>
-  <li><strong>Optional filters</strong> — Precision format, model type (Text, Vision, MoE, Embedding), minimum context length</li>
-  <li><strong>Sort</strong> — by parameters, VRAM, context length, MMLU score, or HumanEval score</li>
-  <li><strong>Search</strong> — type any model name to find it instantly</li>
-</ul>
+<p>You can also switch the cache to FP8 (<code>--kv-cache-dtype fp8</code>), which halves it, and watch every model's fit verdict shift.</p>
 
-<p>The tool instantly recalculates and shows you exactly which models fit, with per-GPU feasibility indicators (green checkmark for fits, red X for doesn't) for each count configuration.</p>
+<h2>Every Number Says How Confident It Is</h2>
 
-<p>For each model, you see:</p>
-<ul>
-  <li>Parameter count &amp; active parameters (for MoE models like DeepSeek-V4 with 1600B/49B)</li>
-  <li>VRAM requirements in GB</li>
-  <li>Context length</li>
-  <li>Available quantization variants with VRAM at each quantization level</li>
-  <li>MMLU &amp; HumanEval benchmark scores</li>
-  <li>Direct links to vLLM Recipe and HuggingFace</li>
-</ul>
+<p>A tool that hands you a number with no provenance is asking you to trust arithmetic you can't see. So each figure carries a marker, and the page ends with a glossary that explains what each one means <em>and what to do about it</em>:</p>
 
-<h2>Multi-GPU Support: From 1 to 8 GPUs</h2>
-
-<p>One of the most valuable features is the multi-GPU slider. The tool combines usable VRAM across GPUs (with a 95% usable factor to account for system overhead) and checks model fit at each count. This makes it easy to answer questions like:</p>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/glossary.jpg" alt="Glossary section explaining the confidence markers: estimated-not-measured, mirror-sourced KV geometry, hand-sourced geometry, coarse params-times-tokens proxy, the activation reserve assumption, and the software-path fit verdict">
 
 <ul>
-  <li><strong>"Can Llama-3.3-70B run on a single L4?"</strong> — No (needs 140 GB BF16, L4 has 23 GB usable).</li>
-  <li><strong>"What about 4x L4?"</strong> — Yes! 184 GB usable is enough for BF16.</li>
-  <li><strong>"What about 2x H100 in FP8?"</strong> — Yes, 152 GB usable comfortably fits 70 GB FP8.</li>
+  <li><strong>No marker</strong> — computed from the model's own published config.</li>
+  <li><strong>°</strong> — the model's repo is gated, so the attention geometry came from an ungated same-architecture mirror.</li>
+  <li><strong>†</strong> — no config reachable anywhere; geometry hand-sourced from the model card or paper.</li>
+  <li><strong>‡</strong> — no geometry at all, so the KV falls back to a coarse params×tokens proxy that ignores GQA/MLA and over-estimates MoE. The weakest number on the site, and it says so.</li>
+  <li><strong>*</strong> — the activation reserve is an <em>assumption</em>. vLLM measures it by profiling a real forward pass at startup; the tool can only guess, so it lets you set it.</li>
 </ul>
 
-<p>The tool even handles next-gen hardware: B100 and B200 with 192 GB each (182 GB usable per card) unlock 8-GPU setups with up to 1,456 GB of usable VRAM — enough for models like DeepSeek-V4 (960 GB in NVFP4) or Qwen3-Coder-480B.</p>
+<p>The honest headline: every VRAM and KV figure here is arithmetic, not a reading from a running server. Use it to shortlist hardware in seconds instead of hours — then confirm by actually starting vLLM.</p>
 
-<h2>108 Models, All in One Place</h2>
+<h2>Quantization: Native Silicon vs. vLLM's Software Path</h2>
 
-<p>The latest generation of open-weight models is covered comprehensively:</p>
+<p>vLLM supports BF16, FP8, INT8, INT4/AWQ/GPTQ, NVFP4, MXFP4 and MXFP8 — but "supported" hides an important distinction. Some formats run on native tensor cores; others are dequantized on the fly in software, which saves memory but gives you no speedup, and can be slower than a format the hardware understands.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-06-22-vllm-model-chooser/images/gpu-modal.jpg" alt="GPU and Format Compatibility modal: per-architecture snapshot of native vs software formats, a GPU specification table with the derived memory budget, and the full quantization compatibility matrix">
 
 <ul>
-  <li><strong>DeepSeek:</strong> V3/V3.1/V3.2, V4-Pro (1600B/49B), V4-Flash (284B/13B), R1 (671B/37B)</li>
-  <li><strong>Qwen:</strong> Qwen3-32B, Qwen3-235B-A22B, Qwen3-Coder-480B, Qwen3.5 series (0.8B to 397B)</li>
-  <li><strong>Meta:</strong> Llama-3.1-8B, Llama-3.3-70B, Llama-4-Scout-109B/17B</li>
-  <li><strong>Mistral:</strong> Small-4-119B, Large-3-675B, Medium-3.5-128B</li>
-  <li><strong>Google:</strong> Gemma-4 series (5B to 31B), diffusiongemma, translategemma</li>
-  <li><strong>NVIDIA:</strong> Nemotron-3 (Nano to Ultra 550B), Cosmos3 series</li>
-  <li><strong>Kimi/Moonshot:</strong> K2-Instruct, K2-Thinking, K2.5, K2.7-Code (1T/32B)</li>
-  <li><strong>MiniMax:</strong> M2/M2.1/M2.5/M2.7/M3 series (427B/26B with 1M context)</li>
-  <li><strong>And more:</strong> InternLM, Baidu ERNIE, StepFun, Xiaomi MiMo, InclusionAI Ling</li>
+  <li><strong>BF16</strong> — native everywhere, from Ada to Blackwell.</li>
+  <li><strong>FP8</strong> — native on Ada, Hopper and Blackwell; software (Marlin) on Ampere.</li>
+  <li><strong>INT8 (W8A8)</strong> — native on every listed GPU; they're all Ampere or newer, with int8 tensor cores.</li>
+  <li><strong>INT4 / AWQ / GPTQ (W4A16)</strong> — software on <em>all</em> GPUs: the weights are dequantized to FP16 for the actual math. Real memory saving, no int4 tensor-core speedup.</li>
+  <li><strong>NVFP4</strong> — Blackwell FP4 tensor cores only. Absent on L4, A100 and H100.</li>
+  <li><strong>MXFP4</strong> — native on Blackwell, software elsewhere (which is how gpt-oss-120b squeezes onto a single A100).</li>
+  <li><strong>MXFP8</strong> — native on Blackwell MX tensor cores only; unsupported on earlier hardware.</li>
 </ul>
 
-<p>Each model entry also includes a <strong>"Tested"</strong> badge for models validated in production, benchmark scores, and direct links to deployment recipes.</p>
+<p>The tool never offers you a variant your GPU can't run, and a fit that only works through the software path is marked <strong>✓*</strong> rather than a plain ✓ — because you should know what you're buying.</p>
 
-<h2>Built for Practical Deployment</h2>
+<h2>Multi-GPU: From One L4 to Eight B200s</h2>
 
-<p>Under the hood, <strong>vLLM Model Chooser</strong> is refreshingly simple: a single <code>index.html</code> that bundles all HTML, CSS, and JavaScript. No build step, no dependencies, no npm install. Just serve it with any HTTP server:</p>
+<p>Every model card shows fit at 1×, 2×, 4× and 8×, and the detail view walks all counts from 1 to 8, so questions like these get answered in a second:</p>
+
+<ul>
+  <li><strong>"Can Llama-3.3-70B run on a single L4?"</strong> — No. 20.8 GB usable per card against 140 GB of BF16 weights.</li>
+  <li><strong>"On one H100, then?"</strong> — Not really: FP8 weights are 70 GB against 74 GB usable, which leaves 4 GB of KV — a server that loads and then serves almost nobody. Two cards give you 78 GB of cache.</li>
+  <li><strong>"What unlocks the 1T-parameter models?"</strong> — Eight B200s: 180 GB usable each, 1.4 TB total, enough for Kimi K2.7-Code or DeepSeek-V4-Pro in a 4-bit format.</li>
+</ul>
+
+<h2>How It's Built</h2>
+
+<p>The page is static and dependency-free at runtime — <code>index.html</code> plus two plain scripts, no bundler, no framework, no build step. Serve it with anything:</p>
 
 <pre><code>python3 -m http.server 5000
-# Then open http://localhost:5000</code></pre>
+# then open http://localhost:5000</code></pre>
 
-<p>The model data is sourced from vLLM's official recipe catalog (<a href="https://recipes.vllm.ai/models.json">recipes.vllm.ai/models.json</a>) and supplemented with detailed quantization compatibility information from <a href="https://docs.vllm.ai/en/stable/features/quantization/">vLLM's quantization docs</a>.</p>
+<p>The data behind it is <em>generated</em>, not hand-written, which is the whole reason the numbers can be trusted. <code>scripts/sync-data.mjs</code> pulls the model inventory and per-model specs from vLLM's official recipe catalog (<a href="https://recipes.vllm.ai/models.json">recipes.vllm.ai/models.json</a>), cross-checks context length and attention geometry against each model's HuggingFace <code>config.json</code>, and derives weight-only VRAM from parameter count × bytes-per-parameter. A second script, <code>npm run factcheck</code>, audits the result back against the recipes, and a Node test suite covers the fit logic. Node is only needed to regenerate or test — never to view.</p>
+
+<p>The quantization × architecture matrix comes from <a href="https://docs.vllm.ai/en/latest/features/quantization/supported_hardware/">vLLM's own supported-hardware docs</a>, corroborated per-model against the hardware hints in each recipe. When a blog post disagrees with a recipe, the recipe wins.</p>
 
 <hr>
 
 <h2>Conclusion</h2>
 
-<p>If you're deploying LLMs with vLLM, the <strong>vLLM Model Chooser</strong> saves you hours of VRAM arithmetic and compatibility research. Pick your GPU, see what fits, and get deploying — all from a single HTML file.</p>
+<p>Sizing an LLM deployment is arithmetic that nobody enjoys doing twice: weights, format support, KV geometry, memory utilization, activation reserve, concurrency. The Chooser does it for 108 models across six GPUs and eight counts, shows its working, and is candid about which numbers are estimates.</p>
+
+<p>Pick your GPU, turn on the KV estimate at the context length you actually serve, and see what survives.</p>
 
 <p>Try it live: <a href="https://ylnhari.github.io/vllm-model-chooser/">ylnhari.github.io/vllm-model-chooser</a></p>
 

@@ -1,9 +1,15 @@
 {
-  "title": "vLLM Model Chooser: Find Your Perfect LLM for Any GPU Setup",
+  "title": "vLLM Model Chooser: Will This LLM Actually Fit on Your GPUs?",
   "date": "2026-06-22",
   "author": "ylnhari",
-  "description": "An interactive tool to find the optimal vLLM-compatible LLM for any GPU setup — L4 to B200, multi-GPU, quantization-aware model selection for 108+ models.",
-  "tags": ["vllm", "llm", "gpu", "open-source", "ai-tools"],
+  "description": "An interactive tool that answers \"will this LLM actually fit on my GPUs?\" - weights, KV cache from real attention geometry, and quantization support, for 108 models from L4 to B200.",
+  "tags": [
+    "vllm",
+    "llm",
+    "gpu",
+    "open-source",
+    "ai-tools"
+  ],
   "status": "published",
   "medium_url": null,
   "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80"

@@ -4,7 +4,13 @@
     "title": "Claude Fable 5 vs GPT-5.6: The Latest-vs-Latest Flagship Comparison",
     "date": "2026-07-13",
     "description": "Claude Fable 5 vs GPT-5.6 (Sol, Terra, Luna): the true latest-vs-latest flagship comparison. Fable 5 owns coding and trust; GPT-5.6 wins agents, browsing, long context, and price.",
-    "tags": ["llm", "claude", "gpt", "benchmarks", "frontier-ai"],
+    "tags": [
+      "llm",
+      "claude",
+      "gpt",
+      "benchmarks",
+      "frontier-ai"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?w=1200&q=80",
     "status": "draft",
     "medium_url": null
@@ -14,7 +20,13 @@
     "title": "The Price of Intelligence: Open-Weight vs Paid Frontier Models in 2026",
     "date": "2026-07-13",
     "description": "Open-weight LLMs now match the paid mid-tier at a fraction of the cost, but the frontier ceiling is still closed-only. A price-versus-intelligence map of DeepSeek, GLM, Kimi and Qwen against Opus, Fable, GPT-5.6 and Grok.",
-    "tags": ["llm", "open-source", "benchmarks", "cost-engineering", "deepseek"],
+    "tags": [
+      "llm",
+      "open-source",
+      "benchmarks",
+      "cost-engineering",
+      "deepseek"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80",
     "status": "draft",
     "medium_url": null
@@ -24,7 +36,13 @@
     "title": "GPT-5.6 vs GPT-5.5: The Upgrade That Isn't About Intelligence",
     "date": "2026-07-13",
     "description": "GPT-5.6's flagship scores a point below GPT-5.5 on raw intelligence. The real upgrade is structural: three tiers, a price ladder, better agentic behaviour at the same cost, and one nasty long-context trap.",
-    "tags": ["llm", "openai", "gpt", "benchmarks", "cost-engineering"],
+    "tags": [
+      "llm",
+      "openai",
+      "gpt",
+      "benchmarks",
+      "cost-engineering"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
     "status": "draft",
     "medium_url": null
@@ -34,7 +52,13 @@
     "title": "Claude Fable 5 vs GPT-5.5: The Honest Frontier Comparison",
     "date": "2026-07-13",
     "description": "Claude Fable 5 vs GPT-5.5 on every axis that matters: benchmarks, variants, intelligence levels, token cost, the 272K long-context cliff, and the refusal tax nobody benchmarks.",
-    "tags": ["llm", "benchmarks", "claude", "gpt", "cost-engineering"],
+    "tags": [
+      "llm",
+      "benchmarks",
+      "claude",
+      "gpt",
+      "cost-engineering"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80",
     "status": "draft",
     "medium_url": null
@@ -44,7 +68,13 @@
     "title": "Rebuilding the LLM Inference Stack From Scratch in NumPy",
     "date": "2026-07-03",
     "description": "A trainable GPT, KV-cache, RoPE, paged attention, speculative decoding, and continuous batching — rebuilt from scratch in pure NumPy, with every optimization proven correct.",
-    "tags": ["llm", "transformers", "inference", "numpy", "from-scratch"],
+    "tags": [
+      "llm",
+      "transformers",
+      "inference",
+      "numpy",
+      "from-scratch"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80",
     "status": "draft",
     "medium_url": null
@@ -54,7 +84,13 @@
     "title": "Your Personal AI Lab on Your Laptop, Remotely Accessible for Free",
     "date": "2026-06-23",
     "description": "Run AI assistants, coding agents, and personal projects on your laptop — and access them from your phone anywhere, for free, using Tailscale and open-source tools.",
-    "tags": ["tailscale", "self-hosting", "ai-agents", "open-source", "devtools"],
+    "tags": [
+      "tailscale",
+      "self-hosting",
+      "ai-agents",
+      "open-source",
+      "devtools"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
     "status": "published",
     "medium_url": null
@@ -64,17 +100,29 @@
     "title": "Automating Blog Posting on Medium Using AI Agents and OpenClaw",
     "date": "2026-06-23",
     "description": "How to automate blog posting on Medium using AI agents and OpenClaw — a complete setup guide with GitHub Pages and personal assistant workflows.",
-    "tags": ["automation", "blogging", "medium", "ai-agents", "openclaw"],
+    "tags": [
+      "automation",
+      "blogging",
+      "medium",
+      "ai-agents",
+      "openclaw"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80",
     "status": "published",
     "medium_url": null
   },
   {
     "slug": "2026-06-22-vllm-model-chooser",
-    "title": "vLLM Model Chooser: Find Your Perfect LLM for Any GPU Setup",
+    "title": "vLLM Model Chooser: Will This LLM Actually Fit on Your GPUs?",
     "date": "2026-06-22",
-    "description": "An interactive tool to find the optimal vLLM-compatible LLM for any GPU setup — L4 to B200, multi-GPU, quantization-aware model selection for 108+ models.",
-    "tags": ["vllm", "llm", "gpu", "open-source", "ai-tools"],
+    "description": "An interactive tool that answers \"will this LLM actually fit on my GPUs?\" - weights, KV cache from real attention geometry, and quantization support, for 108 models from L4 to B200.",
+    "tags": [
+      "vllm",
+      "llm",
+      "gpu",
+      "open-source",
+      "ai-tools"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80",
     "status": "published",
     "medium_url": null
@@ -84,7 +132,11 @@
     "title": "Example Post: Every Supported Element",
     "date": "2026-06-15",
     "description": "A fully annotated example post showing every supported HTML element — the reference for agents generating new posts.",
-    "tags": ["reference", "agents", "blogging"],
+    "tags": [
+      "reference",
+      "agents",
+      "blogging"
+    ],
     "cover_image": "https://images.unsplash.com/photo-1542435503-ec7b0f5f3a91?w=1200&q=80",
     "status": "draft",
     "medium_url": null
