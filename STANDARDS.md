@@ -197,6 +197,58 @@ To store images in the repo: place them in `posts/YYYY-MM-DD-slug/images/`.
 
 ---
 
+## Writing Craft (the house style — distilled from the shipped posts)
+
+### Structure
+- **Analytical/comparison posts open insight-first**: state the counter-intuitive
+  conclusion (or what's wrong with the conventional take) in the first two
+  paragraphs, then spend the body proving it. **Tutorial posts** may instead
+  build up step-by-step (numbered "Step 1…N") after a short personal cold-open.
+- **1–3 `<blockquote>` pull-quotes** per post: one aphoristic sentence that
+  compresses the thesis, used as mid-article punctuation — never decoration.
+- **Comparison posts end with a numbered decision framework** ("So which one?
+  Three cases: …") — a closing that tells the reader what to DO, not a summary.
+- **Series posts cross-link each other** in the body ("companion to …") — every
+  post on adjacent ground published within a week links its siblings.
+
+### Data & charts — ONE convention
+- Charts are **pre-rendered PNGs** in `posts/{SLUG}/images/`, referenced by
+  absolute raw.githubusercontent URL, with a **descriptive `alt` that states the
+  chart's takeaway** (it doubles as the caption Medium keeps).
+- **Commit the generator with the chart**: the script + data that produced each
+  PNG live in `posts/{SLUG}/charts/` (any tooling; matplotlib fine). A chart
+  whose numbers can't be regenerated is a claim that can't be checked.
+- Small numeric walkthroughs (a memory budget, a cost breakdown) may be an
+  indented list instead of a chart — show the arithmetic line by line.
+- **Interactive visualizations are standalone pages, never embedded**: build
+  `posts/{SLUG}/interactive.html` (self-contained Canvas/SVG+JS, its own
+  `<style>`) and LINK to it from the post body. Medium strips `<script>`,
+  `<style>`, and `<canvas>` — an embedded interactive collapses to nothing.
+  The post body must still carry a static PNG of the same view, so Medium
+  readers lose interactivity, not information.
+
+### Code blocks — label the purpose
+Every `<pre><code>` block gets a one-line bold lead-in immediately above it,
+one of: **Run this:** (commands the reader executes) · **Output:** (verified
+program output, pasted not paraphrased) · **Example (illustrative):** (API
+usage/sketch, not guaranteed runnable). Never make the reader infer which.
+
+### Fact discipline (the gate a draft must pass before Hari sees it)
+- **Every third-party number, date, price, or benchmark score carries an
+  inline link to its source, fetched during the writing session.** No source
+  found ⇒ the claim is cut or explicitly marked as estimate. Never write
+  "every number is sourced" as prose — make each number BE sourced.
+- Posts with third-party data end with a **"Sources & caveats"** section:
+  the source list, plus honest methodology notes (which aggregator, snapshot
+  date, where vendors disagree, what's vendor-only/unverified).
+- Where a claim comes from something WE built or ran, anchor it to the
+  reproducible artifact instead: the repo, the tool, or a pasted **Output:**
+  block (measured beats cited).
+- Numbers that are estimates get a confidence marker (°, †, ‡ with a one-line
+  glossary) — the vllm-model-chooser pattern.
+
+---
+
 ## YouTube / Video Embeds
 
 Medium doesn't support `<video>` or `<iframe>`. Workaround for YouTube:
@@ -234,6 +286,12 @@ Build time after a commit: typically 60–120 seconds. Check build status at:
 [ ] No inline CSS in HTML
 [ ] No relative image URLs
 [ ] All <img src="..."> use absolute HTTPS URLs
+[ ] Every third-party number has an inline source link (fetched this session)
+[ ] "Sources & caveats" section present if the post carries third-party data
+[ ] Charts: PNGs in images/ + generator committed in charts/
+[ ] Interactive (if any): standalone interactive.html, linked not embedded,
+    static PNG fallback in body
+[ ] Code blocks labeled (Run this: / Output: / Example:)
 [ ] Committed to main branch
 [ ] GitHub Actions build passed (check /actions)
 [ ] Medium import tested at medium.com/p/import

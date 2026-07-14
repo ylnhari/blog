@@ -37,14 +37,31 @@ If Hari gave a brief prompt (e.g. "write about vLLM quantization"), proceed with
 
 ### Step 2 — Generate the post content
 
-Write the full blog post. Quality standards:
-- Real, accurate information — no hallucinated facts
-- Code examples where relevant (use `<pre><code>`)
-- At least one image (use an Unsplash URL relevant to the topic)
-- 3–6 sections with H2 headings
-- Opening paragraph that hooks the reader
-- Closing paragraph that summarizes and calls to action
-- Blockquote for a relevant quote or key insight
+Write the full blog post per **STANDARDS.md § Writing Craft** (house style —
+read it first). Quality baseline:
+- Analytical post ⇒ insight-first opening; tutorial ⇒ numbered steps
+- 1–3 blockquote pull-quotes compressing the thesis
+- Charts as pre-rendered PNGs in `posts/{SLUG}/images/` with the generator
+  script + data committed in `posts/{SLUG}/charts/`; interactive versions are
+  a standalone `interactive.html` LINKED (never embedded) with a static PNG
+  in the body
+- Every `<pre><code>` block labeled: **Run this:** / **Output:** / **Example
+  (illustrative):**
+- 3–6 sections with H2 headings; comparison posts end with a numbered
+  decision framework; series posts cross-link siblings
+
+### Step 2b — Fact-check pass (MANDATORY before Step 3)
+
+Go through the draft claim by claim:
+1. Every third-party number/date/price/benchmark has an inline source link
+   you fetched THIS session. Unfetchable ⇒ cut the claim or mark it as an
+   estimate with a confidence marker.
+2. Third-party data ⇒ closing **"Sources & caveats"** section (source list +
+   methodology notes: snapshot date, which aggregator, vendor-only figures).
+3. Claims about things WE built/ran ⇒ anchored to the repo/tool or a pasted
+   **Output:** block instead of a link.
+4. Self-audit: scan the draft for every numeral; each one must be traceable
+   via rules 1–3. A draft that fails this pass does not reach Hari.
 
 ---
 
