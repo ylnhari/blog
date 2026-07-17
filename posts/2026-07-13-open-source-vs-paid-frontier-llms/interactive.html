@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Price of Intelligence — Interactive Frontier</title>
 <style>
   :root {
@@ -90,7 +92,7 @@
     font-weight: 800; margin: 0 0 18px; text-wrap: balance;
   }
   h1 .em { font-style: italic; font-weight: 700; }
-  .lede { font-size: clamp(16px, 2.1vw, 18.5px); color: var(--ink-2); max-width: 60ch; margin: 0 0 34px; }
+  .lede { font-size: clamp(16px, 2.1vw, 18.5px); color: var(--ink-2); max-width: 62ch; margin: 0 0 34px; }
 
   .panel {
     position: relative;
@@ -157,7 +159,7 @@
 <div class="wrap">
   <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; July 2026</p>
   <h1>The <span class="em">price</span> of intelligence</h1>
-  <p class="lede">Every frontier model, plotted by what it charges against how capable it is. Open weights own the cheap end of the curve; the very top stays paid. Hover any point to read its exact coordinates — toggle the axis to see what a dollar actually buys.</p>
+  <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the weighted cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights own the cheap end of the curve; the very top used to stay paid — until Kimi K3 became the first open model to climb into it. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
 
   <div class="panel">
     <div class="controls">
@@ -179,17 +181,17 @@
     </div>
 
     <div class="chart-holder">
-      <canvas id="c" role="img" aria-label="Interactive scatter plot of frontier language models by price and capability"></canvas>
+      <canvas id="c" role="img" aria-label="Interactive scatter plot of frontier language models by cost per intelligence task and capability"></canvas>
       <div class="tip" id="tip"></div>
     </div>
 
     <div class="foot">
-      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: output price per million tokens, log scale. Data July 2026.</p>
-      <p><a href="https://medium.com/p/18499eb684a8">Read the full analysis on Medium</a></p>
+      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: weighted cost (USD) per Intelligence Index task, log scale &mdash; lower is better. Data: Artificial Analysis, July 2026.</p>
+      <p><a href="https://x.com/ArtificialAnlys/status/2077975838486843870">Source chart on X</a></p>
     </div>
   </div>
 
-  <p class="takeaway">The dashed line is the <b>efficient frontier</b> — the most intelligence available at each price. Open-weight models sit right on it: nobody, open or closed, gives you their capability for less. <b>GLM-5.2 even matches GPT-5.6 Luna at a lower price.</b> Switch to the value axis and the point sharpens — every open model returns several times more capability per dollar than any paid one. What the premium still buys is the ceiling: index 56 and up is closed-only.</p>
+  <p class="takeaway">The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Open-weight models sit right on its cheap half: nobody gives you capability for less. What changed in July 2026 is the top-right. <b>Kimi K3 is the first open-weight model to land on the frontier at the high end</b> &mdash; index 57.1, third in the world behind only Claude Fable 5 and GPT-5.6 Sol. But read its x-coordinate: at $0.94 per task it costs roughly the same as GPT-5.6 Sol and half of Claude Opus 4.8. Open weights reached the frontier &mdash; and started charging frontier prices. Switch to the value axis and the older rule still holds below the ceiling: the cheapest open models return several times more index per task-dollar than anything paid.</p>
 </div>
 
 <script>
@@ -244,20 +246,33 @@ function stepBg() {
 let bgRAF = 0;
 function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
 
-/* ---------- data ---------- */
+/* ---------- data ----------
+   idx  = Artificial Analysis Intelligence Index (BenchLM / Artificial Analysis, July 2026)
+   task = weighted cost (USD) per AA Intelligence Index task, from the Artificial
+          Analysis "Cost per Intelligence Index Task" chart (17 Jul 2026).
+   lab  = label placement override ('l' left, 't' above) + optional vertical nudge. */
 const MODELS = [
-  { name: "Claude Fable 5",  kind: "paid", idx: 60.0, out: 50.0 },
-  { name: "GPT-5.6 Sol",     kind: "paid", idx: 58.9, out: 30.0 },
-  { name: "Claude Opus 4.8", kind: "paid", idx: 55.7, out: 25.0 },
-  { name: "GPT-5.6 Terra",   kind: "paid", idx: 55.0, out: 15.0 },
-  { name: "Grok 4.5",        kind: "paid", idx: 53.8, out: 6.0 },
-  { name: "GPT-5.6 Luna",    kind: "paid", idx: 51.2, out: 6.0 },
-  { name: "GLM-5.2",         kind: "open", idx: 51.1, out: 4.4 },
-  { name: "DeepSeek V4 Pro", kind: "open", idx: 44.3, out: 3.48 },
-  { name: "Kimi K2.6",       kind: "open", idx: 44.2, out: 4.0 },
-  { name: "Qwen3.5",         kind: "open", idx: 33.8, out: 3.6 },
+  { name: "Claude Fable 5",    kind: "paid", idx: 59.9, task: 2.75, lab: "l"  },
+  { name: "GPT-5.6 Sol",       kind: "paid", idx: 58.9, task: 1.04, ldy: -2   },
+  { name: "Kimi K3",           kind: "open", idx: 57.1, task: 0.94, lab: "t"  },
+  { name: "Claude Opus 4.8",   kind: "paid", idx: 55.7, task: 1.80, ldy: -4   },
+  { name: "GPT-5.6 Terra",     kind: "paid", idx: 55.0, task: 0.55            },
+  { name: "GPT-5.5",           kind: "paid", idx: 54.8, task: 0.99, ldy: 15   },
+  { name: "Grok 4.5",          kind: "paid", idx: 53.8, task: 0.31            },
+  { name: "Claude Sonnet 5",   kind: "paid", idx: 53.4, task: 1.53, ldy: 14   },
+  { name: "GPT-5.6 Luna",      kind: "paid", idx: 51.2, task: 0.21, lab: "l"  },
+  { name: "GLM-5.2",           kind: "open", idx: 51.1, task: 0.47, ldy: -14  },
+  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 50.2, task: 0.59, ldy: 15   },
+  { name: "Qwen3.7 Max",       kind: "paid", idx: 46.0, task: 0.98            },
+  { name: "MiniMax-M3",        kind: "open", idx: 44.4, task: 0.12, ldy: -15  },
+  { name: "DeepSeek V4 Pro",   kind: "open", idx: 44.3, task: 0.04, ldy: 15   },
+  { name: "Kimi K2.6",         kind: "open", idx: 44.2, task: 0.33, ldy: 15   },
+  { name: "Gemini 3 Pro",      kind: "paid", idx: 39.5, task: 0.29            },
+  { name: "Nemotron 3 Ultra",  kind: "open", idx: 37.8, task: 0.23            },
+  { name: "Mistral Medium 3.5",kind: "paid", idx: 29.9, task: 1.20            },
+  { name: "gpt-oss-120b",      kind: "open", idx: 23.8, task: 0.06            },
 ];
-MODELS.forEach(m => m.per = m.idx / m.out);
+MODELS.forEach(m => m.per = m.idx / m.task);
 
 /* ---------- chart ---------- */
 const cvs = document.getElementById("c"), ctx = cvs.getContext("2d");
@@ -265,25 +280,27 @@ const tip = document.getElementById("tip"), holder = cvs.parentElement;
 let W = 0, H = 0, dpr = 1, filter = "all", mode = "index";
 let placed = [], hover = -1, intro = 0, introRAF = 0;
 const pad = { l: 66, r: 30, t: 30, b: 56 };
-const X_MIN = 3, X_MAX = 95, lx = v => Math.log10(v);
+const X_MIN = 0.03, X_MAX = 3.4, lx = v => Math.log10(v);
+const XT = [0.05, 0.1, 0.2, 0.5, 1, 2, 3];
 
 function shown(m) { return filter === "all" || m.kind === filter; }
 function yDomain() {
-  if (mode === "index") return [31, 62.5];
-  return [0, Math.max(...MODELS.map(m => m.per)) * 1.12];
+  if (mode === "index") return [20, 62.5];
+  return [0, Math.max(...MODELS.filter(shown).map(m => m.per)) * 1.12];
 }
 function yVal(m) { return mode === "index" ? m.idx : m.per; }
 function sx(p) { return pad.l + (lx(p) - lx(X_MIN)) / (lx(X_MAX) - lx(X_MIN)) * (W - pad.l - pad.r); }
 function sy(v) { const [a, b] = yDomain(); return H - pad.b - (v - a) / (b - a) * (H - pad.t - pad.b); }
+function fmtUsd(v) { return "$" + (v < 1 ? v.toFixed(2) : v.toString()); }
 
 function resize() {
-  const w = holder.clientWidth, h = Math.max(430, Math.min(580, w * 0.6));
+  const w = holder.clientWidth, h = Math.max(430, Math.min(600, w * 0.64));
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   cvs.width = w * dpr; cvs.height = h * dpr; cvs.style.height = h + "px";
   W = w; H = h; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
 }
 function frontierPoints() {
-  const vis = MODELS.filter(shown).slice().sort((a, b) => a.out - b.out);
+  const vis = MODELS.filter(shown).slice().sort((a, b) => a.task - b.task);
   const fr = []; let best = -Infinity;
   for (const m of vis) if (yVal(m) > best) { best = yVal(m); fr.push(m); }
   return fr;
@@ -302,22 +319,23 @@ function draw() {
   const cPg = css("--paid-glow"), cOg = css("--open-glow");
   const [ya, yb] = yDomain();
 
-  // ceiling band (index mode)
+  // "cheap & capable" value zone (index mode): low cost, high intelligence
   if (mode === "index") {
-    const g = ctx.createLinearGradient(0, sy(62.5), 0, sy(56.3));
+    const zx = sx(0.6), zy = sy(62.5), zyb = sy(50);
+    const g = ctx.createLinearGradient(pad.l, 0, zx, 0);
     g.addColorStop(0, cOg); g.addColorStop(1, "transparent");
-    ctx.globalAlpha = .16; ctx.fillStyle = g;
-    ctx.fillRect(pad.l, sy(62.5), W - pad.l - pad.r, sy(56.3) - sy(62.5));
+    ctx.globalAlpha = .13; ctx.fillStyle = g;
+    ctx.fillRect(pad.l, zy, zx - pad.l, zyb - zy);
     ctx.globalAlpha = 1;
     ctx.fillStyle = cOpen; ctx.font = "700 11px ui-sans-serif, system-ui, sans-serif";
-    ctx.textAlign = "left"; ctx.textBaseline = "middle";
-    ctx.fillText("THE CEILING — paid only", pad.l + 10, sy(60.9));
+    ctx.textAlign = "left"; ctx.textBaseline = "top";
+    ctx.fillText("CHEAP & CAPABLE", pad.l + 10, zy + 8);
   }
 
   // grid + y labels
   ctx.textAlign = "right"; ctx.textBaseline = "middle";
   ctx.font = "12px ui-sans-serif, system-ui, sans-serif";
-  const yt = mode === "index" ? [35, 40, 45, 50, 55, 60] : niceTicks(ya, yb);
+  const yt = mode === "index" ? [20, 30, 40, 50, 60] : niceTicks(ya, yb);
   for (const v of yt) {
     const y = sy(v);
     ctx.strokeStyle = cGrid; ctx.lineWidth = 1;
@@ -325,32 +343,26 @@ function draw() {
     ctx.fillStyle = cInk3; ctx.fillText(mode === "index" ? v : v.toFixed(0), pad.l - 11, y);
   }
   ctx.textAlign = "center"; ctx.textBaseline = "top";
-  for (const v of [3, 5, 10, 20, 30, 50]) { ctx.fillStyle = cInk3; ctx.fillText("$" + v, sx(v), H - pad.b + 11); }
+  for (const v of XT) { ctx.fillStyle = cInk3; ctx.fillText(fmtUsd(v), sx(v), H - pad.b + 11); }
 
   // axis titles
   ctx.fillStyle = cInk3; ctx.font = "600 12px ui-sans-serif, system-ui, sans-serif";
   ctx.textAlign = "center"; ctx.textBaseline = "top";
-  ctx.fillText("Output price — $ / million tokens  (log)", (pad.l + W - pad.r) / 2, H - 20);
+  ctx.fillText("Cost per Intelligence Index task — $  (log, lower is better)", (pad.l + W - pad.r) / 2, H - 20);
   ctx.save(); ctx.translate(17, (pad.t + H - pad.b) / 2); ctx.rotate(-Math.PI / 2);
-  ctx.textBaseline = "middle"; ctx.fillText(mode === "index" ? "Intelligence Index" : "Index points per $", 0, 0);
+  ctx.textBaseline = "middle"; ctx.fillText(mode === "index" ? "Intelligence Index" : "Index points per task-$", 0, 0);
   ctx.restore();
 
   // frontier (draws in with intro)
   const fr = frontierPoints();
-  if (fr.length) {
+  if (fr.length > 1) {
     ctx.save();
-    ctx.strokeStyle = cFront; ctx.lineWidth = 1.8; ctx.setLineDash([6, 5]);
-    ctx.globalAlpha = Math.min(1, intro * 1.1);
     const endX = pad.l + (W - pad.l - pad.r) * intro;
-    ctx.beginPath(); ctx.moveTo(sx(fr[0].out), sy(yVal(fr[0])));
-    for (let i = 1; i < fr.length; i++) { ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i - 1]))); ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i]))); }
-    ctx.lineTo(W - pad.r, sy(yVal(fr[fr.length - 1])));
-    ctx.restore();
-    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, endX, H); ctx.clip();
+    ctx.beginPath(); ctx.rect(0, 0, endX, H); ctx.clip();
     ctx.strokeStyle = cFront; ctx.lineWidth = 1.8; ctx.setLineDash([6, 5]);
     ctx.globalAlpha = Math.min(1, intro * 1.1);
-    ctx.beginPath(); ctx.moveTo(sx(fr[0].out), sy(yVal(fr[0])));
-    for (let i = 1; i < fr.length; i++) { ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i - 1]))); ctx.lineTo(sx(fr[i].out), sy(yVal(fr[i]))); }
+    ctx.beginPath(); ctx.moveTo(sx(fr[0].task), sy(yVal(fr[0])));
+    for (let i = 1; i < fr.length; i++) { ctx.lineTo(sx(fr[i].task), sy(yVal(fr[i - 1]))); ctx.lineTo(sx(fr[i].task), sy(yVal(fr[i]))); }
     ctx.lineTo(W - pad.r, sy(yVal(fr[fr.length - 1]))); ctx.stroke(); ctx.restore();
     if (intro > .85) {
       ctx.globalAlpha = (intro - .85) / .15;
@@ -363,7 +375,7 @@ function draw() {
 
   // hover droplines
   placed = [];
-  MODELS.forEach((m, i) => placed.push({ i, x: sx(m.out), y: sy(yVal(m)), vis: shown(m) }));
+  MODELS.forEach((m, i) => placed.push({ i, x: sx(m.task), y: sy(yVal(m)), vis: shown(m) }));
   if (hover >= 0 && shown(MODELS[hover])) {
     const p = placed.find(q => q.i === hover), m = MODELS[hover];
     const col = m.kind === "paid" ? cPaid : cOpen;
@@ -371,15 +383,14 @@ function draw() {
     ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, H - pad.b); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pad.l, p.y); ctx.stroke();
     ctx.restore();
-    // axis readouts
     ctx.setLineDash([]); ctx.font = "700 11.5px ui-sans-serif, system-ui, sans-serif";
     ctx.fillStyle = col; ctx.textAlign = "center"; ctx.textBaseline = "top";
-    pill(ctx, "$" + m.out, p.x, H - pad.b + 10, col);
+    pill(ctx, fmtUsd(m.task), p.x, H - pad.b + 10, col);
     ctx.textAlign = "right"; ctx.textBaseline = "middle";
-    pill(ctx, (mode === "index" ? m.idx.toFixed(1) : m.per.toFixed(1)), pad.l - 8, p.y, col, true);
+    pill(ctx, (mode === "index" ? m.idx.toFixed(1) : m.per.toFixed(0)), pad.l - 8, p.y, col, true);
   }
 
-  // points (rise + fade in on intro, staggered by price)
+  // points (rise + fade in on intro, staggered by cost)
   MODELS.forEach((m, i) => {
     if (!shown(m)) return;
     const p = placed.find(q => q.i === i);
@@ -389,9 +400,8 @@ function draw() {
     const x = p.x, y = p.y + rise;
     const col = m.kind === "paid" ? cPaid : cOpen;
     const glow = m.kind === "paid" ? cPg : cOg;
-    const r = (hover === i ? 10.5 : 7.6);
+    const r = (hover === i ? 10.5 : 7.2);
     ctx.globalAlpha = t;
-    // glow
     ctx.save(); ctx.shadowColor = glow; ctx.shadowBlur = hover === i ? 26 : 15;
     ctx.beginPath(); ctx.arc(x, y, r + 2.6, 0, 7); ctx.fillStyle = css("--bg-0"); ctx.globalAlpha = t * .9; ctx.fill();
     ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = col; ctx.globalAlpha = t; ctx.fill();
@@ -401,10 +411,18 @@ function draw() {
     ctx.globalAlpha = t;
     ctx.fillStyle = cInk; ctx.font = (hover === i ? "700 " : "500 ") + "12px ui-sans-serif, system-ui, sans-serif";
     ctx.textBaseline = "middle";
-    const ly = y + (m.name === "Kimi K2.6" ? 17 : 0);   // drop Kimi's label clear of DeepSeek
+    const ly = y + (m.ldy || 0);
+    const tw = ctx.measureText(m.name).width;
     const right = x + r + 8;
-    if (right + ctx.measureText(m.name).width < W - pad.r) { ctx.textAlign = "left"; ctx.fillText(m.name, right, ly); }
-    else { ctx.textAlign = "right"; ctx.fillText(m.name, x - r - 8, ly); }
+    const forceLeft = m.lab === "l";
+    const forceTop = m.lab === "t";
+    if (forceTop) {
+      ctx.textAlign = "center"; ctx.fillText(m.name, x, y - r - 11);
+    } else if (!forceLeft && right + tw < W - pad.r) {
+      ctx.textAlign = "left"; ctx.fillText(m.name, right, ly);
+    } else {
+      ctx.textAlign = "right"; ctx.fillText(m.name, x - r - 8, ly);
+    }
     ctx.globalAlpha = 1;
   });
 }
@@ -422,7 +440,7 @@ function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w
 
 function introEased(i) {
   if (REDUCED) return 1;
-  const start = i * 0.06, span = 0.5;
+  const start = i * 0.04, span = 0.5;
   return Math.max(0, Math.min(1, (intro - start) / span));
 }
 function runIntro() {
@@ -444,7 +462,7 @@ function onMove(e) {
   if (best !== hover) { hover = best; draw(); }
   if (best >= 0) {
     const m = MODELS[best], p = placed.find(q => q.i === best);
-    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + m.idx.toFixed(1) + " &middot; $" + m.out + "/M out</span><br><span class='row'>" + m.per.toFixed(1) + " pts per $</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
+    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + m.idx.toFixed(1) + " &middot; " + fmtUsd(m.task) + "/task</span><br><span class='row'>" + m.per.toFixed(0) + " index pts per task-$</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
     tip.style.left = p.x + "px"; tip.style.top = p.y + "px"; tip.classList.add("on");
     cvs.style.cursor = "pointer";
   } else { tip.classList.remove("on"); cvs.style.cursor = "default"; }

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="Kimi K3 is the third most intelligent model in the world and the first open-weight model to reach the frontier's top — but at $15/M output and $0.94 per task, it charges frontier prices. What open weights buy in 2026.">
+  <meta property="og:title" content="Kimi K3: The First Open Model on the Frontier — Priced Like a Closed One">
+  <meta property="og:description" content="The third most intelligent model in the world is open-weight — and it costs the same per task as GPT-5.6 Sol. Open weights reached the frontier and started charging for it.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80">
+  <title>Kimi K3: The First Open Model on the Frontier — Priced Like a Closed One</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>Kimi K3: The First Open Model on the Frontier — Priced Like a Closed One</h1>
+<p class="byline">By ylnhari &middot; July 18, 2026 &middot; llm, kimi, open-source, benchmarks, cost-engineering</p>
+
+<img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80" alt="Abstract network of glowing nodes, representing an open-weight model reaching the capability frontier">
+
+<p>For two years the rule was simple: open weights meant you traded a little capability for a lot of savings. The frontier was closed; the bargains were open. <strong>Kimi K3 just broke the rule from the top.</strong> Moonshot's new model is, as of this week, the <strong>third most intelligent model in the world</strong> — and its weights are scheduled to be downloadable on July 27. That has never been true before.</p>
+
+<p>But read the price tag before you celebrate. K3 costs <strong>$15 per million output tokens</strong> — the same as Claude Sonnet, and nearly four times its own predecessor. The old story ("open is cheaper") and the new story ("open reached the frontier") are both true, and they point in opposite directions. This post is about where they meet.</p>
+
+<h2>Where it lands: third in the world</h2>
+
+<p>On the Artificial Analysis Intelligence Index — the aggregate that rolls reasoning, coding, math, and agentic evals into one number — <strong>Kimi K3 scores 57.1</strong>, behind only <a href="https://benchlm.ai/benchmarks/artificialAnalysis">Claude Fable 5 (59.9) and GPT-5.6 Sol (58.9)</a>. It sits <em>above</em> Claude Opus 4.8 (55.7), the most intelligent model most people can actually buy today. That is a genuinely frontier placement, not a "good for an open model" placement.</p>
+
+<p>The jump from its predecessor is the real headline. Artificial Analysis clocked K3 at <a href="https://x.com/ArtificialAnlys/status/2077975838486843870">a 13-point gain over Kimi K2.6</a> on the same index — one of the largest single-generation leaps any lab has posted this year. Moonshot did it by going big: K3 is a <strong>2.8-trillion-parameter</strong> model, which <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">makes it the first open model in the 3-trillion-parameter class</a>, past DeepSeek's 1.6T V4 Pro.</p>
+
+<blockquote>Open weights used to be the budget option. Kimi K3 is the first that reached the frontier — and it priced itself like it belongs there.</blockquote>
+
+<h2>The catch: a 3× price increase</h2>
+
+<p>The same 13-point leap came with <a href="https://x.com/ArtificialAnlys/status/2077975838486843870">roughly a 3× cost increase</a>. K3's API is <strong>$3 per million input tokens and $15 per million output</strong> (a cached input hit drops to $0.30), against <a href="https://www.kimi.com/blog/kimi-k3">K2.6's $0.95 / $4</a>. As Simon Willison put it, that <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">matches Anthropic's Claude Sonnet pricing</a> — an open model that costs what a closed mid-flagship costs.</p>
+
+<p>Per-token price only tells half the story, because a smart model that burns reasoning tokens can cost more to finish a job than a cheaper model that thinks less. Artificial Analysis measures the honest version — the weighted cost of completing one Intelligence Index task, reasoning included. On that metric <strong>K3 comes in at $0.94 per task</strong>: about <a href="https://x.com/ArtificialAnlys/status/2077975838486843870">half the cost of Claude Opus 4.8 ($1.80), roughly the same as GPT-5.6 Sol ($1.04), and about 3× Kimi K2.6 ($0.33) and Grok 4.5 ($0.31)</a>.</p>
+
+<p>Sit with the middle comparison, because it's the whole point: <strong>on cost-per-task, K3 is a wash against GPT-5.6 Sol</strong> — which scores higher. If you're renting the model through an API, K3's openness buys you nothing on price. You're paying frontier rates for the number-three model.</p>
+
+<h2>The map: an open point on the efficient frontier</h2>
+
+<p>Plot every current model by intelligence against cost-per-task and the shift becomes visible. K3 is the lone open-weight point that reaches the expensive, high-capability corner — it lands directly <em>on</em> the efficient frontier, wedged between GPT-5.6 Terra and Sol, the only orange dot in a neighborhood of blue.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-kimi-k3-open-frontier/images/cost-per-task-frontier.jpg" alt="Scatter of 19 frontier models by intelligence index versus cost per Intelligence Index task. Kimi K3 (open weight) sits on the efficient frontier at index 57.1 and $0.94 per task, between GPT-5.6 Terra and GPT-5.6 Sol. Cheap open models like DeepSeek V4 Pro, GLM-5.2 and Kimi K2.6 cluster at the low-cost left; the paid flagships Fable 5, Sol and Opus 4.8 hold the top right.">
+
+<p>The picture carries both stories at once. Down the cheap left half, the old rule still holds — open models (DeepSeek V4 Pro, GLM-5.2, Kimi K2.6, MiniMax-M3) own the efficient frontier and return several times more index per dollar than anything paid. Up in the top-right, the ceiling is no longer closed-only: K3 broke in. But it broke in at the ceiling's <em>price</em>, not below it.</p>
+
+<p>The chart above is a static snapshot. The live version is interactive — hover any model for its exact coordinates, filter to open-only or paid-only, and flip the vertical axis to "value per dollar" to watch the cheap open models tower over everything: <a href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html">The Price of Intelligence — interactive frontier</a>. It's the companion to <a href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/">the full open-vs-paid analysis</a>, now updated with K3 and the rest of the July 2026 field.</p>
+
+<h2>What the openness actually buys</h2>
+
+<p>If K3 is a price wash against Sol on a hosted API, why does it matter that the weights are open? Because on July 27 the economics change venue. A downloadable 3T-class frontier model is something you can run on your own hardware, fine-tune on your own data, and serve without a per-token meter or a vendor's rate limit. None of the models above it on the index offer that. That's not an API story — it's a self-hosting story, and it's the first time it's been available this close to the top.</p>
+
+<p>A couple of practical notes from the early looks. Moonshot reports K3 uses <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">about 21% fewer output tokens than K2.6</a> for the same work and leads the Frontend Code arena — but the same hands-on write-up found it leans <em>hard</em> on reasoning tokens: a single simple SVG prompt consumed 13,241 of 16,658 output tokens and cost about 25 cents. At $15/M output, a chatty reasoner adds up fast. The published wins are also, for now, largely Moonshot's own numbers; independent aggregate scoring (Artificial Analysis) lines up with the frontier placement, but the finer-grained coding and agentic claims deserve the usual "vendor-reported until reproduced" asterisk.</p>
+
+<h2>I tried to test it myself — and couldn't</h2>
+
+<p>The honest disclosure: I set out to run K3 through a small first-hand battery — the same coding, parsing, and reasoning prompts I'd hand any new model — against a price-comparable Claude tier, in the chat UIs rather than the API. I couldn't. Every submission to K3 on kimi.com came back with <em>"Task paused due to system peak — Agent credits have been refunded,"</em> and never returned an answer across a full evening of retries. Launch-week capacity, most likely. So this piece stands on published benchmarks and the cost-per-task map I rebuilt from Artificial Analysis's numbers — not on my own runs. When the model is reachable, the hands-on comparison is the natural follow-up, and I'll post it.</p>
+
+<h2>So should you use it?</h2>
+
+<p>Match the model to the job, and K3's odd shape — frontier intelligence, frontier price, open weights — sorts cleanly into cases.</p>
+
+<ol>
+<li><strong>You want to self-host frontier-class intelligence</strong> — Kimi K3, after the July 27 weight drop. It's the only open model at the top of the index, full stop. Owning the weights is the entire value proposition; if that doesn't matter to you, neither does K3.</li>
+<li><strong>You're calling a hosted API and paying per token</strong> — GPT-5.6 Sol or Claude Opus 4.8. They match or beat K3 on both intelligence and cost-per-task, and K3's openness gives you nothing through someone else's endpoint.</li>
+<li><strong>You need cheap, high-volume open-weight work</strong> — Kimi K2.6, DeepSeek V4 Pro, or GLM-5.2. They sit at a third or less of K3's cost-per-task and still hold the value frontier. K3 is a capability upgrade, not a savings one.</li>
+<li><strong>You're at the correctness-critical ceiling</strong> — Claude Fable 5 or GPT-5.6 Sol. K3 is number three, not number one; when the last two index points matter, the closed flagships still own them.</li>
+</ol>
+
+<p>The frontier didn't get a new king this week. It got its first open-weight resident — and a reminder that "open" in 2026 is about control, not price. The bargains are still downstairs.</p>
+
+<h2>Sources &amp; caveats</h2>
+
+<p>Every figure above links to its source, fetched on July 17–18, 2026. Two caveats, stated plainly. First, index scores and cost-per-task figures are Artificial Analysis's aggregates (via the BenchLM mirror and Artificial Analysis's own chart) as of mid-July 2026 — treat margins as directional and numbers as accurate-as-of-snapshot. Second, several capability claims (frontend-code leadership, token efficiency) are Moonshot-reported and not yet independently reproduced; I've marked those rather than presenting them as settled. The cost-per-task map is my own build from the sourced numbers — the data and the chart code live in <a href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html">the interactive page</a>, so every point can be checked.</p>
+
+<ul>
+<li><a href="https://x.com/ArtificialAnlys/status/2077975838486843870">Artificial Analysis on X</a> — the +13-point index gain, the ~3× cost increase, and the cost-per-task figures ($0.94 K3, $1.80 Opus 4.8, $1.04 Sol, $0.33 K2.6, $0.31 Grok 4.5)</li>
+<li><a href="https://benchlm.ai/benchmarks/artificialAnalysis">BenchLM — Artificial Analysis Intelligence Index leaderboard (July 2026)</a> — index scores (K3 57.1, Fable 5 59.9, Sol 58.9, Opus 4.8 55.7, and the rest of the field)</li>
+<li><a href="https://www.kimi.com/blog/kimi-k3">Moonshot — Kimi K3 launch</a> — API pricing ($3 / $15 per million, $0.30 cached input), 1M-token context, July 27 open-weight date</li>
+<li><a href="https://simonwillison.net/2026/Jul/16/kimi-k3">Simon Willison — Kimi K3 notes</a> — 2.8T parameters, first open 3T-class model, Sonnet-parity pricing, token-efficiency and hands-on SVG observations</li>
+<li><a href="https://artificialanalysis.ai/models/kimi-k3">Artificial Analysis — Kimi K3 model page</a> — index and price analysis</li>
+</ul>
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>
