@@ -28,7 +28,9 @@ Before writing, confirm:
 - **Topic / Title**: What is the post about? (required)
 - **Audience**: Technical? General? Beginner?
 - **Tone**: Casual? Formal? Tutorial-style?
-- **Approximate length**: Short (500w), Medium (1000w), Long (2000w+)?
+- **Length**: do NOT ask for or assume a word count. Length is set by the topic —
+  write what the subject needs and stop (STANDARDS.md § "Length is set by the
+  topic, never by a target"). Only honour a length if Hari volunteers one.
 - **Key points to cover**: Anything Hari specifically wants included?
 
 If Hari gave a brief prompt (e.g. "write about vLLM quantization"), proceed with sensible defaults and note your assumptions.

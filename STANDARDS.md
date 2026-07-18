@@ -199,6 +199,20 @@ To store images in the repo: place them in `posts/YYYY-MM-DD-slug/images/`.
 
 ## Writing Craft (the house style — distilled from the shipped posts)
 
+### Length is set by the topic, never by a target
+There is no house word count, no "keep it tight" default, and no upper bound.
+**The right length is whatever the subject and the reader's need require** — a
+narrow correction may be 400 words; a comparison that has to carry benchmarks,
+pricing and a decision framework may be 2,500. Say everything the topic needs
+said, in the way that expresses it best, and stop there.
+
+- Never cut substance to hit a size. If material earns its place, it stays.
+- Never pad to reach a size either — length is an outcome, not a goal.
+- If Hari specifies a length or scope for a given post, that instruction wins.
+- **Sources, caveats, and methodology notes do not count toward length** and must
+  never be trimmed, dropped or "compressed" to make a post feel shorter. They are
+  supplementary apparatus, not body copy. Judge the post's length by its argument.
+
 ### Structure
 - **Analytical/comparison posts open insight-first**: state the counter-intuitive
   conclusion (or what's wrong with the conventional take) in the first two
@@ -238,9 +252,19 @@ usage/sketch, not guaranteed runnable). Never make the reader infer which.
   inline link to its source, fetched during the writing session.** No source
   found ⇒ the claim is cut or explicitly marked as estimate. Never write
   "every number is sourced" as prose — make each number BE sourced.
-- Posts with third-party data end with a **"Sources & caveats"** section:
-  the source list, plus honest methodology notes (which aggregator, snapshot
-  date, where vendors disagree, what's vendor-only/unverified).
+- **Prefer sourcing inline.** A hyperlink on the number itself, in the sentence
+  that uses it, is the default — it reads better and keeps the claim next to its
+  evidence. A closing **"Sources & caveats"** section is *optional*: add one when
+  there is genuine methodology to disclose (which aggregator, snapshot date, where
+  vendors disagree, what's vendor-only or unverified, sample size), and skip it
+  when inline links already carry everything. Include sources whenever relevant —
+  just never let their presence or absence drive the post's length.
+- **A vendor's own facts come from the vendor.** Pricing, release dates, context
+  windows and model specs cite the vendor's page (Anthropic / platform.claude.com,
+  x.ai, OpenAI, Moonshot…), never a blogger, newsletter or aggregator who reported
+  them. Secondary sources are for analysis and independent measurement only.
+  Vendor pages carry qualifiers summaries drop — introductory pricing windows,
+  effective dates, tokenizer changes — and those often change the conclusion.
 - Where a claim comes from something WE built or ran, anchor it to the
   reproducible artifact instead: the repo, the tool, or a pasted **Output:**
   block (measured beats cited).
