@@ -4,28 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="ylnhari">
-  <meta name="description" content="Claude Sonnet 5 and Grok 4.5 sit 0.4 points apart on the Artificial Analysis index and 2.5x apart on output price. A practical comparison of where each one actually wins.">
-  <meta property="og:title" content="Claude Sonnet 5 vs Grok 4.5: Same Intelligence, Very Different Price">
-  <meta property="og:description" content="0.4 points apart on the independent intelligence index. 2.5x apart on output tokens. Where each model actually wins, and how to choose.">
+  <meta name="description" content="Claude Sonnet 5 and Grok 4.5 sit 0.4 points apart on the Artificial Analysis index. On price they are close today - until Sonnet's introductory rate ends on 31 August and the output gap widens to 2.5x.">
+  <meta property="og:title" content="Claude Sonnet 5 vs Grok 4.5: Same Intelligence, and a Price Gap Opening in September">
+  <meta property="og:description" content="0.4 points apart on the independent intelligence index, and nearly level on price - until Sonnet's introductory rate ends. Where each model actually wins, and how to choose.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80">
-  <title>Claude Sonnet 5 vs Grok 4.5: Same Intelligence, Very Different Price</title>
+  <title>Claude Sonnet 5 vs Grok 4.5: Same Intelligence, and a Price Gap Opening in September</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
 <article>
 
-<h1>Claude Sonnet 5 vs Grok 4.5: Same Intelligence, Very Different Price</h1>
+<h1>Claude Sonnet 5 vs Grok 4.5: Same Intelligence, and a Price Gap Opening in September</h1>
 <p class="byline">By ylnhari &middot; July 18, 2026 &middot; llm, benchmarks, claude, grok, cost-engineering</p>
 
 <img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80" alt="Two robotic arms playing the same keyboard, representing two models of near-identical capability">
 
 <p>On the <a href="https://benchlm.ai/benchmarks/artificialAnalysis">Artificial Analysis Intelligence Index</a>, Grok 4.5 scores <strong>53.8</strong> and Claude Sonnet 5 scores <strong>53.4</strong>. Four tenths of a point &mdash; inside the noise of any single evaluation.</p>
 
-<p>On price they are nowhere near each other. Grok 4.5 bills <a href="https://x.ai/news/grok-4-5">$2 per million input tokens and $6 per million output</a>. Sonnet sits at <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">$3 and $15</a>. On output &mdash; the expensive side of the meter &mdash; that is <strong>2.5x</strong>.</p>
+<p>On price, the comparison is more interesting than a straight ratio &mdash; because it changes in six weeks. Grok 4.5 bills <a href="https://x.ai/news/grok-4-5">$2 per million input tokens and $6 per million output</a>. Claude Sonnet 5 is currently on <a href="https://platform.claude.com/docs/en/about-claude/pricing">introductory pricing of $2 and $10</a>: identical on input, about <strong>1.7x</strong> on output.</p>
 
-<p>That is the whole decision in two numbers. The rest is working out when the gap matters.</p>
+<p>That introductory rate ends on <strong>31 August 2026</strong>. From 1 September, Sonnet 5 moves to $3 and $15, and the output gap widens to <strong>2.5x</strong>. So the honest answer to "how much cheaper is Grok?" is: somewhat, today &mdash; considerably, from September.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-sonnet-5-vs-grok-4-5-one-line/images/01-intelligence-vs-price.png" alt="Two bar charts. Left: Artificial Analysis Intelligence Index — Claude Sonnet 5 at 53.4 and Grok 4.5 at 53.8, just 0.4 points apart. Right: price per million output tokens — Sonnet at $15 and Grok at $6, a 2.5x gap.">
+<p>One subtlety widens it further. Anthropic notes that Sonnet 5 uses a newer tokenizer producing <strong>roughly 30% more tokens for the same text</strong>. Price per token is not the same as price per unit of work, and that difference lands on the output side, where the meter is most expensive.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-sonnet-5-vs-grok-4-5-one-line/images/01-intelligence-vs-price.png" alt="Two bar charts. Left: Artificial Analysis Intelligence Index — Claude Sonnet 5 at 53.4 and Grok 4.5 at 53.8, just 0.4 points apart. Right: price per million output tokens — Sonnet 5 at $10 on current introductory pricing, $15 from September 1, against Grok 4.5 at $6. The gap is 1.7x today and 2.5x once introductory pricing ends.">
 
 <h2>The tier this actually settles</h2>
 
@@ -39,7 +41,7 @@
 
 <blockquote>Grok 4.5 competes with Sonnet, not with Claude's best. Within that tier it is the better deal; above it, the tier is the thing you are buying.</blockquote>
 
-<p>There is a second cost lever that rarely makes headlines. xAI reports Grok 4.5 completing SWE Bench Pro tasks in about <strong>15,954 output tokens on average against Opus 4.8's 67,020</strong> &mdash; roughly 4.2x fewer. Token efficiency compounds with the per-token price, so on verbose agentic workloads the real-world gap is wider than the sticker 2.5x.</p>
+<p>There is a second cost lever that rarely makes headlines. xAI reports Grok 4.5 completing SWE Bench Pro tasks in about <strong>15,954 output tokens on average against Opus 4.8's 67,020</strong> &mdash; roughly 4.2x fewer. Token efficiency compounds with the per-token price, so on verbose agentic workloads the real-world gap is wider than any sticker ratio suggests.</p>
 
 <h2>What our own testing added</h2>
 
@@ -62,17 +64,17 @@
 <h2>So which one</h2>
 
 <ol>
-<li><strong>High-volume or long-running agentic work</strong> &mdash; Grok 4.5. It leads the long-horizon benchmark, costs 2.5x less per output token, and uses fewer of them. The savings compound twice.</li>
+<li><strong>High-volume or long-running agentic work</strong> &mdash; Grok 4.5. It leads the long-horizon benchmark, costs less per output token, and uses fewer of them. Both effects compound, and both grow in September.</li>
 <li><strong>Hard, repo-scale changes where correctness is expensive</strong> &mdash; Claude Fable 5, not Sonnet. The 80.4% to 64.7% gap on SWE Bench Pro belongs to the flagship; buying Sonnet does not buy you that number.</li>
 <li><strong>Document review &mdash; contracts, specs, long reports.</strong> Either, comfortably. Both recalled every buried fact and flagged every real contradiction without inventing one, which is the property that actually matters for this work.</li>
 <li><strong>Anything parsing messy real-world data</strong> &mdash; trust neither by default. Both are strong here and both can fail silently; feed them your ugliest inputs before shipping.</li>
-<li><strong>Everything else</strong> &mdash; take the cheaper token. At 0.4 index points apart, paying 2.5x for output needs a reason more specific than "it's the better model".</li>
+<li><strong>Everything else</strong> &mdash; today it is close enough that either is defensible. Revisit on 1 September, when the same choice costs 2.5x more on output. At 0.4 index points apart, that needs a reason more specific than "it's the better model".</li>
 </ol>
 
 <h2>Sources &amp; caveats</h2>
 
 <ul>
-<li>Index scores: <a href="https://benchlm.ai/benchmarks/artificialAnalysis">Artificial Analysis Intelligence Index</a>, July 2026 snapshot. Per-benchmark figures and token efficiency: <a href="https://x.ai/news/grok-4-5">xAI's Grok 4.5 launch post</a> (16 July 2026) &mdash; vendor-published, and competitor numbers there are drawn from each lab's own cards. Sonnet pricing via <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">Simon Willison</a>.</li>
+<li>Index scores: <a href="https://benchlm.ai/benchmarks/artificialAnalysis">Artificial Analysis Intelligence Index</a>, July 2026 snapshot. Per-benchmark figures and token efficiency: <a href="https://x.ai/news/grok-4-5">xAI's Grok 4.5 launch post</a> (16 July 2026) &mdash; vendor-published, and competitor numbers there are drawn from each lab's own cards. Claude pricing, the introductory-rate end date, and the tokenizer note: <a href="https://platform.claude.com/docs/en/about-claude/pricing">Anthropic's own pricing documentation</a> &mdash; both labs' prices here come from the vendor, not a secondary report.</li>
 <li>Our hands-on run was a single pass through each model's chat product at default settings &mdash; enough to surface a failure mode, not to rank them. Treat it as an illustration, not a measurement.</li>
 <li>Grok was accessed through its chat product, which does not display the served model version. xAI published Grok 4.5 as its flagship on 16 July, so this is almost certainly it.</li>
 </ul>

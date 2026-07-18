@@ -60,18 +60,22 @@ def chart_intelligence_vs_price():
 
     ax = axes[1]
     style(ax)
-    price = [15, 6]
-    ax.bar(models, price, color=colors, width=0.5)
+    # Sonnet 5 is on introductory pricing ($2/$10) through 31 Aug 2026;
+    # standard pricing ($3/$15) starts 1 Sep 2026. Source: Anthropic docs.
+    labels = ["Sonnet 5\n(now)", "Sonnet 5\n(from Sep 1)", "Grok 4.5"]
+    price = [10, 15, 6]
+    bar_colors = [CLAUDE, "#93b4f7", GROK]
+    ax.bar(labels, price, color=bar_colors, width=0.55)
     for i, v in enumerate(price):
         ax.text(i, v + 0.5, f"${v}", ha="center", fontsize=13, fontweight="bold", color=INK)
     ax.set_ylim(0, 19)
     ax.set_title("Price per million\noutput tokens", fontsize=12,
                  fontweight="bold", color=INK, pad=12)
-    ax.text(0.5, -0.22, "2.5x apart", transform=ax.transAxes, ha="center",
-            fontsize=11, color=MUTED, style="italic")
+    ax.text(0.5, -0.30, "1.7x today - 2.5x once introductory pricing ends",
+            transform=ax.transAxes, ha="center", fontsize=10, color=MUTED, style="italic")
 
-    fig.suptitle("Same intelligence. Very different price.", fontsize=15,
-                 fontweight="bold", color=INK, y=1.02)
+    fig.suptitle("Same intelligence. A price gap that opens in September.",
+                 fontsize=15, fontweight="bold", color=INK, y=1.02)
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "01-intelligence-vs-price.png"),
                 bbox_inches="tight", facecolor="white")
