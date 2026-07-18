@@ -27,17 +27,17 @@
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-sonnet-5-vs-grok-4-5-one-line/images/01-intelligence-vs-price.png" alt="Two bar charts. Left: Artificial Analysis Intelligence Index — Claude Sonnet 5 at 53.4 and Grok 4.5 at 53.8, just 0.4 points apart. Right: price per million output tokens — Sonnet at $15 and Grok at $6, a 2.5x gap.">
 
-<h2>Where each one actually wins</h2>
+<h2>The tier this actually settles</h2>
 
-<p>Aggregate scores hide the shape of these models, and the per-benchmark picture is genuinely split.</p>
+<p>One clarification the headline numbers demand, because it changes the decision: matching Sonnet 5 is not the same as matching Claude's best. "Claude" is a line of four models, not one.</p>
 
-<p>xAI's own launch numbers are refreshingly unflattering in places. Grok 4.5 <strong>leads SWE Marathon at 29.0%</strong>, ahead of Opus 4.8 (26.0%) and Fable 5 (24.0%) &mdash; long-horizon agentic work is its strong suit. It is effectively tied at the top of <strong>Terminal Bench 2.1 (83.3%</strong> against Fable 5's 84.3%). But on <strong>SWE Bench Pro it lands at 64.7%</strong>, well behind Fable 5's 80.4% and Opus 4.8's 69.2%. Different harnesses, different answers.</p>
+<p>Claude's flagship, Fable 5, scores <strong>59.9</strong> on the same index &mdash; roughly six points clear of both models here. Sonnet 5 is Anthropic's mid-tier, built for steady production work rather than peak scores. So what Grok 4.5 has done is draw level with <em>that</em> tier, and undercut it on price. It has not drawn level with the top of Claude's line.</p>
 
-<p>Claude's strength is the opposite shape: the Claude line dominates the repo-scale software-engineering benchmarks, and Sonnet is the tier built for steady production work rather than peak scores.</p>
+<p>xAI's own launch benchmarks show exactly where the ceiling sits, and they are refreshingly unflattering in places. Against <strong>Fable 5</strong> &mdash; not Sonnet &mdash; Grok 4.5 leads <strong>SWE Marathon 29.0% to 24.0%</strong>, the long-horizon agentic test. It is effectively tied on <strong>Terminal Bench 2.1, 83.3% to 84.3%</strong>. But on <strong>SWE Bench Pro it trails badly, 64.7% to 80.4%</strong> &mdash; repo-scale changes are where the flagship pulls away.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-sonnet-5-vs-grok-4-5-one-line/images/02-where-each-wins.png" alt="Grouped bar chart across three benchmarks. Grok 4.5 leads SWE Marathon 29.0 percent to Claude's 24.0. Terminal Bench 2.1 is a near-tie, 83.3 versus 84.3. Claude leads SWE Bench Pro decisively, 80.4 percent to 64.7.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-sonnet-5-vs-grok-4-5-one-line/images/02-where-each-wins.png" alt="Grouped bar chart comparing Grok 4.5 against Claude Fable 5, Anthropic's flagship, across three benchmarks. Grok 4.5 leads SWE Marathon 29.0 percent to 24.0. Terminal Bench 2.1 is a near-tie, 83.3 versus 84.3. Fable 5 leads SWE Bench Pro decisively, 80.4 percent to 64.7. These are flagship numbers, not Sonnet 5's.">
 
-<blockquote>Grok 4.5 is better at running long; Claude is better at getting the hard single change right. Neither is "smarter".</blockquote>
+<blockquote>Grok 4.5 competes with Sonnet, not with Claude's best. Within that tier it is the better deal; above it, the tier is the thing you are buying.</blockquote>
 
 <p>There is a second cost lever that rarely makes headlines. xAI reports Grok 4.5 completing SWE Bench Pro tasks in about <strong>15,954 output tokens on average against Opus 4.8's 67,020</strong> &mdash; roughly 4.2x fewer. Token efficiency compounds with the per-token price, so on verbose agentic workloads the real-world gap is wider than the sticker 2.5x.</p>
 
@@ -59,7 +59,7 @@
 
 <ol>
 <li><strong>High-volume or long-running agentic work</strong> &mdash; Grok 4.5. It leads the long-horizon benchmark, costs 2.5x less per output token, and uses fewer of them. The savings compound twice.</li>
-<li><strong>Hard, repo-scale changes where correctness is expensive</strong> &mdash; Claude. The gap on SWE Bench Pro is real and larger than the index suggests.</li>
+<li><strong>Hard, repo-scale changes where correctness is expensive</strong> &mdash; Claude Fable 5, not Sonnet. The 80.4% to 64.7% gap on SWE Bench Pro belongs to the flagship; buying Sonnet does not buy you that number.</li>
 <li><strong>Anything parsing messy real-world data</strong> &mdash; trust neither by default. Both are strong here and both can fail silently; feed them your ugliest inputs before shipping.</li>
 <li><strong>Everything else</strong> &mdash; take the cheaper token. At 0.4 index points apart, paying 2.5x for output needs a reason more specific than "it's the better model".</li>
 </ol>

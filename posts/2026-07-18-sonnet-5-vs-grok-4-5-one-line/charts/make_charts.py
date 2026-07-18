@@ -93,7 +93,7 @@ def chart_where_each_wins():
     w = 0.36
     ax.bar([i - w / 2 for i in x], grok, width=w, color=GROK, label="Grok 4.5")
     ax.bar([i + w / 2 for i in x], best_claude, width=w, color=CLAUDE,
-           label="Best Claude (Fable 5)")
+           label="Claude Fable 5 (flagship, not Sonnet)")
 
     for i, (g, c) in enumerate(zip(grok, best_claude)):
         ax.text(i - w / 2, g + 1.5, f"{g}%", ha="center", fontsize=10, color=INK)
@@ -104,8 +104,10 @@ def chart_where_each_wins():
     ax.set_ylim(0, 95)
     ax.set_ylabel("score (%)", color=MUTED, fontsize=10)
     ax.legend(frameon=False, fontsize=10, loc="upper left")
-    ax.set_title("Grok runs long; Claude lands the hard change",
+    ax.set_title("Where Grok 4.5 stands against Claude's flagship",
                  fontsize=14, fontweight="bold", color=INK, pad=14)
+    ax.text(0.5, -0.30, "xAI publishes no Sonnet 5 comparison - these are Fable 5 numbers",
+            transform=ax.transAxes, ha="center", fontsize=9, color=MUTED, style="italic")
     fig.tight_layout()
     fig.savefig(os.path.join(OUT, "02-where-each-wins.png"),
                 bbox_inches="tight", facecolor="white")
