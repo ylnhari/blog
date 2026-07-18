@@ -1,8 +1,8 @@
 {
-  "title": "Sonnet 5 and Grok 4.5 Scored the Same. One Costs 2.5x More.",
+  "title": "Claude Sonnet 5 vs Grok 4.5: Same Intelligence, Very Different Price",
   "date": "2026-07-18",
   "author": "ylnhari",
-  "description": "Claude Sonnet 5 and Grok 4.5 scored the same on an identical 8-task battery. Grok's output tokens cost 2.5x less. When capability converges, price stops being a tiebreaker and becomes the decision.",
+  "description": "Claude Sonnet 5 and Grok 4.5 sit 0.4 points apart on the Artificial Analysis index and 2.5x apart on output price. A practical comparison of where each one actually wins.",
   "tags": ["llm", "benchmarks", "claude", "grok", "cost-engineering"],
   "status": "draft",
   "medium_url": null,
