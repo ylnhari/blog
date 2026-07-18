@@ -43,11 +43,15 @@
 
 <h2>What our own testing added</h2>
 
-<p>Published benchmarks tell you where models rank. They do not tell you how a model fails. So we put both through the same set of small, mundane engineering tasks &mdash; the kind of work that actually fills a sprint &mdash; and the results tracked the index almost exactly: near-identical, with one revealing exception.</p>
+<p>Published benchmarks tell you where models rank. They do not tell you how a model fails. So we put both through the same eight tasks &mdash; five coding and SQL problems, two long-document problems, and one drawing &mdash; using documents written from scratch, so nothing could be answered from memory of the training data. The results tracked the index almost exactly: near-identical, with one revealing exception.</p>
+
+<p>The long-document results were the most useful part, because they measure something vendors do not publish. Given a 51 KB archive of 42 meetings, both models found all five facts buried in it &mdash; a budget revised three times, an ownership change, a dated performance target, a count of schedule slips, a rejected vendor. Given a specification with four contradictions planted in it, both found all four, cited the right sections, and <strong>neither invented a fifth</strong>.</p>
+
+<p>That last point matters more than it sounds. The document is padded with bland filler that practically invites a model to pattern-match a problem into existence. Both declined. If you are pointing one of these at contracts, specs or policy documents, "it does not hallucinate issues that are not there" is worth more than a leaderboard position &mdash; and no public benchmark will tell you it.</p>
 
 <p>Asked to parse a messy bank statement, both handled the hard parts &mdash; three date formats, two negative-number conventions, stable ordering. But amounts carried thousands separators, and lines were comma-delimited. Grok split on the first two commas only. Sonnet split on every comma, so every row containing <code>&#8377;1,234.50</code> broke into too many fields and was <strong>silently dropped</strong> &mdash; no crash, no warning, just the largest transactions quietly missing from the output.</p>
 
-<p>One sample, not a verdict on either model. But it is the failure mode worth internalising: at this tier the models rarely fail loudly on hard problems. They fail quietly on careless edge cases, and that is invisible to every leaderboard.</p>
+<p>That was the only separation across all eight tasks &mdash; on the coding set Grok went 20 for 20 against Sonnet's 19. One sample, not a verdict. But it is the failure mode worth internalising: at this tier the models rarely fail loudly on hard problems. They fail quietly on careless edge cases, and that is invisible to every leaderboard.</p>
 
 <p>The other thing worth showing is how alike they are when the task is open-ended. Same prompt to both &mdash; draw an auto-rickshaw towing a server rack up a hill in the rain &mdash; first answer taken, no retries:</p>
 
@@ -60,6 +64,7 @@
 <ol>
 <li><strong>High-volume or long-running agentic work</strong> &mdash; Grok 4.5. It leads the long-horizon benchmark, costs 2.5x less per output token, and uses fewer of them. The savings compound twice.</li>
 <li><strong>Hard, repo-scale changes where correctness is expensive</strong> &mdash; Claude Fable 5, not Sonnet. The 80.4% to 64.7% gap on SWE Bench Pro belongs to the flagship; buying Sonnet does not buy you that number.</li>
+<li><strong>Document review &mdash; contracts, specs, long reports.</strong> Either, comfortably. Both recalled every buried fact and flagged every real contradiction without inventing one, which is the property that actually matters for this work.</li>
 <li><strong>Anything parsing messy real-world data</strong> &mdash; trust neither by default. Both are strong here and both can fail silently; feed them your ugliest inputs before shipping.</li>
 <li><strong>Everything else</strong> &mdash; take the cheaper token. At 0.4 index points apart, paying 2.5x for output needs a reason more specific than "it's the better model".</li>
 </ol>
