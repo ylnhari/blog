@@ -4,116 +4,80 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="ylnhari">
-  <meta name="description" content="I ran Claude Sonnet 5 and Grok 4.5 through the same 8-task battery on the same day. They tied on almost everything. The whole measurable gap came down to one line in a string parser.">
-  <meta property="og:title" content="Sonnet 5 vs Grok 4.5: The Entire Difference Was One Line of Code">
-  <meta property="og:description" content="Two frontier models, one identical battery, same day. They tied on long-context recall, contradiction-hunting, and spatial reasoning. The only gap was a single line in a parser.">
+  <meta name="description" content="Claude Sonnet 5 and Grok 4.5 scored the same on an identical 8-task battery. Grok's output tokens cost 2.5x less. When capability converges, price stops being a tiebreaker and becomes the decision.">
+  <meta property="og:title" content="Sonnet 5 and Grok 4.5 Scored the Same. One Costs 2.5x More.">
+  <meta property="og:description" content="Two frontier models, one identical battery, effectively identical scores — and a 2.5x gap in output-token price. What that means for how you pick a model.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80">
-  <title>Sonnet 5 vs Grok 4.5: The Entire Difference Was One Line of Code</title>
+  <title>Sonnet 5 and Grok 4.5 Scored the Same. One Costs 2.5x More.</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
 <article>
 
-<h1>Sonnet 5 vs Grok 4.5: The Entire Difference Was One Line of Code</h1>
-<p class="byline">By ylnhari &middot; July 18, 2026 &middot; llm, benchmarks, claude, grok, evaluation</p>
+<h1>Sonnet 5 and Grok 4.5 Scored the Same. One Costs 2.5x More.</h1>
+<p class="byline">By ylnhari &middot; July 18, 2026 &middot; llm, benchmarks, claude, grok, cost-engineering</p>
 
-<img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80" alt="Two parallel light trails running side by side, representing two models measured against the same battery">
+<img src="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80" alt="Two robotic arms playing the same keyboard, representing two models producing near-identical results">
 
-<p>I put Claude Sonnet 5 and Grok 4.5 through the same eight tasks, on the same afternoon, under the same rules. I expected a spread. What I got was a near-perfect tie: identical scores on long-context recall, identical scores on contradiction-hunting, and a coherent illustration from both.</p>
+<p>If you are choosing between frontier models on capability scores, you are using a tiebreaker that has stopped breaking ties.</p>
 
-<p>The <em>entire</em> measurable difference across the whole battery came down to a single line in a string-parsing function. Not reasoning. Not knowledge. One argument to <code>split()</code>.</p>
+<p>I ran Claude Sonnet 5 and Grok 4.5 through the same eight tasks on the same afternoon under identical rules. They came out effectively level: same score on long-document recall, same score on contradiction-hunting, both drew a coherent illustration, and across twenty machine-graded test cases the difference was <strong>one</strong>. Not one task. One test case, traceable to a single argument in a single line of code.</p>
 
-<h2>The setup</h2>
+<p>Meanwhile the two models are not priced anything alike. Grok 4.5 bills <a href="https://x.ai/news/grok-4-5">$2 per million input tokens and $6 per million output</a>. Claude Sonnet sits at <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">$3 and $15</a>. On the expensive side of the meter — output — that is <strong>2.5x</strong>.</p>
 
-<p>Eight tasks, fixed and frozen before either model saw them: five code/SQL problems machine-graded by a 20-case test suite, two long-document tasks scored against a written answer key, and one spatial SVG drawing judged by eye.</p>
+<blockquote>When two models produce the same answers, the only honest remaining question is what each one charges to produce them.</blockquote>
 
-<p>The method matters more than the tasks, so here it is in full:</p>
+<h2>The evidence: six of eight are indistinguishable</h2>
 
-<ul>
-<li><strong>Chat UI, not the API.</strong> This measures what a person actually gets when they open the product.</li>
-<li><strong>Each model at its own default settings.</strong> Sonnet 5 on "medium" effort, Grok on "Fast" mode &mdash; whatever the picker offered when I arrived. No tuning.</li>
-<li><strong>Prompts pasted verbatim. Fresh chat per task. First complete answer is the answer.</strong> No follow-ups, no hints, no re-rolls. One retry allowed only if the UI itself failed.</li>
-<li><strong>Long documents pasted inline</strong> &mdash; not attached as files. This turned out to be the most important rule of the whole exercise, and I'll come back to why.</li>
-</ul>
+<p>The battery is eight tasks, frozen before either model saw them: five code and SQL problems graded by a twenty-case test suite, two long-document tasks scored against an answer key written in advance, and one spatial drawing task judged by eye. Both models ran in their own chat product at default settings, fresh session per task, prompt pasted verbatim, first complete answer taken.</p>
 
-<p>The two long documents are a 51 KB archive of 42 fabricated meeting minutes with five specific facts buried in it, and a 24 KB product spec with four deliberately planted contradictions. Both have answer keys written in advance. Fabricated on purpose: nothing in them can be answered from training data.</p>
+<p><strong>Claude Sonnet 5</strong> &mdash; code 19/20 &middot; recall 5/5 &middot; contradictions 4/4, no false positives &middot; drawing complete.<br>
+<strong>Grok 4.5</strong> &mdash; code 20/20 &middot; recall 5/5 &middot; contradictions 4/4, no false positives &middot; drawing complete.</p>
 
-<h2>The scores</h2>
+<p>On the long-document tasks both were flawless. Both pulled all five buried facts out of a 51 KB archive of 42 meetings &mdash; a budget figure that had been revised three times, an ownership assignment, a dated change to a performance target, a count of schedule slips, a rejected vendor and the stated reason. On a spec seeded with four planted contradictions, both found all four, quoted each side, cited the right sections, and &mdash; the part that separates a useful model from an eager one &mdash; neither invented a fifth.</p>
 
-<p><strong>Claude Sonnet 5</strong> &mdash; code 19/20 &middot; long-context recall 5/5 &middot; contradictions 4/4 with zero false positives &middot; SVG complete.</p>
+<p>Two labs, two architectures, and on six of eight tasks I cannot tell the outputs apart.</p>
 
-<p><strong>Grok 4.5</strong> &mdash; code 20/20 &middot; long-context recall 5/5 &middot; contradictions 4/4 with zero false positives &middot; SVG complete.</p>
+<h2>The one difference, and why it is the interesting kind</h2>
 
-<p>That is the whole result. One test case, out of twenty, in one task.</p>
+<p>The task that separated them was deliberately unglamorous: parse a messy bank statement where amounts may carry currency symbols, parentheses or a trailing <code>DR</code> for negatives &mdash; and thousands separators. That last detail is the trap. Lines are <code>date,description,amount</code>, so the obvious move is to split on commas. But <code>&#8377;1,234.50</code> <em>contains</em> a comma.</p>
 
-<blockquote>At this tier the interesting differences aren't in raw intelligence any more. They're in whether a model reads an edge case carefully.</blockquote>
+<p><strong>Sonnet 5:</strong></p>
+<pre><code>parts = line.split(",")</code></pre>
 
-<h2>The one line</h2>
+<p><strong>Grok 4.5:</strong></p>
+<pre><code>parts = [p.strip() for p in line.split(",", 2)]</code></pre>
 
-<p>The task that separated them was deliberately unglamorous: parse a messy bank statement. Dates arrive in three formats. Amounts might carry a currency symbol, might be wrapped in parentheses to mean negative, might have a trailing <code>DR</code> instead &mdash; and might use thousands separators.</p>
+<p>That <code>, 2</code> stops splitting after the first two commas and leaves the rest of the line, commas intact, as the amount. Without it every row using a thousands separator produced four fields instead of three, failed the length check, and was <strong>silently discarded</strong>. Sonnet's parser returned three of five valid rows. It did not crash. It did not warn. It dropped the two largest transactions in the file &mdash; the ones large enough to need a separator in the first place.</p>
 
-<p>That last detail is the trap. The line format is <code>date,description,amount</code>, so the obvious move is to split on commas. But an amount like <code>&#8377;1,234.50</code> <em>contains</em> a comma. Split naively and a three-field line becomes four fields.</p>
+<p>Sonnet got everything genuinely hard right: three date formats, both negative conventions, a stable sort for same-date rows. It failed on carefulness, not capability. That is what differentiates frontier models now, and it is precisely the kind of difference a leaderboard number will never show you.</p>
 
-<p><strong>Sonnet 5 wrote this:</strong></p>
+<h2>What this means for choosing</h2>
 
-<pre><code>parts = line.split(",")
-if len(parts) != 3:
-    continue</code></pre>
+<p>This is the third measurement in a row pointing the same direction. In <a href="https://ylnhari.github.io/blog/posts/2026-07-13-claude-fable-5-vs-gpt-5-6/">Fable 5 versus GPT-5.6</a> the flagships split the board by category rather than one dominating. In <a href="https://ylnhari.github.io/blog/posts/2026-07-18-kimi-k3-open-frontier/">Kimi K3</a> an open-weight model reached the frontier's top and immediately charged frontier prices. Now two models from different labs post the same score on the same tasks.</p>
 
-<p><strong>Grok 4.5 wrote this:</strong></p>
-
-<pre><code>parts = [p.strip() for p in line.split(",", 2)]
-if len(parts) != 3:
-    continue</code></pre>
-
-<p>The difference is <code>, 2</code> &mdash; a maxsplit argument that stops splitting after the first two commas and leaves the rest of the line, commas and all, as the amount field.</p>
-
-<p>Without it, every row whose amount used a thousands separator produced four fields, failed the <code>len(parts) != 3</code> check, and was <strong>silently discarded</strong>. Sonnet's parser returned three of the five valid rows in the test data. It didn't crash. It didn't warn. It just quietly dropped the two largest transactions in the file &mdash; the ones big enough to need a thousands separator in the first place.</p>
-
-<p>I want to be fair about what this is and isn't. It's one test case. Re-run it tomorrow and Sonnet may well get it right; this is a single sample, not a stable property of the model. But it's a good illustration of where these models actually fail now. Sonnet's solution was otherwise clean &mdash; correct date handling across all three formats, correct parenthetical and <code>DR</code> negatives, correct stable sort for same-date rows. It got everything hard right and one thing careless wrong.</p>
-
-<h2>Where they tied, and why that's the real story</h2>
-
-<p>On the long-document tasks, both models were flawless. Both pulled all five buried facts out of the 42-meeting archive &mdash; the final budget figure after three revisions, an ownership assignment, a date-and-delta change to a load-test target, a count of schedule slips with the final date, and a rejected vendor with its stated reason. Grok volunteered the meeting numbers for each without being asked, and every one of them was right.</p>
-
-<p>On the contradiction hunt, both found all four planted conflicts, quoted both sides, named the correct section numbers, and &mdash; the part that actually separates a useful model from an eager one &mdash; <strong>neither invented a fifth</strong>. A document full of bland filler is an invitation to pattern-match noise into a finding. Both declined.</p>
-
-<p>Both also produced a complete, coherent SVG of an auto-rickshaw towing a server rack up a hill in the rain: correct spatial relationships, tow rope attached at both ends, rain, the whole scene readable.</p>
-
-<p>Two different labs, two different architectures, and on six of eight tasks I cannot tell them apart from the output.</p>
-
-<h2>The methodology trap I nearly fell into</h2>
-
-<p>This one is worth more than the benchmark result, because it would have quietly invalidated everything above.</p>
-
-<p>When you paste a very large document into a chat box, some products stop treating it as text and silently convert it into a <strong>file attachment</strong>. That is not a cosmetic difference. Inline text goes into the context window &mdash; the model reads all of it. An attached file may be handed to a retrieval system that pulls out fragments it deems relevant.</p>
-
-<p>Those measure completely different capabilities. One is "can you hold 51 KB in your head and find five needles." The other is "is your search good enough to fetch the right paragraph."</p>
-
-<p>On grok.com, a single paste above roughly 20&ndash;50 KB gets converted into a <code>pasted-text.txt</code> attachment chip. Had I not caught it, I would have been comparing Sonnet's in-context recall against Grok's retrieval and reporting it as the same test. The fix was to paste the document in ~13 KB chunks and verify no attachment chip appeared before submitting. If you run comparisons like this, check what the box actually did with your paste before you trust the score.</p>
-
-<h2>So which one</h2>
+<p>The pattern is convergence at the top. Which reframes the decision: <strong>when capability stops separating models, price and failure-mode stop being footnotes and become the whole choice.</strong> You can see the same thing on the <a href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html">cost-per-task map</a> &mdash; the frontier is getting crowded horizontally, not vertically.</p>
 
 <ol>
-<li><strong>If you're choosing on this battery alone &mdash; it's a coin flip.</strong> Six of eight tasks were indistinguishable. Anyone selling you a confident winner from numbers this close is overreading their data.</li>
-<li><strong>If your work is unglamorous data plumbing</strong> &mdash; parsers, importers, ETL over messy real-world input &mdash; this is exactly the failure mode to watch, from either model. The bug wasn't a wrong answer; it was a silent one. Test your edge cases; don't trust generated parsers on data you haven't fed them.</li>
-<li><strong>If you need long-context reliability</strong>, both earned it here &mdash; but only when the document actually reaches the context window. Verify that before you rely on it.</li>
-<li><strong>If price is the deciding factor</strong>, Grok 4.5 is published at <a href="https://x.ai/news/grok-4-5">$2 per million input tokens and $6 per million output</a>, and x.ai claims roughly 2&times; the token efficiency of comparable models. That's a real argument, and it's independent of anything I measured.</li>
+<li><strong>Volume work where the outputs are long.</strong> Take the cheaper output token. At 2.5x, a workload burning ten million output tokens a month is a materially different bill for the same measured quality.</li>
+<li><strong>Data plumbing &mdash; parsers, importers, ETL over messy real input.</strong> Neither model has earned your trust here. The failure was silent, and a silent parser bug is worse than a loud one. Feed it your ugliest real rows before shipping.</li>
+<li><strong>Long-document work.</strong> Both earned it, with one condition: confirm the document actually reached the context window rather than being handed to a retrieval system. Products differ, and they do not always tell you.</li>
+<li><strong>The last few points of capability.</strong> If your work genuinely lives where the top model is measurably better, pay for the top model &mdash; but verify that on your own tasks, because on these eight it did not show up.</li>
 </ol>
 
 <h2>Sources &amp; caveats</h2>
 
-<p>The scores are my own, first-hand, run on July 18, 2026. Everything else is linked. Five caveats, stated plainly, because a benchmark you can't poke holes in is a benchmark that's hiding something.</p>
+<p>The scores are my own, run 18 July 2026. Pricing is linked to source. Five caveats, because a benchmark you cannot poke holes in is hiding something.</p>
 
 <ul>
-<li><strong>n=1.</strong> One run per task per model, no repeats, first answer taken. That's enough to show what a model <em>can</em> do and to catch a specific bug; it is not enough to establish a stable win rate. Treat the 20/20 vs 19/20 as one observation, not a ranking.</li>
-<li><strong>Model version on the Grok side isn't fully pinned.</strong> I ran it through grok.com's chat on a SuperGrok account in the default "Fast" mode. grok.com does not display which model version it served. <a href="https://x.ai/news/grok-4-5">x.ai published Grok 4.5 on July 16, 2026</a> as its flagship and made it the default in Grok Build, so this is almost certainly Grok 4.5 &mdash; but I did not get a version string out of the chat surface, and I'd rather say that than imply a precision I don't have.</li>
-<li><strong>Default settings, not maximum effort.</strong> Both models have higher-effort modes I deliberately left alone. This measures the out-of-the-box experience, not the ceiling.</li>
-<li><strong>The tasks are mine</strong>, written before either model was run, and the long documents are fabricated so they can't be recalled from training data. That's a strength for contamination but a weakness for generality &mdash; eight tasks is a narrow slice of what these models do.</li>
-<li><strong>Vendor benchmarks disagree with each other and with me</strong>, which is normal. x.ai's own launch post puts Grok 4.5 behind Claude on SWE-Bench Pro (64.7% vs 80.4%) while leading on SWE Marathon. Those are different tasks measuring different things; none of them are this battery.</li>
+<li><strong>One run per task, per model.</strong> First answer taken, no repeats. Enough to demonstrate a capability and catch a specific bug; <em>not</em> enough to establish a win rate. Read 20/20 versus 19/20 as one observation, not a ranking &mdash; re-run tomorrow and the parser bug may not reappear.</li>
+<li><strong>The Grok version is not fully pinned.</strong> I ran it through grok.com's chat on a SuperGrok account at default settings; the product does not display which model version it served. <a href="https://x.ai/news/grok-4-5">x.ai published Grok 4.5 on 16 July 2026</a> as its flagship, so this is almost certainly it &mdash; but I did not get a version string, and I would rather say so than imply precision I do not have.</li>
+<li><strong>Default settings, not maximum effort.</strong> Both have higher-effort modes I left alone. This is the out-of-the-box experience, not the ceiling.</li>
+<li><strong>Eight tasks is a narrow slice.</strong> They are mine, written before either model ran, with fabricated long documents so nothing can be recalled from training data. Good for contamination, limited for generality.</li>
+<li><strong>A measurement trap worth knowing.</strong> Some products silently convert a large paste into a file attachment. Inline text enters the context window; an attachment may be routed to retrieval instead. Those measure different things. grok.com does this above roughly 20&ndash;50 KB &mdash; I pasted in chunks and verified no attachment appeared, or this comparison would have been recall versus search reported as the same test.</li>
 </ul>
 
-<p>A third column &mdash; Kimi K3 &mdash; was meant to be here. Its chat surface spent the entire window returning capacity errors, so it isn't. When it's reachable, the same eight tasks go through it unchanged, and I'll publish that column against these same numbers.</p>
+<p>A third column belongs here: Kimi K3, the open-weight model from the piece above, at a third price point again. Its chat surface returned capacity errors for the entire window, so it is not in this table yet. Same eight tasks, unchanged, when it is reachable &mdash; and the question that run answers is the one this post can only half-answer: across three price points, who actually earns their price?</p>
 
 <hr>
 <p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>

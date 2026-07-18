@@ -1,15 +1,15 @@
 [
   {
     "slug": "2026-07-18-sonnet-5-vs-grok-4-5-one-line",
-    "title": "Sonnet 5 vs Grok 4.5: The Entire Difference Was One Line of Code",
+    "title": "Sonnet 5 and Grok 4.5 Scored the Same. One Costs 2.5x More.",
     "date": "2026-07-18",
-    "description": "I ran Claude Sonnet 5 and Grok 4.5 through the same 8-task battery on the same day. They tied on almost everything. The whole measurable gap came down to one line in a string parser.",
+    "description": "Claude Sonnet 5 and Grok 4.5 scored the same on an identical 8-task battery. Grok's output tokens cost 2.5x less. When capability converges, price stops being a tiebreaker and becomes the decision.",
     "tags": [
       "llm",
       "benchmarks",
       "claude",
       "grok",
-      "evaluation"
+      "cost-engineering"
     ],
     "cover_image": "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80",
     "status": "published",
