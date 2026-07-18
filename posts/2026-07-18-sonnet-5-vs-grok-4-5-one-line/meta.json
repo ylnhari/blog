@@ -1,0 +1,10 @@
+{
+  "title": "Sonnet 5 vs Grok 4.5: The Entire Difference Was One Line of Code",
+  "date": "2026-07-18",
+  "author": "ylnhari",
+  "description": "I ran Claude Sonnet 5 and Grok 4.5 through the same 8-task battery on the same day. They tied on almost everything. The whole measurable gap came down to one line in a string parser.",
+  "tags": ["llm", "benchmarks", "claude", "grok", "evaluation"],
+  "status": "draft",
+  "medium_url": null,
+  "cover_image": "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80"
+}

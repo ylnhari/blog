@@ -1,5 +1,21 @@
 [
   {
+    "slug": "2026-07-18-sonnet-5-vs-grok-4-5-one-line",
+    "title": "Sonnet 5 vs Grok 4.5: The Entire Difference Was One Line of Code",
+    "date": "2026-07-18",
+    "description": "I ran Claude Sonnet 5 and Grok 4.5 through the same 8-task battery on the same day. They tied on almost everything. The whole measurable gap came down to one line in a string parser.",
+    "tags": [
+      "llm",
+      "benchmarks",
+      "claude",
+      "grok",
+      "evaluation"
+    ],
+    "cover_image": "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80",
+    "status": "draft",
+    "medium_url": null
+  },
+  {
     "slug": "2026-07-18-kimi-k3-open-frontier",
     "title": "Kimi K3: The First Open Model on the Frontier — Priced Like a Closed One",
     "date": "2026-07-18",
