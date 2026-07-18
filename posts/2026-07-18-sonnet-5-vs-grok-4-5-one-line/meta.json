@@ -4,7 +4,7 @@
   "author": "ylnhari",
   "description": "Claude Sonnet 5 and Grok 4.5 scored the same on an identical 8-task battery. Grok's output tokens cost 2.5x less. When capability converges, price stops being a tiebreaker and becomes the decision.",
   "tags": ["llm", "benchmarks", "claude", "grok", "cost-engineering"],
-  "status": "published",
-  "medium_url": "https://ylnhari.medium.com/sonnet-5-vs-grok-4-5-the-entire-difference-was-one-line-of-code-65407e702775",
+  "status": "draft",
+  "medium_url": null,
   "cover_image": "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80"
 }
