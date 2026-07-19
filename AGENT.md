@@ -195,6 +195,41 @@ Report back with:
 
 ---
 
+### Step 8 — Record the published URL (do NOT skip)
+
+Once Hari confirms the story is published, immediately write the **canonical
+Medium URL** back into the repo:
+
+```json
+"status": "published",
+"medium_url": "https://ylnhari.medium.com/<slug>-<12-hex-id>"
+```
+
+in BOTH `posts/YYYY-MM-DD-slug/meta.json` and the matching entry in
+`posts/index.json`, then commit and push.
+
+Why this matters: `index.html` renders the "Read on Medium" link **only** when
+`medium_url` is non-null. A published post left at `null` silently loses its
+Medium link on the blog index — the reader sees no way through. `status` alone
+does nothing; the URL is what renders.
+
+Use the full slug URL, not the short `https://medium.com/p/<id>` form.
+
+If a post was published to a Medium **publication**, its canonical may be a
+`medium.com/<pub>/…` URL. Verify with `document.querySelector('link[rel=canonical]')`
+— the story whose canonical points back at `ylnhari.github.io/blog/...` is the
+imported one. Hand-written Medium-only stories are NOT blog posts and must not be
+linked from `index.json`.
+
+**Audit:** any entry with `"status": "published"` and `"medium_url": null` is a
+bug. Check for them with:
+
+```bash
+python -c "import json;print([e['slug'] for e in json.load(open('posts/index.json')) if e['status']=='published' and not e['medium_url']])"
+```
+
+---
+
 ## Error Handling
 
 | Error | Action |

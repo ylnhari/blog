@@ -3,8 +3,14 @@
   "date": "2026-06-23",
   "author": "ylnhari",
   "description": "How to automate blog posting on Medium using AI agents and OpenClaw — a complete setup guide with GitHub Pages and personal assistant workflows.",
-  "tags": ["automation", "blogging", "medium", "ai-agents", "openclaw"],
+  "tags": [
+    "automation",
+    "blogging",
+    "medium",
+    "ai-agents",
+    "openclaw"
+  ],
   "status": "published",
-  "medium_url": null,
+  "medium_url": "https://ylnhari.medium.com/automating-blog-posting-on-medium-using-ai-agents-and-openclaw-7e032590db56",
   "cover_image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80"
 }

@@ -3,8 +3,14 @@
   "date": "2026-07-18",
   "author": "ylnhari",
   "description": "Claude Sonnet 5 and Grok 4.5 sit 0.4 points apart on the Artificial Analysis index. On price they are close today - until Sonnet's introductory rate ends on 31 August and the output gap widens to 2.5x.",
-  "tags": ["llm", "benchmarks", "claude", "grok", "cost-engineering"],
-  "status": "draft",
-  "medium_url": null,
+  "tags": [
+    "llm",
+    "benchmarks",
+    "claude",
+    "grok",
+    "cost-engineering"
+  ],
+  "status": "published",
+  "medium_url": "https://ylnhari.medium.com/claude-sonnet-5-vs-grok-4-5-same-intelligence-and-a-price-gap-opening-in-september-4049078e3843",
   "cover_image": "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80"
 }

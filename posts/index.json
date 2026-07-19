@@ -12,8 +12,8 @@
       "cost-engineering"
     ],
     "cover_image": "https://images.unsplash.com/photo-1516110833967-0b5716ca1387?w=1200&q=80",
-    "status": "draft",
-    "medium_url": null
+    "status": "published",
+    "medium_url": "https://ylnhari.medium.com/claude-sonnet-5-vs-grok-4-5-same-intelligence-and-a-price-gap-opening-in-september-4049078e3843"
   },
   {
     "slug": "2026-07-18-kimi-k3-open-frontier",
@@ -29,7 +29,7 @@
     ],
     "cover_image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80",
     "status": "published",
-    "medium_url": "https://medium.com/p/229530b8b606"
+    "medium_url": "https://ylnhari.medium.com/kimi-k3-the-first-open-model-on-the-frontier-priced-like-a-closed-one-229530b8b606"
   },
   {
     "slug": "2026-07-13-claude-fable-5-vs-gpt-5-6",
@@ -44,8 +44,8 @@
       "frontier-ai"
     ],
     "cover_image": "https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?w=1200&q=80",
-    "status": "draft",
-    "medium_url": null
+    "status": "published",
+    "medium_url": "https://ylnhari.medium.com/claude-fable-5-vs-gpt-5-6-the-latest-vs-latest-flagship-comparison-588ce1e86f69"
   },
   {
     "slug": "2026-07-13-open-source-vs-paid-frontier-llms",
@@ -60,8 +60,8 @@
       "deepseek"
     ],
     "cover_image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80",
-    "status": "draft",
-    "medium_url": null
+    "status": "published",
+    "medium_url": "https://ylnhari.medium.com/the-price-of-intelligence-open-weight-vs-paid-frontier-models-in-2026-18499eb684a8"
   },
   {
     "slug": "2026-07-13-gpt-5-6-vs-gpt-5-5",
@@ -76,8 +76,8 @@
       "cost-engineering"
     ],
     "cover_image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
-    "status": "draft",
-    "medium_url": null
+    "status": "published",
+    "medium_url": "https://ylnhari.medium.com/gpt-5-6-vs-gpt-5-5-the-upgrade-that-isnt-about-intelligence-aace8661eb8e"
   },
   {
     "slug": "2026-07-03-llm-inference-stack-from-scratch",
@@ -109,7 +109,7 @@
     ],
     "cover_image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80",
     "status": "published",
-    "medium_url": null
+    "medium_url": "https://ylnhari.medium.com/your-personal-ai-lab-on-your-laptop-remotely-accessible-for-free-bbb7f08aaf0a"
   },
   {
     "slug": "2026-06-23-ai-powered-blog-automation",
@@ -125,7 +125,7 @@
     ],
     "cover_image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80",
     "status": "published",
-    "medium_url": null
+    "medium_url": "https://ylnhari.medium.com/automating-blog-posting-on-medium-using-ai-agents-and-openclaw-7e032590db56"
   },
   {
     "slug": "2026-06-22-vllm-model-chooser",
@@ -141,7 +141,7 @@
     ],
     "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80",
     "status": "published",
-    "medium_url": null
+    "medium_url": "https://ylnhari.medium.com/vllm-model-chooser-find-your-perfect-llm-for-any-gpu-setup-1521dadaa206"
   },
   {
     "slug": "2026-06-15-example-post",
