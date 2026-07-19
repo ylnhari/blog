@@ -47,6 +47,35 @@ jobs:
               if p.get('status') not in ('draft', 'published'):
                   errors.append(f'{slug}: status must be draft or published')
 
+              # A published post with no medium_url silently loses its
+              # 'Read on Medium' link on the index (index.html renders it only
+              # when medium_url is non-null). Eight posts drifted this way.
+              if p.get('status') == 'published' and not p.get('medium_url'):
+                  errors.append(
+                      f'{slug}: status is published but medium_url is null — '
+                      'the index will render no Medium link. Record the '
+                      'canonical URL (AGENT.md step 8).'
+                  )
+
+              if p.get('medium_url') and '/p/' in p['medium_url']:
+                  errors.append(
+                      f'{slug}: medium_url uses the short /p/<id> form — '
+                      'use the full canonical slug URL.'
+                  )
+
+              # index.json and meta.json must not disagree about publish state.
+              meta_path = f'posts/{slug}/meta.json'
+              if os.path.exists(meta_path):
+                  with open(meta_path) as mf:
+                      meta = json.load(mf)
+                  for field in ('status', 'medium_url'):
+                      if meta.get(field) != p.get(field):
+                          errors.append(
+                              f'{slug}: {field} differs between index.json '
+                              f'({p.get(field)!r}) and meta.json '
+                              f'({meta.get(field)!r})'
+                          )
+
           if errors:
               print('VALIDATION ERRORS:')
               for e in errors:
