@@ -215,6 +215,15 @@ does nothing; the URL is what renders.
 
 Use the full slug URL, not the short `https://medium.com/p/<id>` form.
 
+**Who records the URL (Hari's rule, 2026-07-19):**
+- **Agent published it end-to-end** ⇒ the agent MUST record the URL in the same
+  session. Not optional, not deferred to later.
+- **Hari published it himself** ⇒ Hari passes the URL along; record it then.
+
+So a published post never sits at `medium_url: null`. CI can only catch entries
+that exist — a post published outside the repo and never mentioned stays invisible
+to it, which is exactly why the hand-off above is a rule rather than a habit.
+
 If a post was published to a Medium **publication**, its canonical may be a
 `medium.com/<pub>/…` URL. Verify with `document.querySelector('link[rel=canonical]')`
 — the story whose canonical points back at `ylnhari.github.io/blog/...` is the

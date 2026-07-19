@@ -37,6 +37,9 @@ Takes a topic from Hari, generates a complete blog post, commits it to `github.c
     into BOTH meta.json and posts/index.json, then commit + push
 ```
 
+If YOU published it end-to-end, step 11 is yours and must happen in the same
+session. If Hari published it himself, he passes you the URL — record it then.
+
 Step 11 is not optional. `index.html` renders the "Read on Medium" link only
 when `medium_url` is non-null, so a published post left at `null` silently loses
 its Medium link on the blog index. CI now fails on that combination.
