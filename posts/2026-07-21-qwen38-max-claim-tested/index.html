@@ -72,6 +72,16 @@
 
 <blockquote>At this tier, models rarely fail loudly on difficult problems. They fail quietly on careless edge cases &mdash; and that is invisible to every leaderboard.</blockquote>
 
+<h2>Where my own scoring turned out to be misleading</h2>
+
+<p>One more thing, and it is the finding I trust least comfortably, because it is about my own method rather than the models.</p>
+
+<p>I had been ranking by hidden test cases passed. By that measure Claude Fable 5 (71) edges out Claude Sonnet 5 (70). But count whole <em>tasks</em> instead &mdash; a task counts only if every one of its cases passes &mdash; and it inverts: Sonnet failed one task, Fable failed two. Fable loses more tasks while losing fewer cases, purely because the tasks carry unequal numbers of hidden checks.</p>
+
+<p>Both numbers are true. They rank the two models in opposite orders. Which means the ordering of the middle of my table was partly an artefact of how many test cases I happened to write per task &mdash; not a property of the models.</p>
+
+<p>That is the honest limit of a small suite: with six models clustered between 68 and 73 out of 73, and all the separation coming from two tasks, the gaps are thin enough that the measurement choice moves the ranking. I am reporting both numbers from now on, and expanding the tasks so no single one carries this much weight. Treat the top of the table as meaningful and the middle as approximate.</p>
+
 <h2>The uncomfortable result</h2>
 
 <p><strong>Claude Opus 4.8 finished last.</strong> The largest and most expensive model in the group scored 68 out of 73 &mdash; below Sonnet 5, which is cheaper and smaller.</p>
