@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="Alibaba said Qwen3.8-Max is second only to Claude Fable 5, and published no benchmarks to show it. So I ran my own fifteen tasks across six models. The claim held up - and the models that lost, lost for a reason nobody advertises.">
+  <meta property="og:title" content="Alibaba Said Qwen3.8-Max Is Second Only to Fable 5. It Published No Benchmarks, So I Ran Mine.">
+  <meta property="og:description" content="Alibaba said Qwen3.8-Max is second only to Claude Fable 5, and published no benchmarks to show it. So I ran my own fifteen tasks across six models. The claim held up - and the models that lost, lost for a reason nobody advertises.">
+  <title>Alibaba Said Qwen3.8-Max Is Second Only to Fable 5. It Published No Benchmarks, So I Ran Mine.</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>Alibaba Said Qwen3.8-Max Is Second Only to Fable 5. It Published No Benchmarks, So I Ran Mine.</h1>
+<p class="byline">By ylnhari &middot; 21 July 2026 &middot; llm, benchmarks, qwen, evaluation</p>
+
+<p>On 19 July, at the World AI Conference in Shanghai, Alibaba previewed Qwen3.8-Max and said it ranked <strong>second only to Claude Fable 5</strong> among the systems it had benchmarked.</p>
+
+<p>It did not publish the benchmarks. No table, no model card, no license. As of writing, no independent evaluator &mdash; not Artificial Analysis, not LMArena &mdash; has scored it either. The ranking rests entirely on an internal evaluation nobody outside Alibaba has seen. The stock moved more than 3% on it anyway.</p>
+
+<blockquote>A frontier-scale lab made a specific, falsifiable ranking claim and shipped exactly zero evidence for it. That is a testable situation, and the window to test it before everyone else is measured in days.</blockquote>
+
+<p>So I tested it. Not a leaderboard &mdash; a spot-check with a fixed set of tasks, run identically against six models, with every prompt and every raw answer published. Here is what happened.</p>
+
+<h2>The short version</h2>
+
+<p><strong>The claim held up.</strong> Qwen3.8-Max-Preview swept every task I gave it: 73 out of 73 hidden coding checks, perfect on both long-document reading tasks, and a perfect score on the machine-checked drawing task. It tied Grok 4.5 at the top and beat all three Claude models I tested, including Claude Opus 4.8.</p>
+
+<p>I want to be careful about what that does and does not prove. It does not prove Qwen is the second-best model in the world &mdash; I did not test Fable 5's rivals exhaustively, and fifteen tasks is a spot-check, not a ranking. What it does prove is narrower and still worth something: <em>an evidence-free claim that could easily have collapsed on contact with independent testing did not collapse.</em> Qwen3.8-Max performs like a genuine frontier model on work I designed to be hard.</p>
+
+<h2>What I actually ran</h2>
+
+<p>Fifteen tasks, in three groups:</p>
+
+<ul>
+  <li><strong>Eleven coding and SQL problems</strong>, scored by 73 hidden test cases the model never sees. These are not puzzle problems &mdash; they are the kind of thing that breaks in production: merging intervals with cancellations, a hierarchical rate limiter, a five-bug cache to repair, a performance-gated sweep over 200,000 events, window functions.</li>
+  <li><strong>Two long-document reading tasks.</strong> One asks five specific factual questions about a 51 KB archive of 42 fictional meetings. The other plants four internal contradictions inside a product specification and asks the model to find every one without inventing extras.</li>
+  <li><strong>Two drawing tasks.</strong> Models write SVG &mdash; a picture described entirely in code, which the browser then draws. One is open-ended; the other has a strict specification checked automatically, element by element.</li>
+</ul>
+
+<p>Every document was written from scratch so nothing could be answered from memory of training data. Every model got byte-identical prompts, in its own chat interface, first answer taken, no retries.</p>
+
+<h2>The results</h2>
+
+<p>Coding is out of 73 hidden checks. Reading is the five-fact recall and the four-contradiction hunt. The drawing score is the strict-specification one, checked automatically out of 10.</p>
+
+<ul>
+  <li><strong>Qwen3.8-Max-Preview</strong> &mdash; coding 73/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
+  <li><strong>Grok 4.5</strong> &mdash; coding 73/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
+  <li><strong>DeepSeek</strong> &mdash; coding 72/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
+  <li><strong>Claude Fable 5</strong> &mdash; coding 71/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
+  <li><strong>Claude Sonnet 5</strong> &mdash; coding 70/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
+  <li><strong>Claude Opus 4.8</strong> &mdash; coding 68/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
+</ul>
+
+<p>Every prompt, every model's raw output, the scoring method and all twelve drawings are on the <a href="https://ylnhari.github.io/ai-signal/bench.html">model comparison page</a>, which grows as new models are tested.</p>
+
+<h2>The part I did not expect</h2>
+
+<p>Look at that table again. <strong>Reading and drawing did not separate the models at all.</strong> Every single one scored perfectly on both reading tasks &mdash; and, importantly, none of them raised a false alarm on the contradiction hunt, despite a document padded with bland filler that practically invites a model to invent a problem. Every one scored a perfect 10 on the strict drawing task.</p>
+
+<p>The entire spread &mdash; 73 down to 68, the whole visible difference between these six models &mdash; came from <strong>two tasks</strong>. Both were messy-data parsers. And both failures were carelessness, not reasoning:</p>
+
+<ul>
+  <li><strong>The comma trap.</strong> Amounts written with thousands separators, like <code>1,234.50</code>, in comma-delimited lines. Split on every comma and the row shatters into too many fields and gets silently dropped. Split on the first two only and it survives. Sonnet 5 and Opus 4.8 fell for this.</li>
+  <li><strong>The impossible-date trap.</strong> Dates like 29 February in a non-leap year, or 31 April. Check only whether the day is between 1 and 31 and these sail through. Check them against a real calendar and they do not. Fable 5, Opus 4.8 and DeepSeek fell for this.</li>
+</ul>
+
+<p>Every algorithmic task &mdash; the rate limiter, the cache repair, the performance gate, the window functions &mdash; passed on every model. The hard problems were not what separated them.</p>
+
+<blockquote>At this tier, models rarely fail loudly on difficult problems. They fail quietly on careless edge cases &mdash; and that is invisible to every leaderboard.</blockquote>
+
+<h2>The uncomfortable result</h2>
+
+<p><strong>Claude Opus 4.8 finished last.</strong> The largest and most expensive model in the group scored 68 out of 73 &mdash; below Sonnet 5, which is cheaper and smaller.</p>
+
+<p>It is worth being precise about why, because "expensive model loses" is the kind of sentence that gets quoted without its reason. Opus did not lose on reasoning. It passed every algorithmic task, matched everyone on reading, and scored a perfect 10 on the drawing task. It finished last because it fell into <em>both</em> data-hygiene traps while every other model fell into at most one. That is a narrow, specific, fixable weakness &mdash; not a verdict on the model's intelligence.</p>
+
+<p>But it is exactly the kind of weakness that matters if you are pointing one of these at financial statements, ledgers, or anything where a silently dropped row is worse than an error message.</p>
+
+<h2>What this says about the announcement</h2>
+
+<p>Two things, pulling in opposite directions.</p>
+
+<p>First: the claim survived. Whatever you think of announcing a ranking with no evidence, the underlying model is real and it performs. On my tasks Qwen3.8-Max was the joint-best of six, and it did it in a free chat interface.</p>
+
+<p>Second: <em>we only know that because someone tested it.</em> A 2.4-trillion-parameter model was announced, moved a share price more than 3%, and sat for days with no published benchmark table and no independent score. The claim happened to be true. The process that produced it &mdash; assert a ranking, publish nothing, let the market price it &mdash; would have looked identical if the claim had been false.</p>
+
+<p>That is the part worth keeping. Not "Qwen is good", but that the gap between an announcement and a verification is now days wide, and anyone can close it with a laptop and a fixed set of tasks.</p>
+
+<h2>Sources &amp; caveats</h2>
+
+<p>Three caveats, stated plainly.</p>
+
+<p><strong>First, on the announcement details.</strong> Alibaba's own announcement was an X thread I could not fetch directly. The 2.4-trillion-parameter figure and the exact "second only to Fable 5" wording come from press reporting of that thread, not from a vendor page I could read. Alibaba's own pricing page confirms Qwen3.8-Max-Preview is live but publishes no benchmark table, no context window and no specifications &mdash; which is itself the point of this post. Treat the parameter count as reported, not vendor-confirmed.</p>
+
+<p><strong>Second, on what my testing is.</strong> Fifteen tasks, one run per model, first answer taken. That is a spot-check, not a benchmark suite, and one sample is not a verdict. A different fifteen tasks would likely reorder the middle of that table. What it does support is the shape of the result: nobody failed the hard reasoning, and the differences that did appear were about careless data handling.</p>
+
+<p><strong>Third, on settings.</strong> Each model ran at its own default reasoning mode where it had one, except DeepSeek, which I ran at its strongest setting. Those modes are recorded per model on the comparison page. Models are not all doing the same amount of thinking per answer, and that is worth knowing when reading the scores.</p>
+
+<ul>
+  <li><a href="https://www.scmp.com/tech/article/3361119/alibaba-says-newest-qwen-ai-model-second-only-anthropics-claude-fable-5">South China Morning Post &mdash; Alibaba says newest Qwen model is second only to Claude Fable 5</a></li>
+  <li><a href="https://siliconangle.com/2026/07/19/alibaba-previews-qwen3-8-claims-second-claude-fable-5/">SiliconANGLE &mdash; Alibaba previews Qwen3.8, claims second only to Claude Fable 5</a></li>
+  <li><a href="https://www.marktechpost.com/2026/07/19/alibaba-previews-qwen3-8-max-a-2-4-trillion-parameter-multimodal-model-days-after-moonshots-kimi-k3-open-weight-launch/">MarkTechPost &mdash; 2.4 trillion-parameter multimodal model, days after Kimi K3</a></li>
+  <li><a href="https://www.siliconrepublic.com/machines/alibaba-unveils-qwen3-8-max-preview">Silicon Republic &mdash; Alibaba unveils Qwen3.8-Max preview</a></li>
+  <li><a href="https://ylnhari.github.io/ai-signal/bench.html">The full results &mdash; every prompt, every raw answer, every drawing</a></li>
+</ul>
+
+</article>
+</body>
+</html>
