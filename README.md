@@ -38,6 +38,9 @@ Quick checklist to add a post:
 6. Wait ~90 seconds for GitHub Pages to build
 7. Go to `https://medium.com/p/import`, paste `https://ylnhari.github.io/blog/posts/YYYY-MM-DD-your-slug/`
 8. Review the imported draft on Medium, then publish
+9. **Do NOT skip:** write the published Medium URL back — set `status` to
+   `"published"` and fill `medium_url` in both `posts/{SLUG}/meta.json` and
+   the post's entry in `posts/index.json`. See `AGENT.md` Step 8 for detail.
 
 ---
 
