@@ -241,6 +241,26 @@ said, in the way that expresses it best, and stop there.
   The post body must still carry a static PNG of the same view, so Medium
   readers lose interactivity, not information.
 
+### Model comparisons — link the standing bench page, never re-argue it
+There is ONE canonical, first-hand model comparison:
+**https://ylnhari.github.io/ai-signal/bench.html**. It carries the full results
+table (coding / long-document reading / drawing), the exact prompts, every
+model's raw output, the scoring method, and each model's drawings — all measured
+first-hand, and it grows as new models are tested.
+
+- Any post that compares models, or leans on a claim about one model being
+  better/worse at coding, reading, or instruction-following, **links to it**
+  instead of restating the numbers. One link, in the sentence making the claim.
+- **Never re-derive or re-argue model differences per post**, and never paste the
+  results table into a post — it goes stale the moment a new model is added,
+  and two copies of the numbers will drift apart.
+- Post-specific measurements are still welcome — but if the claim is "model X
+  handles Y better than model Z", that belongs on the bench page first, then the
+  post links it.
+- When a new model is tested, the bench page and the interactive chart at
+  `posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html` are both
+  updated; past posts are not retro-edited.
+
 ### Code blocks — label the purpose
 Every `<pre><code>` block gets a one-line bold lead-in immediately above it,
 one of: **Run this:** (commands the reader executes) · **Output:** (verified
@@ -312,6 +332,8 @@ Build time after a commit: typically 60–120 seconds. Check build status at:
 [ ] All <img src="..."> use absolute HTTPS URLs
 [ ] Every third-party number has an inline source link (fetched this session)
 [ ] "Sources & caveats" section present if the post carries third-party data
+[ ] Any model-vs-model claim links bench.html (see "Model comparisons") —
+    numbers NOT restated in the post
 [ ] Charts: PNGs in images/ + generator committed in charts/
 [ ] Interactive (if any): standalone interactive.html, linked not embedded,
     static PNG fallback in body

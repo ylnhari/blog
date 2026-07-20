@@ -51,6 +51,10 @@ read it first). Quality baseline:
   (illustrative):**
 - 3–6 sections with H2 headings; comparison posts end with a numbered
   decision framework; series posts cross-link siblings
+- **Any model-vs-model claim links the standing bench page**
+  (https://ylnhari.github.io/ai-signal/bench.html) rather than restating its
+  numbers — see STANDARDS.md § "Model comparisons". Don't re-argue model
+  differences per post; don't copy the results table in (it goes stale).
 
 ### Step 2b — Fact-check pass (MANDATORY before Step 3)
 

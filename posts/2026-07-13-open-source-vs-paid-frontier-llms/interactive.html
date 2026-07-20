@@ -188,6 +188,7 @@
     <div class="foot">
       <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: weighted cost (USD) per Intelligence Index task, log scale &mdash; lower is better. Data: Artificial Analysis, July 2026.</p>
       <p><a href="https://x.com/ArtificialAnlys/status/2077975838486843870">Source chart on X</a></p>
+      <p><a href="https://ylnhari.github.io/ai-signal/bench.html">First-hand benchmark results →</a></p>
     </div>
   </div>
 
@@ -246,11 +247,30 @@ function stepBg() {
 let bgRAF = 0;
 function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
 
-/* ---------- data ----------
-   idx  = Artificial Analysis Intelligence Index (BenchLM / Artificial Analysis, July 2026)
-   task = weighted cost (USD) per AA Intelligence Index task, from the Artificial
-          Analysis "Cost per Intelligence Index Task" chart (17 Jul 2026).
-   lab  = label placement override ('l' left, 't' above) + optional vertical nudge. */
+/* ---------- MODEL DATA — the only place model info lives ----------
+   HOW TO ADD A NEW MODEL: append one object to the MODELS array below, e.g.
+     { name: "New Model Name", kind: "paid" | "open",
+       idx: <Artificial Analysis Intelligence Index score>,
+       task: <weighted $ cost per AA Intelligence Index task>,
+       lab: "l" | "t",   // optional: force label left / above the dot
+       ldy: <number> }   // optional: vertical label nudge in px
+   That's it — nothing else on the page needs to change. Colors, tooltip text,
+   axis scaling, the efficient-frontier line, and label placement are all
+   derived from this array at draw time; there are no per-model DOM elements
+   or hardcoded indices anywhere else in this file. To remove a model, delete
+   its object. `lab`/`ldy` are optional and only exist to dodge label overlap
+   for that specific point — omit both to get the default placement (to the
+   right of the dot).
+
+   Field meanings:
+     name = display name used in the on-chart label and hover tooltip
+     kind = "paid" (closed/proprietary) or "open" (open-weight) — the only
+            thing that drives dot color, glow color, and the tooltip tag
+     idx  = Artificial Analysis Intelligence Index (BenchLM / Artificial Analysis, July 2026)
+     task = weighted cost (USD) per AA Intelligence Index task, from the Artificial
+            Analysis "Cost per Intelligence Index Task" chart (17 Jul 2026).
+   `per` (index points per task-$, used by the "Value per $" y-axis mode) is
+   computed automatically right after this array — never set it by hand. */
 const MODELS = [
   { name: "Claude Fable 5",    kind: "paid", idx: 59.9, task: 2.75, lab: "l"  },
   { name: "GPT-5.6 Sol",       kind: "paid", idx: 58.9, task: 1.04, ldy: -2   },
