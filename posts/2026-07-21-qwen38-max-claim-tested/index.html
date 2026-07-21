@@ -64,8 +64,8 @@
 <p>The entire spread &mdash; 73 down to 68, the whole visible difference between these six models &mdash; came from <strong>two tasks</strong>. Both were messy-data parsers. And both failures were carelessness, not reasoning:</p>
 
 <ul>
-  <li><strong>The comma trap.</strong> Amounts written with thousands separators, like <code>1,234.50</code>, in comma-delimited lines. Split on every comma and the row shatters into too many fields and gets silently dropped. Split on the first two only and it survives. Sonnet 5 and Opus 4.8 fell for this.</li>
-  <li><strong>The impossible-date trap.</strong> Dates like 29 February in a non-leap year, or 31 April. Check only whether the day is between 1 and 31 and these sail through. Check them against a real calendar and they do not. Fable 5, Opus 4.8 and DeepSeek fell for this.</li>
+  <li><strong>The comma trap.</strong> Amounts written with thousands separators, like <code>1,234.50</code>, in comma-delimited lines. Split on every comma and the row shatters into too many fields and gets silently dropped. Split on the first two only and it survives. Opus 4.8 fell for this in all four fresh re-runs; Sonnet 5 fell for it in only one of four and handled it in the other three &mdash; the captured miss was the minority outcome, not its usual behaviour.</li>
+  <li><strong>The impossible-date trap.</strong> Dates like 29 February in a non-leap year, or 31 April. Check only whether the day is between 1 and 31 and these sail through. Check them against a real calendar and they do not. Opus 4.8 fell for this in all four fresh re-runs; Fable 5's original miss did not reproduce once across four fresh samples; DeepSeek's miss rests on a single run not yet re-tested.</li>
 </ul>
 
 <p>Every algorithmic task &mdash; the rate limiter, the cache repair, the performance gate, the window functions &mdash; passed on every model. The hard problems were not what separated them.</p>
