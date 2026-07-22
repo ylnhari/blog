@@ -54,7 +54,7 @@
   <li><strong>Claude Sonnet 5</strong> &mdash; coding 70/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
   <li><strong>Claude Opus 4.8</strong> &mdash; coding 68/73 &middot; recall 5/5 &middot; contradictions 4/4 &middot; drawing 10/10</li>
 </ul>
-<p><em>Note (22 July): this scoreboard is the v2-battery snapshot from the day of testing. The harder v3.1 battery run since has reordered it &mdash; Grok fell to last on the coding checks and Sonnet leads them; the <a href="https://ylnhari.github.io/ai-signal/bench.html">live bench page</a> has the current table.</em></p>
+<p><em>Note (22 July): this scoreboard reflects the tasks as they stood on the day of testing. A harder, expanded set of tasks run since has reordered it &mdash; Grok fell to last on the coding checks and Sonnet leads them; the <a href="https://ylnhari.github.io/ai-signal/bench.html">live bench page</a> has the current table.</em></p>
 
 <p>Every prompt, every model's raw output, the scoring method and all twelve drawings are on the <a href="https://ylnhari.github.io/ai-signal/bench.html">model comparison page</a>, which grows as new models are tested.</p>
 
@@ -65,8 +65,8 @@
 <p>The entire spread &mdash; 73 down to 68, the whole visible difference between these six models &mdash; came from <strong>two tasks</strong>. Both were messy-data parsers. And both failures were carelessness, not reasoning:</p>
 
 <ul>
-  <li><strong>The comma trap.</strong> Amounts written with thousands separators, like <code>1,234.50</code>, in comma-delimited lines. Split on every comma and the row shatters into too many fields and gets silently dropped. Split on the first two only and it survives. Opus 4.8 fell for the comma sub-test in two of its four fresh re-runs &mdash; a real but partial weakness, not an every-time one. Sonnet 5's original miss did not reproduce in any of four fresh re-runs; a follow-up regrade of the same samples confirmed the number this post previously carried (three passes out of four) was itself a grading error &mdash; on the corrected count, Sonnet is clean on this trap in every sample collected so far.</li>
-  <li><strong>The impossible-date trap.</strong> Dates like 29 February in a non-leap year, or 31 April. Check only whether the day is between 1 and 31 and these sail through. Check them against a real calendar and they do not. Opus 4.8 fell for this in two of four fresh re-runs; Fable 5's original miss did reproduce once, in one of three valid fresh samples (a fourth sample was an unusable capture, not a fifth clean result); DeepSeek is now confirmed at four fresh samples too, missing this trap in two of them. Sonnet, Grok and Qwen never fell for it in any sample collected.</li>
+  <li><strong>The comma trap.</strong> Amounts written with thousands separators, like <code>1,234.50</code>, in comma-delimited lines. Split on every comma and the row shatters into too many fields and gets silently dropped. Split on the first two only and it survives. Opus 4.8 fell for it in two of four fresh runs &mdash; a real but partial weakness, not an every-time one. Sonnet 5 never did, across four fresh runs.</li>
+  <li><strong>The impossible-date trap.</strong> Dates like 29 February in a non-leap year, or 31 April. Check only whether the day is between 1 and 31 and these sail through. Check them against a real calendar and they do not. Opus 4.8 fell for it in two of four fresh runs; Sonnet 5, Grok 4.5, and Qwen3.8-Max never did; Fable 5 fell for it once in three usable runs (one run's file was corrupted when saving and isn't counted); DeepSeek fell for it in two of four fresh runs.</li>
 </ul>
 
 <p>Every algorithmic task &mdash; the rate limiter, the cache repair, the performance gate, the window functions &mdash; passed on every model. The hard problems were not what separated them.</p>
