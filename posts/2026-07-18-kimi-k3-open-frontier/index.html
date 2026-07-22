@@ -25,7 +25,7 @@
 
 <h2>Where it lands: third in the world</h2>
 
-<p>On the Artificial Analysis Intelligence Index — the aggregate that rolls reasoning, coding, math, and agentic evals into one number — <strong>Kimi K3 scores 57.1</strong>, behind only <a href="https://benchlm.ai/benchmarks/artificialAnalysis">Claude Fable 5 (59.9) and GPT-5.6 Sol (58.9)</a>. It sits <em>above</em> Claude Opus 4.8 (55.7), the most widely-deployed frontier model most people actually use today. That is a genuinely frontier placement, not a "good for an open model" placement.</p>
+<p>On the Artificial Analysis Intelligence Index — the aggregate that rolls reasoning, coding, math, and agentic evals into one number — <strong>Kimi K3 scores 57</strong>, behind only <a href="https://artificialanalysis.ai/models">Claude Fable 5 (60) and GPT-5.6 Sol (59)</a>. It sits <em>above</em> Claude Opus 4.8 (56), the most widely-deployed frontier model most people actually use today. That is a genuinely frontier placement, not a "good for an open model" placement.</p>
 
 <p>The jump from its predecessor is the real headline. Artificial Analysis clocked K3 at <a href="https://x.com/ArtificialAnlys/status/2077975838486843870">a 13-point gain over Kimi K2.6</a> on the same index — one of the largest single-generation leaps any lab has posted this year. Moonshot did it by going big: K3 is a <strong>2.8-trillion-parameter</strong> model, which <a href="https://simonwillison.net/2026/Jul/16/kimi-k3">makes it the first open model in the 3-trillion-parameter class</a>, past DeepSeek's 1.6T V4 Pro.</p>
 
@@ -44,6 +44,7 @@
 <p>Plot every current model by intelligence against cost-per-task and the shift becomes visible. K3 is the lone open-weight point that reaches the expensive, high-capability corner — it lands directly <em>on</em> the efficient frontier, wedged between GPT-5.6 Terra and Sol, the only orange dot in a neighborhood of blue.</p>
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-18-kimi-k3-open-frontier/images/cost-per-task-frontier.jpg" alt="Scatter of 19 frontier models by intelligence index versus cost per Intelligence Index task. Kimi K3 (open weight) sits on the efficient frontier at index 57.1 and $0.94 per task, between GPT-5.6 Terra and GPT-5.6 Sol. Cheap open models like DeepSeek V4 Pro, GLM-5.2 and Kimi K2.6 cluster at the low-cost left; the paid flagships Fable 5, Sol and Opus 4.8 hold the top right.">
+<p><em>Chart note (22 July): positions for models without figures sourced in this post are approximate — read the chart as the shape of the frontier, not exact coordinates.</em></p>
 
 <p>The picture carries both stories at once. Down the cheap left half, the old rule still holds — open models (DeepSeek V4 Pro, GLM-5.2, Kimi K2.6, MiniMax-M3) own the efficient frontier and return several times more index per dollar than anything paid. Up in the top-right, the ceiling is no longer closed-only: K3 broke in. But it broke in at the ceiling's <em>price</em>, not below it.</p>
 
@@ -80,7 +81,7 @@
 
 <ul>
 <li><a href="https://x.com/ArtificialAnlys/status/2077975838486843870">Artificial Analysis on X</a> — the +13-point index gain, the ~3× cost increase, and the cost-per-task figures ($0.94 K3, $1.80 Opus 4.8, $1.04 Sol, $0.33 K2.6, $0.31 Grok 4.5)</li>
-<li><a href="https://benchlm.ai/benchmarks/artificialAnalysis">BenchLM — Artificial Analysis Intelligence Index leaderboard (July 2026)</a> — index scores (K3 57.1, Fable 5 59.9, Sol 58.9, Opus 4.8 55.7, and the rest of the field)</li>
+<li><a href="https://artificialanalysis.ai/models">Artificial Analysis — Intelligence Index leaderboard (accessed 22 July 2026)</a> — index scores (K3 57, Fable 5 60, Sol 59, Opus 4.8 56, and the rest of the field)</li>
 <li><a href="https://www.kimi.com/blog/kimi-k3">Moonshot — Kimi K3 launch</a> — API pricing ($3 / $15 per million, $0.30 cached input), 1M-token context, July 27 open-weight date</li>
 <li><a href="https://simonwillison.net/2026/Jul/16/kimi-k3">Simon Willison — Kimi K3 notes</a> — 2.8T parameters, first open 3T-class model, Sonnet-parity pricing, token-efficiency and hands-on SVG observations</li>
 <li><a href="https://artificialanalysis.ai/models/kimi-k3">Artificial Analysis — Kimi K3 model page</a> — index and price analysis</li>

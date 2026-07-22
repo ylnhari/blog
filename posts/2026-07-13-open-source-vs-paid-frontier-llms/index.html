@@ -28,6 +28,7 @@
 <h2>The one chart</h2>
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/01-price-intelligence-frontier.png" alt="Scatter plot of Artificial Analysis Intelligence Index against output price on a log scale. Open-weight models (orange) cluster in the cheap region up to index ~51; paid models (blue) extend up to index 60 at much higher prices. GLM-5.2 sits at the same intelligence as GPT-5.6 Luna for less money.">
+<p><em>Chart note (22 July): positions for models without figures sourced in this post are approximate — read these charts as the shape of the market, not exact coordinates.</em></p>
 
 <p>Read it like an economist reads a cost curve. The vertical axis is the <a href="https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index">Artificial Analysis Intelligence Index</a> — a composite that, in its current version, weights agentic and coding tasks heavily. The horizontal axis is output-token price, on a log scale so that $4 and $50 both read clearly. The dashed line is the efficient frontier: the best intelligence available at each price. Anything below and to the right of it is paying more for less.</p>
 
@@ -37,7 +38,8 @@
 
 <p><strong>An open model quietly dominates a paid one.</strong> GLM-5.2's 51.1 essentially matches <a href="https://benchlm.ai/benchmarks/artificialAnalysis">GPT-5.6 Luna's 51.2</a> — at a lower price. That is not "open is competitive," that is an open-weight model beating a frontier lab's product on both axes at once. If you were reaching for Luna for a cost-sensitive job, GLM-5.2 is strictly the better deal.</p>
 
-<p><strong>But the ceiling is closed-only.</strong> Look at the top of the chart. Everything above index 56 — GPT-5.6 Sol at <a href="https://artificialanalysis.ai/models/gpt-5-6-sol">58.9</a>, Claude Fable 5 at <a href="https://artificialanalysis.ai/articles/gpt-5-6-has-landed">60</a> — is paid, and there is no open-weight model anywhere near it. The best open model tops out around 51. That gap is real, and it is where your money still goes.</p>
+<p><strong>But the ceiling is closed-only.</strong> Look at the top of the chart. Everything above index 56 — GPT-5.6 Sol at <a href="https://artificialanalysis.ai/models/gpt-5-6-sol">59</a>, Claude Fable 5 at <a href="https://artificialanalysis.ai/models/claude-fable-5">60</a> — is paid, and there is no open-weight model anywhere near it. The best open model tops out around 51. That gap is real, and it is where your money still goes.</p>
+<p><em>Update (18 July): Kimi K3's release moved the open-weights ceiling to index 57 — see <a href="../2026-07-18-kimi-k3-open-frontier/">the K3 post</a> for the new picture.</em></p>
 
 <blockquote>Open weights didn't catch the frontier. They caught the mid-tier — and made the mid-tier cheap. What you now pay a premium for is the last nine index points at the very top.</blockquote>
 
@@ -69,7 +71,7 @@
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-07-13-open-source-vs-paid-frontier-llms/images/05-effective-cost.png" alt="Bar chart comparing effective cost per task. Claude Opus 4.8 is the baseline at 1.0; Grok 4.5 completes the same task at roughly 0.06 of the cost, being both cheaper per token and far more token-efficient.">
 
-<p>Grok 4.5 is priced at <a href="https://pricepertoken.com/pricing-page/provider/xai">$2 input / $6 output</a>, and xAI reports it solves a task with <a href="https://chatforest.com/builders-log/grok-45-launch-pricing-benchmarks-cursor-training-builder-evaluation-july-2026/">roughly 4.2x fewer tokens than Opus 4.8</a>. Multiply the two effects together and a finished task can cost a small fraction of the Opus equivalent. Token efficiency is a hidden axis that sticker-price charts miss entirely — and it can flip the ranking. The same caution applies to open models: some of them are notably verbose, which quietly erodes their per-token advantage on real jobs. Always measure cost per completed task on your own workload, not cost per token on a price sheet.</p>
+<p>Grok 4.5 is priced at <a href="https://x.ai/news/grok-4-5">$2 input / $6 output</a>, and xAI reports it solves a task with <a href="https://x.ai/news/grok-4-5">roughly 4.2x fewer tokens than Opus 4.8</a>. Multiply the two effects together and a finished task can cost a small fraction of the Opus equivalent. Token efficiency is a hidden axis that sticker-price charts miss entirely — and it can flip the ranking. The same caution applies to open models: some of them are notably verbose, which quietly erodes their per-token advantage on real jobs. Always measure cost per completed task on your own workload, not cost per token on a price sheet.</p>
 
 <h2>The map, and the decision</h2>
 
@@ -107,9 +109,9 @@
 <li><a href="https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index">Artificial Analysis — Intelligence Index</a> (the capability axis, methodology)</li>
 <li><a href="https://benchlm.ai/benchmarks/artificialAnalysis">BenchLM — Artificial Analysis Index leaderboard, July 2026</a> (per-model index scores)</li>
 <li><a href="https://benchlm.ai/blog/posts/best-open-source-llm">BenchLM — Best open-source LLM 2026</a> (open-model rankings, SWE-bench)</li>
-<li><a href="https://deepinfra.com/blog/deepseek-v4-pro-pricing-guide-2026-providers-cost-analysis">DeepInfra — DeepSeek V4 Pro pricing guide</a> and <a href="https://pricepertoken.com/pricing-page/provider/xai">Price Per Token — xAI / Grok pricing</a> (open + Grok token costs)</li>
+<li><a href="https://deepinfra.com/blog/deepseek-v4-pro-pricing-guide-2026-providers-cost-analysis">DeepInfra — DeepSeek V4 Pro pricing guide</a> and <a href="https://x.ai/news/grok-4-5">xAI — Grok 4.5 announcement</a> (Grok pricing + token-efficiency, vendor page)</li>
 <li><a href="https://artificialanalysis.ai/articles/gpt-5-6-has-landed">Artificial Analysis — GPT-5.6 has landed</a> (GPT-5.6 tier scores and pricing)</li>
-<li><a href="https://chatforest.com/builders-log/grok-45-launch-pricing-benchmarks-cursor-training-builder-evaluation-july-2026/">Grok 4.5 builder evaluation</a> (token-efficiency claim; xAI-sourced, directional)</li>
+<li><a href="https://x.ai/news/grok-4-5">xAI — Grok 4.5 announcement</a> (token-efficiency chart, vendor page)</li>
 </ul>
 
 <hr>
