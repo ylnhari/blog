@@ -187,12 +187,13 @@
 
     <div class="foot">
       <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: weighted cost (USD) per Intelligence Index task, log scale &mdash; lower is better. Data: Artificial Analysis, July 2026.</p>
+      <p>Added 22 Jul 2026: Gemini 3.6 Flash, Gemini 3.5 Flash-Lite, DeepSeek V4 Flash &mdash; index from AA's model pages; their cost-per-task is derived from AA's total evaluation cost, so treat those x-positions as approximate.</p>
       <p><a href="https://x.com/ArtificialAnlys/status/2077975838486843870">Source chart on X</a></p>
       <p><a href="https://ylnhari.github.io/ai-signal/bench.html">First-hand benchmark results →</a></p>
     </div>
   </div>
 
-  <p class="takeaway">The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Open-weight models sit right on its cheap half: nobody gives you capability for less. What changed in July 2026 is the top-right. <b>Kimi K3 is the first open-weight model to land on the frontier at the high end</b> &mdash; index 57.1, third in the world behind only Claude Fable 5 and GPT-5.6 Sol. But read its x-coordinate: at $0.94 per task it costs roughly the same as GPT-5.6 Sol and half of Claude Opus 4.8. Open weights reached the frontier &mdash; and started charging frontier prices. Switch to the value axis and the older rule still holds below the ceiling: the cheapest open models return several times more index per task-dollar than anything paid.</p>
+  <p class="takeaway">The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Open-weight models sit right on its cheap half: nobody gives you capability for less. What changed in July 2026 is the top-right. <b>Kimi K3 is the first open-weight model to land on the frontier at the high end</b> &mdash; index 57, third in the world behind only Claude Fable 5 and GPT-5.6 Sol. But read its x-coordinate: at $0.94 per task it costs roughly the same as GPT-5.6 Sol and half of Claude Opus 4.8. Open weights reached the frontier &mdash; and started charging frontier prices. Switch to the value axis and the older rule still holds below the ceiling: the cheapest open models return several times more index per task-dollar than anything paid.</p>
 </div>
 
 <script>
@@ -291,6 +292,11 @@ const MODELS = [
   { name: "Nemotron 3 Ultra",  kind: "open", idx: 37.8, task: 0.23            },
   { name: "Mistral Medium 3.5",kind: "paid", idx: 29.9, task: 1.20            },
   { name: "gpt-oss-120b",      kind: "open", idx: 23.8, task: 0.06            },
+  /* added 22 Jul 2026 — idx from AA model pages; task = AA total eval cost /
+     ~2200 Intelligence-Index tasks (approximate; see footnote) */
+  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 50.0, task: 0.33, approx: 1 },
+  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 36.0, task: 0.068, approx: 1 },
+  { name: "DeepSeek V4 Flash", kind: "open", idx: 40.0, task: 0.033, approx: 1 },
 ];
 MODELS.forEach(m => m.per = m.idx / m.task);
 
@@ -299,8 +305,8 @@ const cvs = document.getElementById("c"), ctx = cvs.getContext("2d");
 const tip = document.getElementById("tip"), holder = cvs.parentElement;
 let W = 0, H = 0, dpr = 1, filter = "all", mode = "index";
 let placed = [], hover = -1, intro = 0, introRAF = 0;
-const pad = { l: 66, r: 30, t: 30, b: 56 };
-const X_MIN = 0.03, X_MAX = 3.4, lx = v => Math.log10(v);
+const pad = { l: 70, r: 44, t: 48, b: 60 };
+const X_MIN = 0.022, X_MAX = 4.6, lx = v => Math.log10(v);
 const XT = [0.05, 0.1, 0.2, 0.5, 1, 2, 3];
 
 function shown(m) { return filter === "all" || m.kind === filter; }
@@ -314,7 +320,7 @@ function sy(v) { const [a, b] = yDomain(); return H - pad.b - (v - a) / (b - a) 
 function fmtUsd(v) { return "$" + (v < 1 ? v.toFixed(2) : v.toString()); }
 
 function resize() {
-  const w = holder.clientWidth, h = Math.max(430, Math.min(600, w * 0.64));
+  const w = holder.clientWidth, h = Math.max(460, Math.min(680, w * 0.70));
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   cvs.width = w * dpr; cvs.height = h * dpr; cvs.style.height = h + "px";
   W = w; H = h; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
@@ -334,22 +340,43 @@ function niceTicks(a, b) {
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
+  const labelQueue = [];
   const cInk = css("--ink"), cInk3 = css("--ink-3s"), cGrid = css("--grid");
   const cPaid = css("--paid"), cOpen = css("--open"), cFront = css("--frontier");
   const cPg = css("--paid-glow"), cOg = css("--open-glow");
   const [ya, yb] = yDomain();
 
-  // "cheap & capable" value zone (index mode): low cost, high intelligence
+  // quadrants (index mode): split at $0.60/task and index 48
   if (mode === "index") {
-    const zx = sx(0.6), zy = sy(62.5), zyb = sy(50);
-    const g = ctx.createLinearGradient(pad.l, 0, zx, 0);
-    g.addColorStop(0, cOg); g.addColorStop(1, "transparent");
-    ctx.globalAlpha = .13; ctx.fillStyle = g;
-    ctx.fillRect(pad.l, zy, zx - pad.l, zyb - zy);
+    const qx = sx(0.6), qy = sy(48);
+    const top = sy(yDomain()[1]), bot = H - pad.b, right = W - pad.r;
+    // ideal: capable & cheap (top-left) — strongest tint
+    ctx.globalAlpha = .11; ctx.fillStyle = cOg;
+    ctx.fillRect(pad.l, top, qx - pad.l, qy - top);
+    // premium frontier (top-right) — faint cool tint
+    ctx.globalAlpha = .05; ctx.fillStyle = cPg;
+    ctx.fillRect(qx, top, right - qx, qy - top);
+    // poor value (bottom-right) — faint warm tint
+    ctx.globalAlpha = .05; ctx.fillStyle = "#ff7a59";
+    ctx.fillRect(qx, qy, right - qx, bot - qy);
     ctx.globalAlpha = 1;
-    ctx.fillStyle = cOpen; ctx.font = "700 11px ui-sans-serif, system-ui, sans-serif";
-    ctx.textAlign = "left"; ctx.textBaseline = "top";
-    ctx.fillText("CHEAP & CAPABLE", pad.l + 10, zy + 8);
+    // quadrant boundary crosshair
+    ctx.strokeStyle = cGrid; ctx.lineWidth = 1; ctx.setLineDash([2, 5]);
+    ctx.beginPath(); ctx.moveTo(qx, top); ctx.lineTo(qx, bot); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad.l, qy); ctx.lineTo(right, qy); ctx.stroke();
+    ctx.setLineDash([]);
+    // corner labels
+    ctx.font = "700 10px ui-sans-serif, system-ui, sans-serif";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = cOpen; ctx.textAlign = "left";
+    ctx.fillText("IDEAL — CAPABLE & CHEAP", pad.l + 10, top + 8);
+    ctx.fillStyle = cInk3; ctx.textAlign = "right";
+    ctx.fillText("PREMIUM FRONTIER", right - 10, top + 8);
+    ctx.fillStyle = cInk3; ctx.textAlign = "left";
+    ctx.fillText("BUDGET / UTILITY", pad.l + 10, qy + 8);
+    ctx.fillStyle = "#ff7a59"; ctx.textAlign = "right"; ctx.globalAlpha = .8;
+    ctx.fillText("POOR VALUE", right - 10, qy + 8);
+    ctx.globalAlpha = 1;
   }
 
   // grid + y labels
@@ -427,24 +454,45 @@ function draw() {
     ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = col; ctx.globalAlpha = t; ctx.fill();
     ctx.restore();
     if (hover === i) { ctx.beginPath(); ctx.arc(x, y, r + 5, 0, 7); ctx.strokeStyle = col; ctx.globalAlpha = t * .5; ctx.lineWidth = 1.6; ctx.stroke(); }
-    // label
-    ctx.globalAlpha = t;
-    ctx.fillStyle = cInk; ctx.font = (hover === i ? "700 " : "500 ") + "12px ui-sans-serif, system-ui, sans-serif";
-    ctx.textBaseline = "middle";
-    const ly = y + (m.ldy || 0);
-    const tw = ctx.measureText(m.name).width;
-    const right = x + r + 8;
-    const forceLeft = m.lab === "l";
-    const forceTop = m.lab === "t";
-    if (forceTop) {
-      ctx.textAlign = "center"; ctx.fillText(m.name, x, y - r - 11);
-    } else if (!forceLeft && right + tw < W - pad.r) {
-      ctx.textAlign = "left"; ctx.fillText(m.name, right, ly);
-    } else {
-      ctx.textAlign = "right"; ctx.fillText(m.name, x - r - 8, ly);
-    }
-    ctx.globalAlpha = 1;
+    // label — queued for the collision-avoiding placement pass below
+    labelQueue.push({ i, m, x, y, r, t });
   });
+
+  // greedy label placement: try candidate offsets until one doesn't collide
+  ctx.textBaseline = "middle";
+  const boxes = labelQueue.map(q => ({ x: q.x - q.r - 3, y: q.y - q.r - 3,
+                                       w: 2 * q.r + 6, h: 2 * q.r + 6 }));
+  const hit = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x &&
+                        a.y < b.y + b.h && a.y + a.h > b.y;
+  for (const q of labelQueue.sort((a, b) => a.x - b.x)) {
+    ctx.font = (hover === q.i ? "700 " : "500 ") + "12px ui-sans-serif, system-ui, sans-serif";
+    const twd = ctx.measureText(q.m.name).width, th = 13;
+    const cand = [];
+    const push = (align, cx, cy) => cand.push({ align, cx, cy });
+    const d = q.r + 8;
+    if (q.m.lab === "t") push("center", q.x, q.y - d - 6);
+    if (q.m.lab === "l") push("right", q.x - d, q.y + (q.m.ldy || 0));
+    push("left",  q.x + d, q.y + (q.m.ldy || 0));
+    push("right", q.x - d, q.y + (q.m.ldy || 0));
+    push("center", q.x, q.y - d - 6);
+    push("center", q.x, q.y + d + 7);
+    for (const dy of [14, -14, 26, -26])
+      for (const [al, cx] of [["left", q.x + d], ["right", q.x - d]])
+        push(al, cx, q.y + dy);
+    let chosen = cand[cand.length - 1];
+    for (const c of cand) {
+      const bx = c.align === "left" ? c.cx : c.align === "right" ? c.cx - twd : c.cx - twd / 2;
+      const box = { x: bx - 2, y: c.cy - th / 2 - 1, w: twd + 4, h: th + 2 };
+      if (box.x < 2 || box.x + box.w > W - 2) continue;
+      if (box.y < 2 || box.y + box.h > H - pad.b + 24) continue;
+      if (!boxes.some(b => hit(box, b))) { chosen = c; boxes.push(box); break; }
+    }
+    ctx.globalAlpha = q.t;
+    ctx.fillStyle = cInk;
+    ctx.textAlign = chosen.align;
+    ctx.fillText(q.m.name, chosen.cx, chosen.cy);
+    ctx.globalAlpha = 1;
+  }
 }
 function pill(c, txt, x, y, col, left) {
   c.save(); c.font = "700 11.5px ui-sans-serif, system-ui, sans-serif";
