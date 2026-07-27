@@ -414,8 +414,13 @@ function draw() {
     if (intro > .85) {
       ctx.globalAlpha = (intro - .85) / .15;
       ctx.fillStyle = cFront; ctx.font = "italic 11px ui-sans-serif, system-ui, sans-serif";
-      ctx.textAlign = "right"; ctx.textBaseline = "bottom";
-      ctx.fillText("efficient frontier", W - pad.r - 6, sy(yVal(fr[fr.length - 1])) - 7);
+      ctx.textAlign = "right";
+      // When the frontier ends high, its label would sit under the PREMIUM
+      // FRONTIER corner label; drop it below the line instead.
+      const frY = sy(yVal(fr[fr.length - 1]));
+      const nearTop = frY - 7 < pad.t + 26;
+      ctx.textBaseline = nearTop ? "top" : "bottom";
+      ctx.fillText("efficient frontier", W - pad.r - 6, frY + (nearTop ? 8 : -7));
       ctx.globalAlpha = 1;
     }
   }
