@@ -1,21 +1,6 @@
-# Python
-__pycache__/
-*.py[cod]
-
-# OS cruft
-.DS_Store
-Thumbs.db
-
-# Editor / merge leftovers
-*.swp
-*.orig
-*.rej
-*.bak
-
-# Secrets — never commit
+# Generated local output and machine-specific state
+post.html
 .env
-.env.*
-!.env.example
-
-# Deps
-node_modules/
+.venv/
+__pycache__/
+*.log
