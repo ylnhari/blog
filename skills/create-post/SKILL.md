@@ -1,4 +1,9 @@
-# Skill: Create Blog Post
+---
+name: create-blog-post
+description: Create a fact-checked post in this repository, deploy it to GitHub Pages, and import it as a Medium draft when Hari requests a blog post or Medium draft.
+---
+
+# Create Blog Post
 
 ## Trigger
 
@@ -16,9 +21,9 @@ Takes a topic from Hari, generates a complete blog post, commits it to `github.c
 
 ## Before You Start
 
-1. Read `AGENT.md` in the blog repo root — it has the full step-by-step workflow.
-2. Read `STANDARDS.md` in the blog repo root — it defines every HTML rule.
-3. The repo is cloned at `C:\Users\ylnha\projects\blog`
+1. Read `../../AGENTS.md` — it is the canonical step-by-step workflow.
+2. Read `../../STANDARDS.md` — it defines every HTML rule.
+3. Run from the repository root; never assume a machine-specific clone path.
 
 ## Step Summary
 

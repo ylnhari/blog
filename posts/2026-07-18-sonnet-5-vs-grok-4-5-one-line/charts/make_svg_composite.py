@@ -8,11 +8,15 @@ Source renders live in the private bench kit; this script composites the two
 into one image for the post.
 """
 import os
+from pathlib import Path
 from PIL import Image, ImageDraw
 
-MB = r"C:\Users\ylnha\Projects\signaldesk\experiments\model-bench\results"
-OUT = os.path.join(os.path.dirname(__file__), "..", "images")
-os.makedirs(OUT, exist_ok=True)
+default_bench = Path(__file__).resolve().parents[4] / "signaldesk" / "experiments" / "model-bench" / "results"
+MB = Path(os.environ.get("MODEL_BENCH_RESULTS", default_bench)).expanduser().resolve()
+if not MB.is_dir():
+    raise SystemExit("Set MODEL_BENCH_RESULTS to the private benchmark results directory.")
+OUT = Path(__file__).resolve().parent.parent / "images"
+OUT.mkdir(parents=True, exist_ok=True)
 
 CLAUDE = (47, 111, 237)
 GROK = (224, 125, 47)
@@ -24,8 +28,8 @@ def load(p, h=560):
     return im.resize((w, h), Image.LANCZOS)
 
 
-a = load(os.path.join(MB, "claude-sonnet-5", "2026-07-18", "x1-render.png"))
-b = load(os.path.join(MB, "grok-4.5", "2026-07-18", "x1-render.png"))
+a = load(MB / "claude-sonnet-5" / "2026-07-18" / "x1-render.png")
+b = load(MB / "grok-4.5" / "2026-07-18" / "x1-render.png")
 
 pad, top = 24, 54
 W = a.width + b.width + pad * 3
@@ -38,5 +42,6 @@ d = ImageDraw.Draw(canvas)
 d.text((pad + 8, 20), "Claude Sonnet 5", fill=CLAUDE)
 d.text((pad * 2 + a.width + 8, 20), "Grok 4.5", fill=GROK)
 
-canvas.save(os.path.join(OUT, "03-svg-side-by-side.png"))
-print("wrote", os.path.abspath(os.path.join(OUT, "03-svg-side-by-side.png")))
+output = OUT / "03-svg-side-by-side.png"
+canvas.save(output)
+print("wrote", output)
