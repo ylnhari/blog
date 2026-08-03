@@ -1,6 +1,21 @@
-# Generated local output and machine-specific state
-post.html
-.env
-.venv/
+# Python
 __pycache__/
-*.log
+*.py[cod]
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editor / merge leftovers
+*.swp
+*.orig
+*.rej
+*.bak
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Deps
+node_modules/
