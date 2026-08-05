@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Price of Intelligence — Interactive Frontier</title>
+<title>The Price of Intelligence — Interactive Frontier Map</title>
 <style>
   :root {
     --bg-0: #f3f2ec;
@@ -79,7 +79,10 @@
     overflow-x: hidden;
   }
   #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-  .wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 52px 24px 72px; }
+  /* The plot carries 24 labelled points, so it needs a wide canvas for the
+     names to resolve without colliding. Prose blocks below stay narrow via
+     their own max-width — only the chart panel uses the full width. */
+  .wrap { position: relative; z-index: 1; max-width: 1560px; margin: 0 auto; padding: 52px 28px 72px; }
 
   .eyebrow {
     display: inline-flex; align-items: center; gap: 9px;
@@ -148,7 +151,9 @@
   .foot a { color: var(--paid); text-decoration: none; font-weight: 600; }
   .foot a:hover { text-decoration: underline; }
 
-  .takeaway { margin: 34px auto 0; font-size: clamp(15px, 2vw, 16.5px); color: var(--ink-2); max-width: 66ch; }
+  /* Left-aligned, not centred: on the wide canvas an auto-margin block floats
+     far right of the left-aligned lede and reads as an unrelated column. */
+  .takeaway { margin: 34px 0 0; font-size: clamp(15px, 2vw, 16.5px); color: var(--ink-2); max-width: 66ch; }
   .takeaway b { color: var(--ink); font-weight: 700; }
 
   @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
@@ -157,9 +162,9 @@
 <canvas id="bg" aria-hidden="true"></canvas>
 
 <div class="wrap">
-  <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; July 2026</p>
+  <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; August 2026</p>
   <h1>The <span class="em">price</span> of intelligence</h1>
-  <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the weighted cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights own the cheap end of the curve; the very top used to stay paid — until Kimi K3 became the first open model to climb into it. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
+  <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights own the cheap end of the curve, and Kimi K3 holds the rung open models opened at the top. What changed since July: Claude Opus 5 took the lead outright, OpenAI cut GPT-5.6 Luna's price by 80%, and DeepSeek's re-post-trained V4 Flash landed at index 50 for three cents a task. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
 
   <div class="panel">
     <div class="controls">
@@ -186,14 +191,15 @@
     </div>
 
     <div class="foot">
-      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: weighted cost (USD) per Intelligence Index task, log scale &mdash; lower is better. Data: Artificial Analysis, July 2026.</p>
-      <p>Added 22 Jul 2026: Gemini 3.6 Flash, Gemini 3.5 Flash-Lite, DeepSeek V4 Flash &mdash; index from AA's model pages; their cost-per-task is derived from AA's total evaluation cost, so treat those x-positions as approximate.</p>
-      <p><a href="https://x.com/ArtificialAnlys/status/2077975838486843870">Source chart on X</a></p>
+      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 24 points read from Artificial Analysis model pages on 5 Aug 2026.</p>
+      <p>Method: x = each model's published cost to run the full Intelligence Index, divided by ~2,200 tasks. The divisor is an estimate, so absolute x-values are approximate &mdash; but it is the same divisor for every model, so the comparisons between them are not. AA has since rebased the Index, so these scores are not comparable with figures quoted in its older launch articles.</p>
+      <p>Not plotted: Gemini 3 Pro and Inkling (index 41), for which AA reports no evaluation cost. Qwen3.8-Max is marked paid &mdash; Alibaba has promised weights but not yet shipped them.</p>
+      <p><a href="https://artificialanalysis.ai/models">Artificial Analysis model index</a></p>
       <p><a href="https://ylnhari.github.io/ai-signal/bench.html">First-hand benchmark results →</a></p>
     </div>
   </div>
 
-  <p class="takeaway">The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Open-weight models sit right on its cheap half: nobody gives you capability for less. What changed in July 2026 is the top-right. <b>Kimi K3 is the first open-weight model to land on the frontier at the high end</b> &mdash; index 57, third in the world behind only Claude Fable 5 and GPT-5.6 Sol. But read its x-coordinate: at $0.94 per task it costs roughly the same as GPT-5.6 Sol and half of Claude Opus 4.8. Open weights reached the frontier &mdash; and started charging frontier prices. Switch to the value axis and the older rule still holds below the ceiling: the cheapest open models return several times more index per task-dollar than anything paid.</p>
+  <p class="takeaway">The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Seven models hold it: DeepSeek V4 Flash, GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Kimi K3, GPT-5.6 Sol, and Claude Opus 5 at the ceiling. Two of the seven are open weights, and they hold the two ends that matter. <b>DeepSeek's re-post-trained V4 Flash is the story of this update</b>: index 50 at roughly $0.03 a task, the same score as Gemini 3.5 Flash and Gemini 3.6 Flash for about a fourteenth of their cost. It anchors the whole cheap half of the curve. At the top, <b>Kimi K3 still holds the rung open weights opened in July</b> &mdash; index 57, fourth in the world &mdash; but at about $1.11 per task it is no longer cheap; it costs near what GPT-5.6 Sol does. The paid tiers did move: OpenAI's 80% cut puts GPT-5.6 Luna on the frontier at index 51, the best value of anything closed. Switch to the value axis and the gap is still not close &mdash; DeepSeek V4 Flash returns around 1,500 index points per task-dollar against Luna's ~645 and Claude Fable 5's ~23.</p>
 </div>
 
 <script>
@@ -252,7 +258,7 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
    HOW TO ADD A NEW MODEL: append one object to the MODELS array below, e.g.
      { name: "New Model Name", kind: "paid" | "open",
        idx: <Artificial Analysis Intelligence Index score>,
-       task: <weighted $ cost per AA Intelligence Index task>,
+       cost: <AA "Cost to Run Intelligence Index", total USD>,
        lab: "l" | "t",   // optional: force label left / above the dot
        ldy: <number> }   // optional: vertical label nudge in px
    That's it — nothing else on the page needs to change. Colors, tooltip text,
@@ -267,37 +273,61 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
      name = display name used in the on-chart label and hover tooltip
      kind = "paid" (closed/proprietary) or "open" (open-weight) — the only
             thing that drives dot color, glow color, and the tooltip tag
-     idx  = Artificial Analysis Intelligence Index (BenchLM / Artificial Analysis, July 2026)
-     task = weighted cost (USD) per AA Intelligence Index task, from the Artificial
-            Analysis "Cost per Intelligence Index Task" chart (17 Jul 2026).
+     idx  = Artificial Analysis Intelligence Index, read off each model's AA
+            model page on 5 Aug 2026. AA shows these as integers.
+     task = cost (USD) per AA Intelligence Index task = that model's published
+            "Cost to Run Artificial Analysis Intelligence Index" divided by
+            TASKS_PER_INDEX below.
    `per` (index points per task-$, used by the "Value per $" y-axis mode) is
-   computed automatically right after this array — never set it by hand. */
+   computed automatically right after this array — never set it by hand.
+
+   REFRESHED 5 Aug 2026 — read this before editing:
+   Every x-position is now derived the same way, from AA's per-model total
+   evaluation cost. The earlier build mixed two sources: most points came from
+   AA's 17 Jul "Cost per Intelligence Index Task" chart while three later
+   additions were derived from evaluation cost. AA has since rebased the
+   Intelligence Index (Nemotron 3 Ultra reads 38 on its model page against the
+   47.7 quoted in AA's launch article, for example), so the two vintages were
+   no longer comparable. Deriving all 24 uniformly costs some absolute
+   precision on the x-axis — the divisor is an estimate — but makes every
+   pairwise comparison, which is the entire point of the chart, exact.
+   Consequence: do NOT paste a figure from AA's cost-per-task chart into
+   `task`. Use evaluation cost / TASKS_PER_INDEX, or the point will sit on a
+   different scale from its neighbours.
+
+   Two models are deliberately absent: Gemini 3 Pro and Inkling (Thinking
+   Machines, index 41). AA's pages report "No data available" for their
+   evaluation cost, so they have no honest x-coordinate. Add them if and when
+   AA publishes one. */
+const TASKS_PER_INDEX = 2200;
 const MODELS = [
-  { name: "Claude Fable 5",    kind: "paid", idx: 59.9, task: 2.75, lab: "l"  },
-  { name: "GPT-5.6 Sol",       kind: "paid", idx: 58.9, task: 1.04, ldy: -2   },
-  { name: "Kimi K3",           kind: "open", idx: 57.1, task: 0.94, lab: "t"  },
-  { name: "Claude Opus 4.8",   kind: "paid", idx: 55.7, task: 1.80, ldy: -4   },
-  { name: "GPT-5.6 Terra",     kind: "paid", idx: 55.0, task: 0.55            },
-  { name: "GPT-5.5",           kind: "paid", idx: 54.8, task: 0.99, ldy: 15   },
-  { name: "Grok 4.5",          kind: "paid", idx: 53.8, task: 0.31            },
-  { name: "Claude Sonnet 5",   kind: "paid", idx: 53.4, task: 1.53, ldy: 14   },
-  { name: "GPT-5.6 Luna",      kind: "paid", idx: 51.2, task: 0.21, lab: "l"  },
-  { name: "GLM-5.2",           kind: "open", idx: 51.1, task: 0.47, ldy: -14  },
-  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 50.2, task: 0.59, ldy: 15   },
-  { name: "Qwen3.7 Max",       kind: "paid", idx: 46.0, task: 0.98            },
-  { name: "MiniMax-M3",        kind: "open", idx: 44.4, task: 0.12, ldy: -15  },
-  { name: "DeepSeek V4 Pro",   kind: "open", idx: 44.3, task: 0.04, ldy: 15   },
-  { name: "Kimi K2.6",         kind: "open", idx: 44.2, task: 0.33, ldy: 15   },
-  { name: "Gemini 3 Pro",      kind: "paid", idx: 39.5, task: 0.29            },
-  { name: "Nemotron 3 Ultra",  kind: "open", idx: 37.8, task: 0.23            },
-  { name: "Mistral Medium 3.5",kind: "paid", idx: 29.9, task: 1.20            },
-  { name: "gpt-oss-120b",      kind: "open", idx: 23.8, task: 0.06            },
-  /* added 22 Jul 2026 — idx from AA model pages; task = AA total eval cost /
-     ~2200 Intelligence-Index tasks (approximate; see footnote) */
-  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 50.0, task: 0.33, approx: 1 },
-  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 36.0, task: 0.068, approx: 1 },
-  { name: "DeepSeek V4 Flash", kind: "open", idx: 40.0, task: 0.033, approx: 1 },
+  // name                       kind      idx  AA eval cost (USD)
+  { name: "Claude Opus 5",     kind: "paid", idx: 61, cost: 3835.51 },
+  { name: "Claude Fable 5",    kind: "paid", idx: 60, cost: 5630.52, lab: "l" },
+  { name: "GPT-5.6 Sol",       kind: "paid", idx: 59, cost: 2824.18, ldy: -13 },
+  { name: "Kimi K3",           kind: "open", idx: 57, cost: 2437.41, lab: "t" },
+  { name: "Claude Opus 4.8",   kind: "paid", idx: 56, cost: 3752.55, lab: "l" },
+  { name: "GPT-5.5",           kind: "paid", idx: 55, cost: 2777.91, ldy: 15 },
+  { name: "GPT-5.6 Terra",     kind: "paid", idx: 55, cost: 1403.15 },
+  { name: "Grok 4.5",          kind: "paid", idx: 54, cost: 582.47, lab: "t" },
+  { name: "Claude Sonnet 5",   kind: "paid", idx: 53, cost: 4010.12, lab: "l" },
+  { name: "Qwen3.8-Max",       kind: "paid", idx: 53, cost: 2159.51, ldy: 15 },
+  { name: "GPT-5.6 Luna",      kind: "paid", idx: 51, cost: 174.06, lab: "t" },
+  { name: "GLM-5.2",           kind: "open", idx: 51, cost: 939.41, ldy: -14 },
+  { name: "DeepSeek V4 Flash", kind: "open", idx: 50, cost: 72.02 },
+  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 50, cost: 726.70, ldy: 15 },
+  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 50, cost: 1040.88, ldy: -15 },
+  { name: "Qwen3.7 Max",       kind: "paid", idx: 46, cost: 1454.10 },
+  { name: "DeepSeek V4 Pro",   kind: "open", idx: 44, cost: 176.34, lab: "t" },
+  { name: "MiniMax-M3",        kind: "open", idx: 44, cost: 203.86, ldy: 15 },
+  { name: "Kimi K2.6",         kind: "open", idx: 44, cost: 840.64 },
+  { name: "MiMo-V2.5-Pro",     kind: "open", idx: 42, cost: 98.91 },
+  { name: "Nemotron 3 Ultra",  kind: "open", idx: 38, cost: 529.72 },
+  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 36, cost: 153.08 },
+  { name: "Mistral Medium 3.5",kind: "paid", idx: 30, cost: 882.15 },
+  { name: "gpt-oss-120b",      kind: "open", idx: 24, cost: 96.28 },
 ];
+MODELS.forEach(m => m.task = m.cost / TASKS_PER_INDEX);
 MODELS.forEach(m => m.per = m.idx / m.task);
 
 /* ---------- chart ---------- */
@@ -305,22 +335,32 @@ const cvs = document.getElementById("c"), ctx = cvs.getContext("2d");
 const tip = document.getElementById("tip"), holder = cvs.parentElement;
 let W = 0, H = 0, dpr = 1, filter = "all", mode = "index";
 let placed = [], hover = -1, intro = 0, introRAF = 0;
-const pad = { l: 70, r: 44, t: 48, b: 60 };
-const X_MIN = 0.022, X_MAX = 4.6, lx = v => Math.log10(v);
+const pad = { l: 78, r: 58, t: 52, b: 62 };
+// Domain brackets the live data (≈$0.033 DeepSeek V4 Flash → ≈$2.56 Fable 5)
+// with just enough slack for the outermost labels to sit outside their dots.
+const X_MIN = 0.024, X_MAX = 3.6, lx = v => Math.log10(v);
 const XT = [0.05, 0.1, 0.2, 0.5, 1, 2, 3];
 
 function shown(m) { return filter === "all" || m.kind === filter; }
 function yDomain() {
-  if (mode === "index") return [20, 62.5];
+  if (mode === "index") return [20, 64];
   return [0, Math.max(...MODELS.filter(shown).map(m => m.per)) * 1.12];
 }
 function yVal(m) { return mode === "index" ? m.idx : m.per; }
 function sx(p) { return pad.l + (lx(p) - lx(X_MIN)) / (lx(X_MAX) - lx(X_MIN)) * (W - pad.l - pad.r); }
 function sy(v) { const [a, b] = yDomain(); return H - pad.b - (v - a) / (b - a) * (H - pad.t - pad.b); }
-function fmtUsd(v) { return "$" + (v < 1 ? v.toFixed(2) : v.toString()); }
+// Cheap models now cluster below $0.10/task, where two decimals collapses
+// DeepSeek V4 Flash and gpt-oss-120b onto the same string — so go to three.
+function fmtUsd(v) { return "$" + (v < 0.1 ? v.toFixed(3) : v.toFixed(2)); }
+function fmtTick(v) { return "$" + (v < 1 ? v.toFixed(2) : v); }
+// AA publishes the Intelligence Index as whole numbers; don't imply a decimal
+// of precision that isn't in the source.
+function fmtIdx(v) { return Number.isInteger(v) ? String(v) : v.toFixed(1); }
 
 function resize() {
-  const w = holder.clientWidth, h = Math.max(460, Math.min(680, w * 0.70));
+  // Wide-and-short aspect: horizontal room is what keeps 24 model labels from
+  // overlapping, so height grows far more slowly than width.
+  const w = holder.clientWidth, h = Math.max(480, Math.min(760, w * 0.52));
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   cvs.width = w * dpr; cvs.height = h * dpr; cvs.style.height = h + "px";
   W = w; H = h; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
@@ -390,7 +430,7 @@ function draw() {
     ctx.fillStyle = cInk3; ctx.fillText(mode === "index" ? v : v.toFixed(0), pad.l - 11, y);
   }
   ctx.textAlign = "center"; ctx.textBaseline = "top";
-  for (const v of XT) { ctx.fillStyle = cInk3; ctx.fillText(fmtUsd(v), sx(v), H - pad.b + 11); }
+  for (const v of XT) { ctx.fillStyle = cInk3; ctx.fillText(fmtTick(v), sx(v), H - pad.b + 11); }
 
   // axis titles
   ctx.fillStyle = cInk3; ctx.font = "600 12px ui-sans-serif, system-ui, sans-serif";
@@ -439,7 +479,7 @@ function draw() {
     ctx.fillStyle = col; ctx.textAlign = "center"; ctx.textBaseline = "top";
     pill(ctx, fmtUsd(m.task), p.x, H - pad.b + 10, col);
     ctx.textAlign = "right"; ctx.textBaseline = "middle";
-    pill(ctx, (mode === "index" ? m.idx.toFixed(1) : m.per.toFixed(0)), pad.l - 8, p.y, col, true);
+    pill(ctx, (mode === "index" ? fmtIdx(m.idx) : m.per.toFixed(0)), pad.l - 8, p.y, col, true);
   }
 
   // points (rise + fade in on intro, staggered by cost)
@@ -467,6 +507,20 @@ function draw() {
   ctx.textBaseline = "middle";
   const boxes = labelQueue.map(q => ({ x: q.x - q.r - 3, y: q.y - q.r - 3,
                                        w: 2 * q.r + 6, h: 2 * q.r + 6 }));
+  // Treat the dashed frontier as an obstacle too. It's a step polyline, so each
+  // segment contributes one horizontal and one vertical bar. Without this, the
+  // names sitting on the frontier get a dash drawn straight through them and
+  // read as struck-through text.
+  if (fr.length > 1) {
+    const fx = m => sx(m.task), fy = m => sy(yVal(m));
+    for (let i = 1; i < fr.length; i++) {
+      const x0 = fx(fr[i - 1]), x1 = fx(fr[i]), y0 = fy(fr[i - 1]), y1 = fy(fr[i]);
+      boxes.push({ x: x0, y: y0 - 5, w: x1 - x0, h: 10 });
+      boxes.push({ x: x1 - 5, y: Math.min(y0, y1), w: 10, h: Math.abs(y1 - y0) });
+    }
+    const last = fr[fr.length - 1], xl = fx(last);
+    boxes.push({ x: xl, y: fy(last) - 5, w: W - pad.r - xl, h: 10 });
+  }
   const hit = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x &&
                         a.y < b.y + b.h && a.y + a.h > b.y;
   for (const q of labelQueue.sort((a, b) => a.x - b.x)) {
@@ -481,15 +535,25 @@ function draw() {
     push("right", q.x - d, q.y + (q.m.ldy || 0));
     push("center", q.x, q.y - d - 6);
     push("center", q.x, q.y + d + 7);
-    for (const dy of [14, -14, 26, -26])
-      for (const [al, cx] of [["left", q.x + d], ["right", q.x - d]])
-        push(al, cx, q.y + dy);
+    // Several models now share an Intelligence Index score (three at 50, three
+    // at 44), so neighbours land on the same gridline and the first few
+    // offsets all collide. Sweep further vertically, then step the label out
+    // horizontally as well before giving up.
+    for (const ring of [d, d + 16, d + 34])
+      for (const dy of [14, -14, 22, -22, 30, -30, 40, -40])
+        for (const [al, cx] of [["left", q.x + ring], ["right", q.x - ring]])
+          push(al, cx, q.y + dy);
     let chosen = cand[cand.length - 1];
     for (const c of cand) {
       const bx = c.align === "left" ? c.cx : c.align === "right" ? c.cx - twd : c.cx - twd / 2;
       const box = { x: bx - 2, y: c.cy - th / 2 - 1, w: twd + 4, h: th + 2 };
-      if (box.x < 2 || box.x + box.w > W - 2) continue;
-      if (box.y < 2 || box.y + box.h > H - pad.b + 24) continue;
+      // Left edge stops at the plot area, not the panel: the y-axis tick
+      // numbers live in that gutter and a leftward label lands on top of them
+      // (DeepSeek V4 Flash, the cheapest point, hits this every time). The
+      // right gutter is empty, so labels may use it. Same below the axis,
+      // where the x-tick row sits.
+      if (box.x < pad.l - 2 || box.x + box.w > W - 4) continue;
+      if (box.y < 6 || box.y + box.h > H - pad.b - 2) continue;
       if (!boxes.some(b => hit(box, b))) { chosen = c; boxes.push(box); break; }
     }
     ctx.globalAlpha = q.t;
@@ -513,7 +577,11 @@ function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w
 
 function introEased(i) {
   if (REDUCED) return 1;
-  const start = i * 0.04, span = 0.5;
+  // The stagger must finish inside intro's 0..1 range. A fixed per-model step
+  // silently broke as the list grew: at 24 models a hardcoded 0.04 put the
+  // last dot's start at 0.92, so it topped out at 16% opacity and never
+  // finished fading in. Derive the step from the model count instead.
+  const span = 0.5, start = MODELS.length > 1 ? (i / (MODELS.length - 1)) * (1 - span) : 0;
   return Math.max(0, Math.min(1, (intro - start) / span));
 }
 function runIntro() {
@@ -535,7 +603,7 @@ function onMove(e) {
   if (best !== hover) { hover = best; draw(); }
   if (best >= 0) {
     const m = MODELS[best], p = placed.find(q => q.i === best);
-    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + m.idx.toFixed(1) + " &middot; " + fmtUsd(m.task) + "/task</span><br><span class='row'>" + m.per.toFixed(0) + " index pts per task-$</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
+    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + fmtIdx(m.idx) + " &middot; " + fmtUsd(m.task) + "/task</span><br><span class='row'>" + m.per.toFixed(0) + " index pts per task-$</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
     tip.style.left = p.x + "px"; tip.style.top = p.y + "px"; tip.classList.add("on");
     cvs.style.cursor = "pointer";
   } else { tip.classList.remove("on"); cvs.style.cursor = "default"; }
