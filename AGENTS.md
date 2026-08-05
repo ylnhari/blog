@@ -15,6 +15,48 @@ This canonical workflow tells any compatible agent how to take a topic and produ
 
 ---
 
+## Living artifacts
+
+**Re-check weekly; refresh on drift.**
+
+Most of this repo is frozen by design: a published post is a dated snapshot and
+must not be quietly rewritten. A few artifacts are the exception — they claim to
+describe *the present*, so leaving them alone is what makes them wrong.
+
+**Only the table below is in scope.** A post is a snapshot even when it is full of
+prices, specs or model names that have since moved — a standalone piece dated in
+the past is a record of what was true then, and silently updating its numbers
+falsifies it. If a post has gone materially wrong, that is a new post or a dated
+correction note, never an edit in place. Do not "helpfully" refresh a post because
+it contains live-looking figures.
+
+| Artifact | What goes stale | Upstream source |
+|---|---|---|
+| `posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html` | The `MODELS` array: which models exist, their Intelligence Index, their evaluation cost. Also the lede/takeaway prose, which names the current leader and the frontier holders. | Artificial Analysis model pages (`artificialanalysis.ai/models/<slug>`) |
+
+**Refresh procedure**
+
+1. Re-fetch each model's page and read the Intelligence Index plus the published
+   "Cost to Run Artificial Analysis Intelligence Index". Cite the vendor's or
+   aggregator's own page — never a secondary write-up that reported it.
+2. Update `MODELS` (see that file's header comment — it documents the schema and
+   the one derivation rule). Add newly released models; drop any whose upstream
+   figure has disappeared, and footnote the omission rather than estimating.
+3. **Never mix vintages.** If the upstream rebases its scale, rederive every
+   point on the new basis instead of patching a few — the file's header explains
+   why and how this was hit on 2026-08-05.
+4. Update the prose whose *claim* the new data breaks. Refreshed numbers beside a
+   sentence naming the old leader is worse than no refresh at all.
+5. Adding models is a layout change: open the page and look at it. Label
+   placement, the intro animation, and the axis domain are all sized to the data.
+6. Nothing here publishes itself — pushing follows the approval gates above.
+
+When a post's body embeds a static chart of the same data, either refresh both or
+leave the post alone and let the interactive version carry the current numbers;
+never let the two disagree without saying which is current.
+
+---
+
 ## What You Are Doing
 
 Given a topic or title from Hari, you will:
