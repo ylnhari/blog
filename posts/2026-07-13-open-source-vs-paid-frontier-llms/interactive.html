@@ -92,10 +92,22 @@
   .eyebrow .pip { width: 7px; height: 7px; border-radius: 50%; background: var(--open); box-shadow: 0 0 12px var(--open-glow); }
   h1 {
     font-size: clamp(34px, 6vw, 66px); line-height: .98; letter-spacing: -.028em;
-    font-weight: 800; margin: 0 0 18px; text-wrap: balance;
+    font-weight: 800; margin: 0; text-wrap: balance;
   }
   h1 .em { font-style: italic; font-weight: 700; }
-  .lede { font-size: clamp(16px, 2.1vw, 18.5px); color: var(--ink-2); max-width: 62ch; margin: 0 0 34px; }
+  .lede { font-size: clamp(16px, 2.1vw, 18.5px); color: var(--ink-2); max-width: 64ch; margin: 0; }
+
+  /* Masthead: title left, lede right. A single left-aligned prose column under
+     a 1560px chart leaves half the page empty and reads as broken alignment —
+     so the intro text sits beside the title instead of under it, and the two
+     together span the same width as the panel below. */
+  .masthead {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px 64px; align-items: end; margin: 0 0 34px;
+  }
+  @media (max-width: 900px) {
+    .masthead { grid-template-columns: 1fr; align-items: start; }
+  }
 
   .panel {
     position: relative;
@@ -146,14 +158,41 @@
   .tip .tag.paid { background: var(--paid); color: #fff; }
   .tip .tag.open { background: var(--open); color: #1a1205; }
 
-  .foot { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: space-between; align-items: baseline; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hair); }
+  /* Four notes across, one per column — as a flex row they collapsed into
+     full-width bands and the method note ran to ~200 characters a line. */
+  .foot {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px 36px; margin-top: 16px; padding-top: 14px;
+    border-top: 1px solid var(--hair);
+  }
+  @media (max-width: 1180px) { .foot { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px)  { .foot { grid-template-columns: 1fr; } }
   .foot p { margin: 0; font-size: 12.5px; color: var(--ink-3s); }
+  .foot-links { display: flex; flex-direction: column; gap: 6px; }
   .foot a { color: var(--paid); text-decoration: none; font-weight: 600; }
   .foot a:hover { text-decoration: underline; }
 
-  /* Left-aligned, not centred: on the wide canvas an auto-margin block floats
-     far right of the left-aligned lede and reads as an unrelated column. */
-  .takeaway { margin: 34px 0 0; font-size: clamp(15px, 2vw, 16.5px); color: var(--ink-2); max-width: 66ch; }
+  /* Three columns rather than one wide measure: spanning 1500px as a single
+     paragraph gives ~190-character lines, which is unreadable. A grid of three
+     self-contained paragraphs rather than CSS `columns` — flowing one
+     paragraph through columns broke sentences (and bold phrases) across the
+     gutter, so each column is now its own complete thought. */
+  .takeaway {
+    margin: 34px 0 0; font-size: clamp(15px, 2vw, 16.5px); color: var(--ink-2);
+    max-width: none; display: grid; gap: 26px 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .takeaway p { margin: 0; padding: 0 28px; }
+  .takeaway p + p { border-left: 1px solid var(--hair); }
+  @media (max-width: 1180px) {
+    .takeaway { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .takeaway p:nth-child(3) { border-left: 0; }
+  }
+  @media (max-width: 700px) {
+    .takeaway { grid-template-columns: 1fr; }
+    .takeaway p { padding: 0; }
+    .takeaway p + p { border-left: 0; }
+  }
   .takeaway b { color: var(--ink); font-weight: 700; }
 
   @media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
@@ -162,9 +201,13 @@
 <canvas id="bg" aria-hidden="true"></canvas>
 
 <div class="wrap">
-  <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; August 2026</p>
-  <h1>The <span class="em">price</span> of intelligence</h1>
-  <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights own the cheap end of the curve, and Kimi K3 holds the rung open models opened at the top. What changed since July: Claude Opus 5 took the lead outright, OpenAI cut GPT-5.6 Luna's price by 80%, and DeepSeek's re-post-trained V4 Flash landed at index 50 for three cents a task. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
+  <header class="masthead">
+    <div>
+      <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; August 2026</p>
+      <h1>The <span class="em">price</span> of intelligence</h1>
+    </div>
+    <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights own the cheap end of the curve, and Kimi K3 holds the rung open models opened at the top. What changed since July: Claude Opus 5 took the lead outright, OpenAI cut GPT-5.6 Luna's price by 80%, and DeepSeek's re-post-trained V4 Flash landed at index 50 for three cents a task. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
+  </header>
 
   <div class="panel">
     <div class="controls">
@@ -194,12 +237,18 @@
       <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 24 points read from Artificial Analysis model pages on 5 Aug 2026.</p>
       <p>Method: x = each model's published cost to run the full Intelligence Index, divided by ~2,200 tasks. The divisor is an estimate, so absolute x-values are approximate &mdash; but it is the same divisor for every model, so the comparisons between them are not. AA has since rebased the Index, so these scores are not comparable with figures quoted in its older launch articles.</p>
       <p>Not plotted: Gemini 3 Pro and Inkling (index 41), for which AA reports no evaluation cost. Qwen3.8-Max is marked paid &mdash; Alibaba has promised weights but not yet shipped them.</p>
-      <p><a href="https://artificialanalysis.ai/models">Artificial Analysis model index</a></p>
-      <p><a href="https://ylnhari.github.io/ai-signal/bench.html">First-hand benchmark results →</a></p>
+      <p class="foot-links">
+        <a href="https://artificialanalysis.ai/models">Artificial Analysis model index</a>
+        <a href="https://ylnhari.github.io/ai-signal/bench.html">First-hand benchmark results →</a>
+      </p>
     </div>
   </div>
 
-  <p class="takeaway">The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Seven models hold it: DeepSeek V4 Flash, GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Kimi K3, GPT-5.6 Sol, and Claude Opus 5 at the ceiling. Two of the seven are open weights, and they hold the two ends that matter. <b>DeepSeek's re-post-trained V4 Flash is the story of this update</b>: index 50 at roughly $0.03 a task, the same score as Gemini 3.5 Flash and Gemini 3.6 Flash for about a fourteenth of their cost. It anchors the whole cheap half of the curve. At the top, <b>Kimi K3 still holds the rung open weights opened in July</b> &mdash; index 57, fourth in the world &mdash; but at about $1.11 per task it is no longer cheap; it costs near what GPT-5.6 Sol does. The paid tiers did move: OpenAI's 80% cut puts GPT-5.6 Luna on the frontier at index 51, the best value of anything closed. Switch to the value axis and the gap is still not close &mdash; DeepSeek V4 Flash returns around 1,500 index points per task-dollar against Luna's ~645 and Claude Fable 5's ~23.</p>
+  <div class="takeaway">
+    <p>The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Seven models hold it: DeepSeek V4 Flash, GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Kimi K3, GPT-5.6 Sol, and Claude Opus 5 at the ceiling. Two of those seven are open weights, and they hold the two ends that matter.</p>
+    <p><b>DeepSeek's re-post-trained V4 Flash is the story of this update</b>: index 50 at roughly $0.03 a task &mdash; the same score as Gemini 3.5 Flash and Gemini 3.6 Flash for about a fourteenth of their cost. It anchors the entire cheap half of the curve, and nothing paid comes close to it down there.</p>
+    <p>At the top, <b>Kimi K3 still holds the rung open weights opened in July</b> &mdash; index 57, fourth in the world &mdash; but at about $1.11 a task it is no longer cheap. The paid tiers did move: OpenAI's 80% cut puts GPT-5.6 Luna on the frontier at index 51, the best value of anything closed. On the value axis the gap is still not close &mdash; DeepSeek V4 Flash returns around 1,500 index points per task-dollar against Luna's ~645 and Claude Fable 5's ~23.</p>
+  </div>
 </div>
 
 <script>
