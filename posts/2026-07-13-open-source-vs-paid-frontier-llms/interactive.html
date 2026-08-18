@@ -206,7 +206,7 @@
       <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; August 2026</p>
       <h1>The <span class="em">price</span> of intelligence</h1>
     </div>
-    <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights own the cheap end of the curve, and Kimi K3 holds the rung open models opened at the top. What changed since July: Claude Opus 5 took the lead outright, OpenAI cut GPT-5.6 Luna's price by 80%, and DeepSeek's re-post-trained V4 Flash landed at index 50 for three cents a task. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
+    <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights still own the cheap end of the curve, and Kimi K3 still holds the rung open models opened at the top. What changed since the last refresh: DeepSeek's V4 Flash checkpoint got noticeably pricier to evaluate — its cost per task rose roughly 4.5x — and the best value on the entire chart is no longer DeepSeek's; it's Xiaomi's MiMo-V2.5-Pro, at nearly 1,000 index points per task-dollar. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
   </header>
 
   <div class="panel">
@@ -234,9 +234,9 @@
     </div>
 
     <div class="foot">
-      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 24 points read from Artificial Analysis model pages on 5 Aug 2026.</p>
+      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 24 points read from Artificial Analysis model pages on 18 Aug 2026.</p>
       <p>Method: x = each model's published cost to run the full Intelligence Index, divided by ~2,200 tasks. The divisor is an estimate, so absolute x-values are approximate &mdash; but it is the same divisor for every model, so the comparisons between them are not. AA has since rebased the Index, so these scores are not comparable with figures quoted in its older launch articles.</p>
-      <p>Not plotted: Gemini 3 Pro and Inkling (index 41), for which AA reports no evaluation cost. Qwen3.8-Max is marked paid &mdash; Alibaba has promised weights but not yet shipped them.</p>
+      <p>Not plotted: Gemini 3 Pro (index 41) and the newly-released Qwen3.8-27B (index 52), for which AA reports no evaluation cost. Nemotron 3 Ultra, plotted in the prior version of this chart, no longer appears in Artificial Analysis's tracked models and has been dropped. Qwen3.8-Max is marked paid &mdash; Alibaba has promised weights but not yet shipped them.</p>
       <p class="foot-links">
         <a href="https://artificialanalysis.ai/models">Artificial Analysis model index</a>
         <a href="https://ylnhari.github.io/ai-signal/bench.html">First-hand benchmark results →</a>
@@ -245,9 +245,9 @@
   </div>
 
   <div class="takeaway">
-    <p>The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Seven models hold it: DeepSeek V4 Flash, GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Kimi K3, GPT-5.6 Sol, and Claude Opus 5 at the ceiling. Two of those seven are open weights, and they hold the two ends that matter.</p>
-    <p><b>DeepSeek's re-post-trained V4 Flash is the story of this update</b>: index 50 at roughly $0.03 a task &mdash; the same score as Gemini 3.5 Flash and Gemini 3.6 Flash for about a fourteenth of their cost. It anchors the entire cheap half of the curve, and nothing paid comes close to it down there.</p>
-    <p>At the top, <b>Kimi K3 still holds the rung open weights opened in July</b> &mdash; index 57, fourth in the world &mdash; but at about $1.11 a task it is no longer cheap. The paid tiers did move: OpenAI's 80% cut puts GPT-5.6 Luna on the frontier at index 51, the best value of anything closed. On the value axis the gap is still not close &mdash; DeepSeek V4 Flash returns around 1,500 index points per task-dollar against Luna's ~645 and Claude Fable 5's ~23.</p>
+    <p>The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Nine models hold it now, not seven: gpt-oss-120b and MiMo-V2.5-Pro at the cheap end, then GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Qwen3.8-Max, Kimi K3, GPT-5.6 Sol and Claude Opus 5 at the ceiling. Three of those nine are open weights &mdash; and they hold the two cheapest rungs outright, not just a foothold.</p>
+    <p><b>DeepSeek's V4 Flash is no longer the story</b> &mdash; relabeled "V4 Flash 0731" on AA's own page, its evaluation cost jumped roughly 4.5x since the last refresh, to about $0.15 a task, and it's now solidly mid-pack on value. The new best-value point on the whole chart, paid or open, is <b>Xiaomi's MiMo-V2.5-Pro</b>: index 43 for about $0.045 a task, roughly 957 index points per task-dollar &mdash; nearly 3x DeepSeek V4 Flash's new number, and open weights again.</p>
+    <p>At the top, <b>Kimi K3 still holds the rung open weights opened in July</b> &mdash; index 60, fourth in the world &mdash; and at about $1.10 a task its price hasn't moved either. GPT-5.6 Luna is still the best value of anything closed &mdash; index 52 for about $0.08 a task, roughly 664 index points per task-dollar &mdash; but it's not the best value on the chart anymore; MiMo-V2.5-Pro beats it outright. Claude Fable 5 sits at the other extreme: index 62 for about $2.48 a task, roughly 25 points per task-dollar.</p>
   </div>
 </div>
 
@@ -335,46 +335,59 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
    evaluation cost. The earlier build mixed two sources: most points came from
    AA's 17 Jul "Cost per Intelligence Index Task" chart while three later
    additions were derived from evaluation cost. AA has since rebased the
-   Intelligence Index (Nemotron 3 Ultra reads 38 on its model page against the
-   47.7 quoted in AA's launch article, for example), so the two vintages were
-   no longer comparable. Deriving all 24 uniformly costs some absolute
-   precision on the x-axis — the divisor is an estimate — but makes every
-   pairwise comparison, which is the entire point of the chart, exact.
-   Consequence: do NOT paste a figure from AA's cost-per-task chart into
-   `task`. Use evaluation cost / TASKS_PER_INDEX, or the point will sit on a
-   different scale from its neighbours.
+   Intelligence Index, so the two vintages were no longer comparable. Deriving
+   all uniformly costs some absolute precision on the x-axis — the divisor is
+   an estimate — but makes every pairwise comparison, which is the entire
+   point of the chart, exact. Consequence: do NOT paste a figure from AA's
+   cost-per-task chart into `task`. Use evaluation cost / TASKS_PER_INDEX, or
+   the point will sit on a different scale from its neighbours.
 
-   Two models are deliberately absent: Gemini 3 Pro and Inkling (Thinking
-   Machines, index 41). AA's pages report "No data available" for their
-   evaluation cost, so they have no honest x-coordinate. Add them if and when
-   AA publishes one. */
+   REFRESHED AGAIN 18 Aug 2026 — every idx/cost re-read from each model's live
+   AA page (all 24 moved; most idx scores drifted +1 to +3, a routine AA
+   re-score, but DeepSeek V4 Flash, DeepSeek V4 Pro and Qwen3.8-Max show
+   discontinuous cost jumps that look like real checkpoint updates, not
+   re-scoring noise). Two changes to which models are plotted:
+     - Inkling now has a published evaluation cost ($698.28) and moved from
+       the excluded footnote into the array.
+     - Nemotron 3 Ultra no longer appears anywhere in Artificial Analysis's
+       tracked model list (checked their full ~600-model index, not just its
+       old page, which 404s) — dropped rather than carried forward on a stale
+       figure, per the rule below.
+
+   Two models are deliberately absent: Gemini 3 Pro (index 41) and
+   Qwen3.8-27B (Alibaba, released 14 Aug 2026, AA index 52) — AA's pages
+   report no evaluation cost for either, so neither has an honest
+   x-coordinate. Add them if and when AA publishes one. Qwen3.8-Max-Preview
+   (tracked separately on ai-signal/bench.html) has no reachable AA model
+   page under any slug tried and is not the same figure as "Qwen3.8-Max"
+   below. */
 const TASKS_PER_INDEX = 2200;
 const MODELS = [
   // name                       kind      idx  AA eval cost (USD)
-  { name: "Claude Opus 5",     kind: "paid", idx: 61, cost: 3835.51 },
-  { name: "Claude Fable 5",    kind: "paid", idx: 60, cost: 5630.52, lab: "l" },
-  { name: "GPT-5.6 Sol",       kind: "paid", idx: 59, cost: 2824.18, ldy: -13 },
-  { name: "Kimi K3",           kind: "open", idx: 57, cost: 2437.41, lab: "t" },
-  { name: "Claude Opus 4.8",   kind: "paid", idx: 56, cost: 3752.55, lab: "l" },
-  { name: "GPT-5.5",           kind: "paid", idx: 55, cost: 2777.91, ldy: 15 },
-  { name: "GPT-5.6 Terra",     kind: "paid", idx: 55, cost: 1403.15 },
-  { name: "Grok 4.5",          kind: "paid", idx: 54, cost: 582.47, lab: "t" },
-  { name: "Claude Sonnet 5",   kind: "paid", idx: 53, cost: 4010.12, lab: "l" },
-  { name: "Qwen3.8-Max",       kind: "paid", idx: 53, cost: 2159.51, ldy: 15 },
-  { name: "GPT-5.6 Luna",      kind: "paid", idx: 51, cost: 174.06, lab: "t" },
-  { name: "GLM-5.2",           kind: "open", idx: 51, cost: 939.41, ldy: -14 },
-  { name: "DeepSeek V4 Flash", kind: "open", idx: 50, cost: 72.02 },
-  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 50, cost: 726.70, ldy: 15 },
-  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 50, cost: 1040.88, ldy: -15 },
-  { name: "Qwen3.7 Max",       kind: "paid", idx: 46, cost: 1454.10 },
-  { name: "DeepSeek V4 Pro",   kind: "open", idx: 44, cost: 176.34, lab: "t" },
-  { name: "MiniMax-M3",        kind: "open", idx: 44, cost: 203.86, ldy: 15 },
-  { name: "Kimi K2.6",         kind: "open", idx: 44, cost: 840.64 },
-  { name: "MiMo-V2.5-Pro",     kind: "open", idx: 42, cost: 98.91 },
-  { name: "Nemotron 3 Ultra",  kind: "open", idx: 38, cost: 529.72 },
-  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 36, cost: 153.08 },
-  { name: "Mistral Medium 3.5",kind: "paid", idx: 30, cost: 882.15 },
-  { name: "gpt-oss-120b",      kind: "open", idx: 24, cost: 96.28 },
+  { name: "Claude Opus 5",     kind: "paid", idx: 63, cost: 3836.05 },
+  { name: "Claude Fable 5",    kind: "paid", idx: 62, cost: 5455.22, lab: "l" },
+  { name: "GPT-5.6 Sol",       kind: "paid", idx: 61, cost: 2823.25, ldy: -13 },
+  { name: "Kimi K3",           kind: "open", idx: 60, cost: 2425.11, lab: "t" },
+  { name: "Qwen3.8-Max",       kind: "paid", idx: 58, cost: 1741.41, lab: "l" },
+  { name: "Claude Opus 4.8",   kind: "paid", idx: 57, cost: 3752.32, lab: "l", ldy: -14 },
+  { name: "GPT-5.6 Terra",     kind: "paid", idx: 57, cost: 1389.66, lab: "t" },
+  { name: "GPT-5.5",           kind: "paid", idx: 56, cost: 2778.13, ldy: 15 },
+  { name: "Grok 4.5",          kind: "paid", idx: 56, cost: 579.21, lab: "t", ldy: -14 },
+  { name: "Claude Sonnet 5",   kind: "paid", idx: 55, cost: 4010.51, lab: "l" },
+  { name: "DeepSeek V4 Pro",   kind: "open", idx: 53, cost: 604.51, lab: "t" },
+  { name: "GLM-5.2",           kind: "open", idx: 53, cost: 746.82, ldy: -14 },
+  { name: "GPT-5.6 Luna",      kind: "paid", idx: 52, cost: 172.17, lab: "t" },
+  { name: "DeepSeek V4 Flash", kind: "open", idx: 52, cost: 323.26, ldy: 15 },
+  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 52, cost: 412.03, ldy: -15 },
+  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 52, cost: 1042.43, ldy: 15 },
+  { name: "Qwen3.7 Max",       kind: "paid", idx: 47, cost: 1063.86 },
+  { name: "MiniMax-M3",        kind: "open", idx: 45, cost: 204.82, ldy: 15 },
+  { name: "Kimi K2.6",         kind: "open", idx: 45, cost: 841.11, ldy: -14 },
+  { name: "MiMo-V2.5-Pro",     kind: "open", idx: 43, cost: 98.86, lab: "t" },
+  { name: "Inkling",           kind: "open", idx: 42, cost: 698.28 },
+  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 37, cost: 153.39 },
+  { name: "Mistral Medium 3.5",kind: "paid", idx: 30, cost: 883.33 },
+  { name: "gpt-oss-120b",      kind: "open", idx: 24, cost: 95.05, lab: "t" },
 ];
 MODELS.forEach(m => m.task = m.cost / TASKS_PER_INDEX);
 MODELS.forEach(m => m.per = m.idx / m.task);
@@ -385,7 +398,7 @@ const tip = document.getElementById("tip"), holder = cvs.parentElement;
 let W = 0, H = 0, dpr = 1, filter = "all", mode = "index";
 let placed = [], hover = -1, intro = 0, introRAF = 0;
 const pad = { l: 78, r: 58, t: 52, b: 62 };
-// Domain brackets the live data (≈$0.033 DeepSeek V4 Flash → ≈$2.56 Fable 5)
+// Domain brackets the live data (≈$0.043 gpt-oss-120b → ≈$2.48 Fable 5)
 // with just enough slack for the outermost labels to sit outside their dots.
 const X_MIN = 0.024, X_MAX = 3.6, lx = v => Math.log10(v);
 const XT = [0.05, 0.1, 0.2, 0.5, 1, 2, 3];
