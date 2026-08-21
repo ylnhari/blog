@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Price of Intelligence — Interactive Frontier Map</title>
+<link rel="canonical" href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html">
 <style>
   :root {
     --bg-0: #f3f2ec;
@@ -234,7 +235,7 @@
     </div>
 
     <div class="foot">
-      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 25 points read from Artificial Analysis model pages on 20 Aug 2026.</p>
+      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 25 points read from Artificial Analysis model pages on 21 Aug 2026.</p>
       <p>Method: x = each model's published cost to run the full Intelligence Index, divided by ~2,200 tasks. The divisor is an estimate, so absolute x-values are approximate &mdash; but it is the same divisor for every model, so the comparisons between them are not. AA has since rebased the Index, so these scores are not comparable with figures quoted in its older launch articles.</p>
       <p>Not plotted: Gemini 3 Pro (index 41), for which AA still reports no evaluation cost. Qwen3.8-27B is now plotted: AA added a published evaluation cost. Nemotron 3 Ultra, plotted in the prior version of this chart, no longer appears in Artificial Analysis's tracked models and has been dropped. Qwen3.8-Max is marked paid &mdash; Alibaba has promised weights but not yet shipped them.</p>
       <p class="foot-links">
@@ -308,6 +309,8 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
      { name: "New Model Name", kind: "paid" | "open",
        idx: <Artificial Analysis Intelligence Index score>,
        cost: <AA "Cost to Run Intelligence Index", total USD>,
+       input: <AA input price per 1M tokens>,
+       output: <AA output price per 1M tokens>,
        lab: "l" | "t",   // optional: force label left / above the dot
        ldy: <number> }   // optional: vertical label nudge in px
    That's it — nothing else on the page needs to change. Colors, tooltip text,
@@ -327,6 +330,8 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
      task = cost (USD) per AA Intelligence Index task = that model's published
             "Cost to Run Artificial Analysis Intelligence Index" divided by
             TASKS_PER_INDEX below.
+     input/output = AA's displayed USD price per 1M input/output tokens, used
+            only in the hover tooltip.
    `per` (index points per task-$, used by the "Value per $" y-axis mode) is
    computed automatically right after this array — never set it by hand.
 
@@ -363,38 +368,43 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
      - Gemini 3 Pro (index 41) still has no published evaluation cost and
        remains excluded; it has no honest x-coordinate.
 
+   REFRESHED AGAIN 21 Aug 2026 — every existing idx/cost was re-read from the
+   same live AA pages and remained unchanged. Added each page's displayed
+   input/output price to the hover tooltip; all four numbers now share one
+   source vintage.
+
    Gemini 3 Pro (index 41) is deliberately absent because AA still reports no
    evaluation cost. Qwen3.8-Max-Preview (tracked separately on
    ai-signal/bench.html) has no reachable AA model page under any slug tried
    and is not the same figure as "Qwen3.8-Max" below. */
 const TASKS_PER_INDEX = 2200;
 const MODELS = [
-  // name                       kind      idx  AA eval cost (USD)
-  { name: "Claude Opus 5",     kind: "paid", idx: 63, cost: 3836.05 },
-  { name: "Claude Fable 5",    kind: "paid", idx: 62, cost: 5455.22, lab: "l" },
-  { name: "GPT-5.6 Sol",       kind: "paid", idx: 61, cost: 2823.25, ldy: -13 },
-  { name: "Kimi K3",           kind: "open", idx: 60, cost: 2425.11, lab: "t" },
-  { name: "Qwen3.8-Max",       kind: "paid", idx: 58, cost: 1741.41, lab: "l" },
-  { name: "Claude Opus 4.8",   kind: "paid", idx: 57, cost: 3752.32, lab: "l", ldy: -14 },
-  { name: "GPT-5.6 Terra",     kind: "paid", idx: 57, cost: 1389.66, lab: "t" },
-  { name: "GPT-5.5",           kind: "paid", idx: 56, cost: 2778.13, ldy: 15 },
-  { name: "Grok 4.5",          kind: "paid", idx: 56, cost: 579.21, lab: "t", ldy: -14 },
-  { name: "Claude Sonnet 5",   kind: "paid", idx: 55, cost: 4010.51, lab: "l" },
-  { name: "DeepSeek V4 Pro",   kind: "open", idx: 53, cost: 604.51, lab: "t" },
-  { name: "GLM-5.2",           kind: "open", idx: 53, cost: 843.44, ldy: -14 },
-  { name: "GPT-5.6 Luna",      kind: "paid", idx: 52, cost: 172.17, lab: "t" },
-  { name: "DeepSeek V4 Flash", kind: "open", idx: 52, cost: 323.26, ldy: 15 },
-  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 52, cost: 412.03, ldy: -15 },
-  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 52, cost: 1042.43, ldy: 15 },
-  { name: "Qwen3.8-27B",       kind: "open", idx: 52, cost: 666.92 },
-  { name: "Qwen3.7 Max",       kind: "paid", idx: 47, cost: 1063.86 },
-  { name: "MiniMax-M3",        kind: "open", idx: 45, cost: 204.82, ldy: 15 },
-  { name: "Kimi K2.6",         kind: "open", idx: 45, cost: 841.11, ldy: -14 },
-  { name: "MiMo-V2.5-Pro",     kind: "open", idx: 43, cost: 98.86, lab: "t" },
-  { name: "Inkling",           kind: "open", idx: 42, cost: 698.28 },
-  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 37, cost: 153.39 },
-  { name: "Mistral Medium 3.5",kind: "paid", idx: 30, cost: 883.33 },
-  { name: "gpt-oss-120b",      kind: "open", idx: 24, cost: 95.05, lab: "t" },
+  // name                       kind      idx  AA eval cost   input/output USD per 1M tokens
+  { name: "Claude Opus 5",     kind: "paid", idx: 63, cost: 3836.05, input: 5.00, output: 25.00 },
+  { name: "Claude Fable 5",    kind: "paid", idx: 62, cost: 5455.22, input: 10.00, output: 50.00, lab: "l" },
+  { name: "GPT-5.6 Sol",       kind: "paid", idx: 61, cost: 2823.25, input: 5.00, output: 30.00, ldy: -13 },
+  { name: "Kimi K3",           kind: "open", idx: 60, cost: 2425.11, input: 3.00, output: 15.00, lab: "t" },
+  { name: "Qwen3.8-Max",       kind: "paid", idx: 58, cost: 1741.41, input: 2.00, output: 6.00, lab: "l" },
+  { name: "Claude Opus 4.8",   kind: "paid", idx: 57, cost: 3752.32, input: 5.00, output: 25.00, lab: "l", ldy: -14 },
+  { name: "GPT-5.6 Terra",     kind: "paid", idx: 57, cost: 1389.66, input: 2.00, output: 12.00, lab: "t" },
+  { name: "GPT-5.5",           kind: "paid", idx: 56, cost: 2778.13, input: 5.00, output: 30.00, ldy: 15 },
+  { name: "Grok 4.5",          kind: "paid", idx: 56, cost: 579.21, input: 2.00, output: 6.00, lab: "t", ldy: -14 },
+  { name: "Claude Sonnet 5",   kind: "paid", idx: 55, cost: 4010.51, input: 2.00, output: 10.00, lab: "l" },
+  { name: "DeepSeek V4 Pro",   kind: "open", idx: 53, cost: 604.51, input: 1.32, output: 3.96, lab: "t" },
+  { name: "GLM-5.2",           kind: "open", idx: 53, cost: 843.44, input: 1.40, output: 4.40, ldy: -14 },
+  { name: "GPT-5.6 Luna",      kind: "paid", idx: 52, cost: 172.17, input: 0.20, output: 1.20, lab: "t" },
+  { name: "DeepSeek V4 Flash", kind: "open", idx: 52, cost: 323.26, input: 0.44, output: 1.32, ldy: 15 },
+  { name: "Gemini 3.6 Flash",  kind: "paid", idx: 52, cost: 412.03, input: 0.75, output: 3.75, ldy: -15 },
+  { name: "Gemini 3.5 Flash",  kind: "paid", idx: 52, cost: 1042.43, input: 1.50, output: 9.00, ldy: 15 },
+  { name: "Qwen3.8-27B",       kind: "open", idx: 52, cost: 666.92, input: 0.43, output: 3.10 },
+  { name: "Qwen3.7 Max",       kind: "paid", idx: 47, cost: 1063.86, input: 2.50, output: 7.50 },
+  { name: "MiniMax-M3",        kind: "open", idx: 45, cost: 204.82, input: 0.30, output: 1.20, ldy: 15 },
+  { name: "Kimi K2.6",         kind: "open", idx: 45, cost: 841.11, input: 0.95, output: 4.00, ldy: -14 },
+  { name: "MiMo-V2.5-Pro",     kind: "open", idx: 43, cost: 98.86, input: 0.43, output: 0.87, lab: "t" },
+  { name: "Inkling",           kind: "open", idx: 42, cost: 698.28, input: 1.00, output: 4.05 },
+  { name: "Gemini 3.5 F-Lite", kind: "paid", idx: 37, cost: 153.39, input: 0.30, output: 2.50 },
+  { name: "Mistral Medium 3.5",kind: "paid", idx: 30, cost: 883.33, input: 1.50, output: 7.50 },
+  { name: "gpt-oss-120b",      kind: "open", idx: 24, cost: 95.05, input: 0.15, output: 0.60, lab: "t" },
 ];
 MODELS.forEach(m => m.task = m.cost / TASKS_PER_INDEX);
 MODELS.forEach(m => m.per = m.idx / m.task);
@@ -421,6 +431,7 @@ function sy(v) { const [a, b] = yDomain(); return H - pad.b - (v - a) / (b - a) 
 // Cheap models now cluster below $0.10/task, where two decimals collapses
 // DeepSeek V4 Flash and gpt-oss-120b onto the same string — so go to three.
 function fmtUsd(v) { return "$" + (v < 0.1 ? v.toFixed(3) : v.toFixed(2)); }
+function fmtPerM(v) { return "$" + v.toFixed(2) + "/M"; }
 function fmtTick(v) { return "$" + (v < 1 ? v.toFixed(2) : v); }
 // AA publishes the Intelligence Index as whole numbers; don't imply a decimal
 // of precision that isn't in the source.
@@ -672,7 +683,7 @@ function onMove(e) {
   if (best !== hover) { hover = best; draw(); }
   if (best >= 0) {
     const m = MODELS[best], p = placed.find(q => q.i === best);
-    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + fmtIdx(m.idx) + " &middot; " + fmtUsd(m.task) + "/task</span><br><span class='row'>" + m.per.toFixed(0) + " index pts per task-$</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
+    tip.innerHTML = "<b>" + m.name + "</b><br><span class='row'>Index " + fmtIdx(m.idx) + " &middot; " + fmtUsd(m.task) + "/task</span><br><span class='row'>Input " + fmtPerM(m.input) + " &middot; Output " + fmtPerM(m.output) + "</span><br><span class='tag " + m.kind + "'>" + (m.kind === "paid" ? "Paid" : "Open weight") + "</span>";
     tip.style.left = p.x + "px"; tip.style.top = p.y + "px"; tip.classList.add("on");
     cvs.style.cursor = "pointer";
   } else { tip.classList.remove("on"); cvs.style.cursor = "default"; }
