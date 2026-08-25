@@ -207,7 +207,7 @@
       <p class="eyebrow"><span class="pip"></span> Frontier LLMs &middot; August 2026</p>
       <h1>The <span class="em">price</span> of intelligence</h1>
     </div>
-    <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights still own the cheap end of the curve, and Kimi K3 still holds the rung open models opened at the top. This refresh adds Alibaba's open-weight Qwen3.8-27B: index 52 for about $0.30 a task. It also raises GLM-5.2's evaluation cost by about 13%, without moving its index. Xiaomi's MiMo-V2.5-Pro remains the best value on the entire chart, at nearly 1,000 index points per task-dollar. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
+    <p class="lede">Every frontier model, plotted by how much a unit of intelligence actually costs against how capable it is. The horizontal axis is the real bill — the cost of one Artificial Analysis Intelligence Index task, reasoning tokens included. Open weights still own the cheap end of the curve, but Kimi K3 has lost the rung it opened in July: OpenAI's 21 Aug price cut on GPT-5.6 Sol made it both cheaper and higher-scoring than Kimi K3 at once. Xiaomi's MiMo-V2.5-Pro remains the best value on the entire chart, at nearly 1,000 index points per task-dollar. Hover any point for its exact coordinates; toggle the axis to see what a dollar of task-cost really buys.</p>
   </header>
 
   <div class="panel">
@@ -235,7 +235,7 @@
     </div>
 
     <div class="foot">
-      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. All 25 points read from Artificial Analysis model pages on 21 Aug 2026.</p>
+      <p>Vertical: Artificial Analysis Intelligence Index. Horizontal: cost (USD) per Intelligence Index task, log scale &mdash; lower is better. 24 of 25 points read from Artificial Analysis model pages on 21 Aug 2026; GPT-5.6 Sol re-verified 25 Aug 2026 against Artificial Analysis and OpenAI's own pricing page after a reported price cut.</p>
       <p>Method: x = each model's published cost to run the full Intelligence Index, divided by ~2,200 tasks. The divisor is an estimate, so absolute x-values are approximate &mdash; but it is the same divisor for every model, so the comparisons between them are not. AA has since rebased the Index, so these scores are not comparable with figures quoted in its older launch articles.</p>
       <p>Not plotted: Gemini 3 Pro (index 41), for which AA still reports no evaluation cost. Qwen3.8-27B is now plotted: AA added a published evaluation cost. Nemotron 3 Ultra, plotted in the prior version of this chart, no longer appears in Artificial Analysis's tracked models and has been dropped. Qwen3.8-Max is marked paid &mdash; Alibaba has promised weights but not yet shipped them.</p>
       <p class="foot-links">
@@ -246,9 +246,9 @@
   </div>
 
   <div class="takeaway">
-    <p>The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Nine models hold it now, not seven: gpt-oss-120b and MiMo-V2.5-Pro at the cheap end, then GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Qwen3.8-Max, Kimi K3, GPT-5.6 Sol and Claude Opus 5 at the ceiling. Three of those nine are open weights &mdash; and they hold the two cheapest rungs outright, not just a foothold.</p>
-    <p><b>This refresh adds Qwen3.8-27B without moving the efficient frontier</b> &mdash; the new open-weight point reaches index 52 for about $0.30 a task, but GPT-5.6 Luna already reaches that same score more cheaply. GLM-5.2 is the only existing point whose cost moved: its index remains 53 while its evaluation cost rose about 13%, to about $0.38 a task. The best-value point on the whole chart, paid or open, remains <b>Xiaomi's MiMo-V2.5-Pro</b>: index 43 for about $0.045 a task, roughly 957 index points per task-dollar &mdash; nearly 3x DeepSeek V4 Flash's number, and open weights again.</p>
-    <p>At the top, <b>Kimi K3 still holds the rung open weights opened in July</b> &mdash; index 60, fourth in the world &mdash; and at about $1.10 a task its price hasn't moved either. GPT-5.6 Luna is still the best value of anything closed &mdash; index 52 for about $0.08 a task, roughly 664 index points per task-dollar &mdash; but it's not the best value on the chart anymore; MiMo-V2.5-Pro beats it outright. Claude Fable 5 sits at the other extreme: index 62 for about $2.48 a task, roughly 25 points per task-dollar.</p>
+    <p>The dashed line is the <b>efficient frontier</b> &mdash; the most intelligence available at each cost-per-task. Eight models hold it now, not nine: gpt-oss-120b and MiMo-V2.5-Pro at the cheap end, then GPT-5.6 Luna, Grok 4.5, GPT-5.6 Terra, Qwen3.8-Max, GPT-5.6 Sol and Claude Opus 5 at the ceiling. Two of those eight are open weights &mdash; and they hold the two cheapest rungs outright, not just a foothold.</p>
+    <p><b>This refresh corrects GPT-5.6 Sol's price</b>, which had gone stale: OpenAI cut it on 21 Aug 2026 from $5.00/$30.00 to $4.00/$20.00 per million input/output tokens, and Artificial Analysis's evaluation cost for Sol fell with it, from about $1.28 to about $0.92 a task, without moving its index (61). The cut makes Sol strictly better than <b>Kimi K3</b> for the first time &mdash; cheaper AND higher-scoring &mdash; which pushes Kimi K3 off the frontier it opened in July. The best-value point on the whole chart, paid or open, remains <b>Xiaomi's MiMo-V2.5-Pro</b>: index 43 for about $0.045 a task, roughly 957 index points per task-dollar &mdash; nearly 3x DeepSeek V4 Flash's number, and open weights again.</p>
+    <p>Kimi K3 is still fourth in the world by raw Intelligence Index (60), but it no longer holds a rung of its own on the frontier &mdash; at about $1.10 a task its price hasn't moved, while GPT-5.6 Sol undercut it. GPT-5.6 Luna is still the best value of anything closed &mdash; index 52 for about $0.08 a task, roughly 664 index points per task-dollar &mdash; but it's not the best value on the chart; MiMo-V2.5-Pro beats it outright. Claude Fable 5 sits at the other extreme: index 62 for about $2.48 a task, roughly 25 points per task-dollar.</p>
   </div>
 </div>
 
@@ -373,6 +373,22 @@ function loopBg() { stepBg(); drawBg(); bgRAF = requestAnimationFrame(loopBg); }
    input/output price to the hover tooltip; all four numbers now share one
    source vintage.
 
+   REFRESHED AGAIN 25 Aug 2026 — Hari reported the input/output tooltip
+   numbers looked stale, particularly for OpenAI. Checked all three GPT-5.6
+   tiers against their live AA pages and directly against OpenAI's own
+   pricing page (openai.com/api/pricing): Terra ($2.00/$12.00) and Luna
+   ($0.20/$1.20) matched and were left alone. GPT-5.6 Sol did not — OpenAI
+   cut it on 21 Aug 2026 from $5.00/$30.00 to $4.00/$20.00, a promo through
+   21 Nov 2026 per their pricing page; AA's evaluation cost for Sol fell with
+   it, from $2823.25 to $2015.94 ($1.28 → $0.92/task), while its index held
+   at 61. That price drop moves Sol cheaper than Kimi K3 while still scoring
+   higher, which knocks Kimi K3 off the efficient frontier — see the takeaway
+   prose. This was a targeted 3-model check, not a full 25-model resweep: AA's
+   homepage highlights also surfaced Grok 4.6 and GLM-5.3 as newer than the
+   Grok 4.5 / GLM-5.2 points still plotted here, which the next full refresh
+   should investigate (new version vs. same model re-scored) rather than this
+   pass, which only touched a confirmed pricing error.
+
    Gemini 3 Pro (index 41) is deliberately absent because AA still reports no
    evaluation cost. Qwen3.8-Max-Preview (tracked separately on
    ai-signal/bench.html) has no reachable AA model page under any slug tried
@@ -382,7 +398,7 @@ const MODELS = [
   // name                       kind      idx  AA eval cost   input/output USD per 1M tokens
   { name: "Claude Opus 5",     kind: "paid", idx: 63, cost: 3836.05, input: 5.00, output: 25.00 },
   { name: "Claude Fable 5",    kind: "paid", idx: 62, cost: 5455.22, input: 10.00, output: 50.00, lab: "l" },
-  { name: "GPT-5.6 Sol",       kind: "paid", idx: 61, cost: 2823.25, input: 5.00, output: 30.00, ldy: -13 },
+  { name: "GPT-5.6 Sol",       kind: "paid", idx: 61, cost: 2015.94, input: 4.00, output: 20.00, ldy: -13 },
   { name: "Kimi K3",           kind: "open", idx: 60, cost: 2425.11, input: 3.00, output: 15.00, lab: "t" },
   { name: "Qwen3.8-Max",       kind: "paid", idx: 58, cost: 1741.41, input: 2.00, output: 6.00, lab: "l" },
   { name: "Claude Opus 4.8",   kind: "paid", idx: 57, cost: 3752.32, input: 5.00, output: 25.00, lab: "l", ldy: -14 },
