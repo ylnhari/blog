@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="ylnhari">
+  <meta name="description" content="The open-weight gap closed to 1-3 index points. That is not the story. The story is that buyers stopped paying for the top of the range - and the vendors noticed first.">
+  <meta property="og:title" content="The Frontier Premium Nobody Is Buying">
+  <meta property="og:description" content="The open-weight gap closed to 1-3 index points. That is not the story. The story is that buyers stopped paying for the top of the range - and the vendors noticed first.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1620266757065-5814239881fd?w=1200&q=80">
+  <title>The Frontier Premium Nobody Is Buying</title>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<article>
+
+<h1>The Frontier Premium Nobody Is Buying</h1>
+<p class="byline">By ylnhari &middot; August 26, 2026 &middot; LLMs, open weights, pricing, economics</p>
+
+<img src="https://images.unsplash.com/photo-1620266757065-5814239881fd?w=1200&q=80" alt="A price tag on a shelf, illustrating that the most capable model is no longer the one buyers pick">
+
+<!-- === POST CONTENT STARTS HERE === -->
+
+<p>Six weeks ago I wrote that the interesting question about open-weight models was whether they could catch the frontier on capability. That question is now close to settled, and the answer is boring: on the <a href="https://artificialanalysis.ai/models/kimi-k3">Artificial Analysis Intelligence Index</a>, the best open-weight model sits <strong>three points</strong> below the best proprietary one. Kimi K3 scores 60. <a href="https://artificialanalysis.ai/models/claude-opus-5">Claude Opus 5</a> scores 63.</p>
+
+<p>The interesting question turned out to be a different one, and the evidence for it does not come from a benchmark at all. It comes from corporate credit cards. <strong>Buyers have quietly stopped paying for the top of the range</strong> — and the vendors worked this out before the commentary did, which is why three of the four big proprietary labs are currently quoting a price that is not their real price.</p>
+
+<blockquote>The capability gap closed to a rounding error. The price gap did not. That asymmetry is the whole story of August 2026.</blockquote>
+
+<h2>The shape of the market, in one chart</h2>
+
+<p>Here is every current flagship I could get a vendor price and an independent score for, plotted together. Intelligence is measured by Artificial Analysis; every price is from the vendor's own pricing page, fetched the day this was written.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-08-26-open-weights-vs-proprietary-the-premium-nobody-buys/images/intelligence-vs-cost.png" alt="Intelligence versus blended cost per million tokens: open-weight models sit one to three index points below the frontier at a fraction of the price, while Claude Fable 5 costs twice Opus 5 for a lower measured score.">
+
+<p>The eye goes to the top right, and it should. <a href="https://platform.claude.com/docs/en/about-claude/pricing">Claude Fable 5 costs $10 per million input tokens and $50 per million output</a>. Opus 5, from the same vendor, costs <a href="https://platform.claude.com/docs/en/about-claude/pricing">$5 and $25</a> — and scores a point <em>higher</em> on the index. On a blended basis that is $7.70 against $3.85: <strong>twice the price for slightly less measured intelligence.</strong></p>
+
+<p>A market where that persists is a market where price is not being set by capability. And sure enough, buyers behave accordingly.</p>
+
+<h2>The receipts</h2>
+
+<p>Ramp publishes an <a href="https://ramp.com/data/ai-index-august-2026">AI Index</a> built from corporate-card and bill-pay transactions across more than 70,000 US businesses. Their August 2026 edition — pointedly titled "Cracks in the AI thesis" — contains the number this post is really about:</p>
+
+<ul>
+  <li><strong>Claude Fable 5 accounted for 6% of Anthropic tokens purchased, but 11.4% of Anthropic dollars spent.</strong> The flagship is a small minority of actual usage while being heavily over-weighted in cost.</li>
+  <li><strong>GPT-5.6 Sol accounted for 25% of OpenAI tokens and 23% of spend</strong> — a flagship carrying a real share of its vendor's volume, which is what a healthy top-of-range looks like.</li>
+</ul>
+
+<p>Ramp adds a caveat that makes the finding stronger rather than weaker: their sample "skews slightly more tech-y" than the wider economy, so genuine Fable adoption is, in their words, likely even lower. The most expensive model on the market is under-used by the population most likely to use it.</p>
+
+<p>This lines up with reporting the <em>Financial Times</em> ran on 2026-08-23 under the headline that Anthropic's best model struggles to attract users as cheaper tools thrive — <a href="https://simonwillison.net/2026/Aug/23/anthropics-best-ai-model-struggles-to-attract-users-as-cheaper-t/">relayed here via Simon Willison</a>, since the FT is paywalled. Those figures put Anthropic's annualised revenue at $65B in July, up from $47B in May, while Fable 5 sat at 8.0% of Anthropic model spend in Ramp's split. I am labelling those as <em>reported</em> rather than confirmed: they are FT numbers reaching you through a third party, and they are about Anthropic rather than from Anthropic.</p>
+
+<h2>The vendors moved first</h2>
+
+<p>If you want to know what a lab believes about demand for its flagship, watch the price rather than the launch post.</p>
+
+<p>OpenAI cut GPT-5.6 Sol twice in August. <a href="https://developers.openai.com/api/docs/changelog">Its own changelog</a> records the 2026-08-21 cut as "20% lower input pricing and 33% lower output pricing", taking Sol to $4 and $20 per million. Reuters, <a href="https://www.investing.com/news/stock-market-news/openai-cuts-developer-pricing-for-frontier-gpt56-sol-model-by-more-than-20-4872186">reporting the same cut</a>, framed it as a response to competition from Anthropic and from Chinese models, and noted it followed earlier cuts to Terra and Luna.</p>
+
+<p>But here is the part that almost every summary drops, and it changes what the chart means:</p>
+
+<ul>
+  <li><strong>Sol's $4/$20 is promotional.</strong> OpenAI's pricing page says it holds "at least through November 21, 2026". It does not say what happens after. There is no published reversion price.</li>
+  <li><strong>Gemini 3.7 Flash's $0.75/$3.75 is promotional too</strong>, and this one has a stated cliff: <a href="https://ai.google.dev/gemini-api/docs/pricing">Google's pricing page</a> lists $1.50/$7.50 from 2027-01-01. Exactly double, on both sides.</li>
+  <li><strong>Anthropic went the other way.</strong> Sonnet 5 launched at $2/$10 as an introductory rate due to expire on 2026-08-31. On 2026-08-10 Anthropic <a href="https://platform.claude.com/docs/en/about-claude/pricing">cancelled the increase</a>: the scheduled move to $3/$15 "will not occur", and $2/$10 is now simply the standard price.</li>
+</ul>
+
+<p>So of the headline numbers in that chart, two are temporary discounts and one is a permanent cut that started life as a temporary discount. <em>The list price is not currently a stable quantity.</em> Any comparison you read this month — including this one — is a photograph of a moving object, which is exactly why the generator and the fetch dates for my chart are <a href="https://github.com/ylnhari/blog/tree/main/posts/2026-08-26-open-weights-vs-proprietary-the-premium-nobody-buys/charts">committed next to it</a>.</p>
+
+<blockquote>When three of four vendors are quoting a promotional price simultaneously, they are not competing on capability. They are defending share.</blockquote>
+
+<p>There is a supply-side reason this is sustainable, and it landed the day before I wrote this. OpenAI published <a href="https://openai.com/index/jalapeno-first-results">the first measured results from Jalape&ntilde;o</a>, its own inference chip, claiming 1.5&ndash;1.9x more throughput per watt and 1.7&ndash;3.6x lower latency than the commercial systems it benchmarked against, with deployment inside OpenAI's own infrastructure planned by year end. Cheaper serving is what lets a price cut be a strategy instead of a wound.</p>
+
+<hr>
+
+<h2>"Open" is doing a lot of work in that sentence</h2>
+
+<p>Now the correction, because I nearly got this wrong myself while researching this post.</p>
+
+<p>The phrase "open-weight model" has quietly split into three different things, and treating them as one category produces bad conclusions. I know, because I had to correct this post twice while writing it.</p>
+
+<ol>
+  <li><strong>Genuinely open source, permissive licence.</strong> DeepSeek ships <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/main/LICENSE">V4-Flash-0731 under a verbatim MIT licence</a> — no revenue trigger, no user cap, no naming requirement. And it is not alone: <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813">V4-Pro-0813, a 1.7-trillion-parameter model, is MIT too</a>. <a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen3.8-27B is Apache-2.0</a>. This tier is genuinely free and sits a clear step below the frontier.</li>
+  <li><strong>Weights you can download, under a licence that is not open source.</strong> Kimi K3 is the strongest model in this bracket at index 60, and its <a href="https://huggingface.co/moonshotai/Kimi-K3">weights really are on Hugging Face</a>. But <a href="https://huggingface.co/moonshotai/Kimi-K3/raw/main/LICENSE">its licence</a> requires a separate agreement with Moonshot once a model-as-a-service business passes <strong>$20M</strong> in revenue over twelve months, and prominent "Kimi K3" branding above 100M monthly users. Qwen's open Max checkpoint carries <a href="https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/raw/main/LICENSE">the same shape of clause at a $50M threshold</a>. Moonshot itself says "open weight" and never "open source"; <a href="https://arena.ai/leaderboard/text">LMArena declines to classify K3 as open source</a> while Artificial Analysis counts it as open weights. Both are defensible. That is the problem.</li>
+  <li><strong>Marketed as open, not yet downloadable.</strong> <strong>GLM-5.3 has no weights to download today.</strong> Z.ai's own launch post says it plainly: "We will release the weights in two weeks after launch, once safety evaluation and hardening are complete." The stated reason is capability, not schedule — the same post reports a <a href="https://z.ai/blog/glm-5.3">state-of-the-art 84.5 on CyberGym</a>, more than doubling its predecessor on exploitation benchmarks. Two weeks from its 2026-08-14 launch lands about now, so this one may be out of date by the time you read it — check before you believe either me or the marketing.</li>
+</ol>
+
+<p>There is a second trap inside category two. The open Qwen checkpoint is <em>not</em> the model you rent. Alibaba's own card is explicit that the downloadable weights are text-only and thinking-only at 262K context, while hosted Qwen3.8-Max adds vision, non-thinking mode and a 1M window. Same name, materially different product.</p>
+
+<p>So when someone tells you the open models have caught up, ask which one they mean. If they mean Kimi K3, the capability claim is nearly true and the licence is conditional. If they mean DeepSeek, the licence is genuinely free and the model is a tier down. <strong>There is currently no model that is both frontier-adjacent and unconditionally open</strong> — and that, not the benchmark gap, is the real state of open weights in August 2026.</p>
+
+<h2>What I can tell you first-hand</h2>
+
+<p>Index scores are somebody else's measurement. I keep <a href="https://ylnhari.github.io/ai-signal/bench.html">a standing bench</a> where I run the same twenty-five tasks against every model myself, four independent times each from a clean context, and check every answer against hidden cases. I am not going to restate its results here — it grows as models are added and a copy in a blog post goes stale the day after — but two things from adding GPT-5.6 to it this week bear directly on the argument above.</p>
+
+<p>The first is about what a benchmark number hides. On the task that tests closures and mutable defaults, GPT-5.6 Sol passed cleanly in two of its four runs and scored 3 of 8 hidden cases in the other two. Not a weakness — <em>a coin flip</em>. Its failing runs correctly defend against the famous late-binding trap, and then reintroduce the identical bug one layer up:</p>
+
+<p><strong>Example (illustrative — this is the shape of the failing run):</strong></p>
+
+<pre><code>for field_name, min_len in specs:
+    def validator(value, min_len=min_len):     # guards the famous trap
+        if value not in validator.cache:       # ...then reads `validator`
+            validator.cache[value] = len(value) &gt;= min_len
+        return validator.cache[value]
+    validator.cache = {}</code></pre>
+
+<p>The default argument correctly freezes <code>min_len</code>. But <code>validator</code> inside the body is a free variable resolved when the function is <em>called</em>, and by then the loop has finished and the name points at the last function created. Every validator ends up sharing one cache. It fixed the version of this bug that appears in tutorials and fell into the version that does not.</p>
+
+<p>The second is smaller and funnier. There is one question in my battery that nearly every model answers wrong — a word count with a hyphenated compound in it. Nine of the ten models I had tested miss it in every single run. The sole exception, at the time of writing, is the cheapest model in the entire lineup. Whatever the frontier premium buys, it is not that.</p>
+
+<blockquote>A single benchmark run would have told me GPT-5.6 Sol passes that task, or fails it, with equal probability. Both would have been publishable. Both would have been wrong.</blockquote>
+
+<hr>
+
+<h2>So which one should you actually use?</h2>
+
+<p>Three cases, and the honest answer differs sharply between them.</p>
+
+<ol>
+  <li><strong>You are serving high volume and your task is not at the edge of hard.</strong> Go cheap and open, and do it now. DeepSeek V4-Flash under MIT at roughly a sixteenth of Fable's blended cost is the strongest value on the chart, and an MIT licence means no vendor can reprice you — which, given how much of this post is about prices moving, is worth more than a couple of index points. DeepSeek also <a href="https://api-docs.deepseek.com/quick_start/pricing">halves its API rates off-peak</a>, so batch work gets cheaper again. Measure whether your workload notices the gap before you pay to close it.</li>
+  <li><strong>You need frontier-grade reasoning and you are cost-sensitive.</strong> This is where the market has moved most and where the received wisdom is most stale. Grok 4.6 and Kimi K3 both land within one to three index points of the leaders at roughly a third to two-thirds of the blended price. If you are on a flagship purely out of habit, this is the comparison to run. Just read the Kimi licence first if you intend to resell inference.</li>
+  <li><strong>You genuinely need the top, and you can prove it.</strong> Then buy Opus 5, not the most expensive thing available — because on current numbers the most expensive thing available is not the most capable. And whatever you pick, price it on the post-promotional rate, not the sticker. If Gemini 3.7 Flash's economics only work at $0.75, you have until December 31st.</li>
+  <li><strong>In every case: measure on your own workload before you commit.</strong> An index point is an average over somebody else's tasks. The coin-flip result above came from running one task four times instead of once, and it inverted the conclusion. Nothing in this post substitutes for that.</li>
+</ol>
+
+<p>The thing I would not do is assume the current prices are load-bearing. Two of them expire before this post is six months old.</p>
+
+<p><em>This is a follow-up to <a href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/">The Price of Intelligence: Open-Weight vs Paid Frontier Models in 2026</a>, written six weeks earlier — which asked whether open models could catch up, and now reads like it was asking the wrong question. Its <a href="https://ylnhari.github.io/blog/posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html">interactive price-versus-intelligence chart</a> is kept current and covers more models than the static one above.</em></p>
+
+<h2>Sources &amp; caveats</h2>
+
+<p>Every price above comes from the vendor's own pricing page, fetched on 2026-08-26. That matters more than usual this month: third-party summaries of AI pricing have been reliably wrong lately, because they drop the promotional qualifiers, and the qualifier is frequently the whole story.</p>
+
+<ul>
+  <li><strong>Intelligence scores</strong> are the <a href="https://artificialanalysis.ai/models">Artificial Analysis Intelligence Index v4.1.1</a>, fetched 2026-08-26. Artificial Analysis publishes no last-updated timestamp on these pages, so the version string is the only provenance available. Independent measurement, not a vendor claim.</li>
+  <li><strong>Blended cost</strong> is 0.7&times;cached-input + 0.2&times;input + 0.1&times;output. Artificial Analysis does not publish that formula; I derived it and verified it reproduces their own published figures for GPT-5.6 Sol, Claude Opus 5 and Kimi K3 exactly, then applied it to vendor prices. I deliberately did <em>not</em> use Artificial Analysis's own price column, because their leaderboard listing disagrees with their model pages.</li>
+  <li><strong>A comparison this post does not make:</strong> Anthropic notes that its 4.7-and-later models produce roughly 30% more tokens for the same text. A raw per-token comparison therefore understates real Claude cost, and I have not adjusted for it — the Claude points on that chart are, if anything, flattering.</li>
+  <li><strong>Grok 4.6 and GPT-5.6 have context-length pricing cliffs.</strong> Grok bills every token in a request at the higher rate once the prompt reaches 200K; OpenAI applies 2x input and 1.5x output above 272K. Anthropic, unusually, charges its full 1M window at standard rates. If your prompts are long, the chart understates the gap.</li>
+  <li><strong>GLM-5.3's status is the least settled thing here</strong>, though the key claim is now vendor-sourced: the two-week weights delay and the safety-review reason are Z.ai's own words on its launch post, not third-party reporting. What I could not resolve is the licence those weights will carry (GLM-5.1 and 5.2 were both MIT, but that is precedent, not a commitment) or the parameter count, which Z.ai does not state. Sources also disagree on whether it launched on 2026-08-14 or 2026-08-18. Re-check before relying on any of it.</li>
+  <li><strong>Ramp measures its own customer base</strong>, not the economy, and says so. The FT figures are relayed second-hand through a blog because the FT is paywalled. Neither is a substitute for a vendor disclosure, and I have not treated them as one.</li>
+  <li><strong>My own results</strong> come from twenty-five tasks run four times per model from clean contexts, graded against hidden cases. Method, prompts, every raw output and every score are on <a href="https://ylnhari.github.io/ai-signal/bench.html">the bench page</a>. The chart's generator and data are committed alongside this post.</li>
+</ul>
+
+<!-- === POST CONTENT ENDS HERE === -->
+
+<hr>
+<p class="footer-note"><em>Published via automated pipeline &middot; <a href="https://ylnhari.github.io/blog">ylnhari.github.io/blog</a></em></p>
+
+</article>
+</body>
+</html>
