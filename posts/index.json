@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-08-26-open-weights-vs-proprietary-the-premium-nobody-buys",
+    "title": "The Frontier Premium Nobody Is Buying",
+    "date": "2026-08-26",
+    "description": "The open-weight gap closed to 1-3 index points. That is not the story. The story is that buyers stopped paying for the top of the range, and the vendors noticed first.",
+    "tags": ["LLMs", "open weights", "pricing", "economics"],
+    "cover_image": "https://images.unsplash.com/photo-1620266757065-5814239881fd?w=1200&q=80",
+    "status": "draft",
+    "medium_url": null
+  },
+  {
     "slug": "2026-07-31-jio-prime-lite-lock-escape-guide",
     "title": "Stuck on 'Prime Lite with Jio'? The Verified Map Out",
     "date": "2026-07-31",
