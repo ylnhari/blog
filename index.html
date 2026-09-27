@@ -21,6 +21,15 @@
   </header>
 
   <main>
+    <div class="post-filters" role="search">
+      <label for="post-search">Search posts</label>
+      <input id="post-search" type="search" autocomplete="off" placeholder="Title, topic, or tag">
+      <label for="tag-filter">Filter by tag</label>
+      <select id="tag-filter">
+        <option value="">All tags</option>
+      </select>
+      <p id="post-count" class="filter-status" role="status" aria-live="polite">Loading posts…</p>
+    </div>
     <ul class="post-list" id="post-list">
       <li class="empty-state">Loading posts…</li>
     </ul>
@@ -29,38 +38,122 @@
 </div>
 
 <script>
-  fetch('posts/index.json')
-    .then(r => r.json())
-    .then(posts => {
-      const list = document.getElementById('post-list');
+  const list = document.getElementById('post-list');
+  const search = document.getElementById('post-search');
+  const tagFilter = document.getElementById('tag-filter');
+  const count = document.getElementById('post-count');
+  let posts = [];
 
-      if (!posts.length) {
-        list.innerHTML = '<li class="empty-state">No posts yet. Check back soon.</li>';
-        return;
+  function postTags(post) {
+    return Array.isArray(post.tags) ? post.tags.filter(tag => typeof tag === 'string') : [];
+  }
+
+  function render() {
+    const query = search.value.trim().toLocaleLowerCase();
+    const selectedTag = tagFilter.value;
+    const matches = posts.filter(post => {
+      const tags = postTags(post);
+      const searchable = [post.title, post.description, ...tags]
+        .filter(value => typeof value === 'string')
+        .join(' ')
+        .toLocaleLowerCase();
+      return (!query || searchable.includes(query)) && (!selectedTag || tags.includes(selectedTag));
+    });
+
+    list.replaceChildren();
+    if (!matches.length) {
+      const empty = document.createElement('li');
+      empty.className = 'empty-state';
+      empty.textContent = posts.length ? 'No posts match these filters.' : 'No posts yet. Check back soon.';
+      list.append(empty);
+    }
+
+    for (const post of matches) {
+      const card = document.createElement('li');
+      card.className = 'post-card';
+
+      const heading = document.createElement('h2');
+      const titleLink = document.createElement('a');
+      titleLink.href = `posts/${encodeURIComponent(String(post.slug || ''))}/`;
+      titleLink.textContent = String(post.title || 'Untitled post');
+      heading.append(titleLink);
+      card.append(heading);
+
+      const meta = document.createElement('p');
+      meta.className = 'meta';
+      const parsedDate = new Date(`${post.date || ''}T00:00:00`);
+      meta.textContent = Number.isNaN(parsedDate.getTime())
+        ? ''
+        : parsedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      if (typeof post.medium_url === 'string') {
+        try {
+          const mediumUrl = new URL(post.medium_url);
+          if (mediumUrl.protocol === 'https:') {
+            if (meta.textContent) meta.append(' · ');
+            const mediumLink = document.createElement('a');
+            mediumLink.href = mediumUrl.href;
+            mediumLink.target = '_blank';
+            mediumLink.rel = 'noopener';
+            mediumLink.textContent = 'Read on Medium';
+            meta.append(mediumLink);
+          }
+        } catch (_) {
+          // Ignore invalid external links in the post catalog.
+        }
       }
+      card.append(meta);
 
-      list.innerHTML = posts.map(post => {
-        const date = new Date(post.date + 'T00:00:00').toLocaleDateString('en-US', {
-          year: 'numeric', month: 'long', day: 'numeric'
-        });
-        const tags = (post.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
-        const url = `posts/${post.slug}/`;
-        const mediumLink = post.medium_url
-          ? ` &middot; <a href="${post.medium_url}" target="_blank" rel="noopener">Read on Medium</a>`
-          : '';
+      const description = document.createElement('p');
+      description.className = 'description';
+      description.textContent = String(post.description || '');
+      card.append(description);
 
-        return `
-          <li class="post-card">
-            <h2><a href="${url}">${post.title}</a></h2>
-            <p class="meta">${date}${mediumLink}</p>
-            <p class="description">${post.description}</p>
-            ${tags ? `<div class="tags">${tags}</div>` : ''}
-          </li>`;
-      }).join('');
+      const tags = postTags(post);
+      if (tags.length) {
+        const tagList = document.createElement('div');
+        tagList.className = 'tags';
+        for (const tag of tags) {
+          const badge = document.createElement('span');
+          badge.className = 'tag';
+          badge.textContent = tag;
+          tagList.append(badge);
+        }
+        card.append(tagList);
+      }
+      list.append(card);
+    }
+
+    count.textContent = `${matches.length} ${matches.length === 1 ? 'post' : 'posts'}`;
+  }
+
+  search.addEventListener('input', render);
+  tagFilter.addEventListener('change', render);
+
+  fetch('posts/index.json')
+    .then(response => {
+      if (!response.ok) throw new Error('Post catalog request failed');
+      return response.json();
+    })
+    .then(data => {
+      if (!Array.isArray(data)) throw new Error('Post catalog is invalid');
+      posts = data.filter(post => post && typeof post === 'object');
+      const tags = [...new Set(posts.flatMap(postTags))]
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+      for (const tag of tags) {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        tagFilter.append(option);
+      }
+      render();
     })
     .catch(() => {
-      document.getElementById('post-list').innerHTML =
-        '<li class="empty-state">Could not load posts.</li>';
+      list.replaceChildren();
+      const error = document.createElement('li');
+      error.className = 'empty-state';
+      error.textContent = 'Could not load posts. Please try again later.';
+      list.append(error);
+      count.textContent = 'Posts are unavailable';
     });
 </script>
 </body>
