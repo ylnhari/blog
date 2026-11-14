@@ -333,3 +333,20 @@ hr::before {
     margin-top: 0.25rem;
   }
 }
+
+/* Dark mode: follows the reader's system setting (no script, so Medium import stays safe) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e6e8ee;
+    --muted: #9aa3b5;
+    --accent: #7aa2ff;
+    --bg: #0f1117;
+    --code-bg: #1a1e29;
+    --border: #2a3040;
+    color-scheme: dark;
+  }
+  .post-filters input,
+  .post-filters select { border-color: #3a4256; }
+  .post-card .description { color: #c3c8d4; }
+  img { opacity: 0.94; }
+}

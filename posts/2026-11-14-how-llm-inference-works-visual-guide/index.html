@@ -4,22 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="ylnhari">
-  <meta name="description" content="Every LLM inference trick is a statement about tensor shapes. An interactive page that shows b, s and h move through a transformer, split across GPUs, and fill memory.">
-  <meta property="og:title" content="See the Shapes: LLM Inference Optimization, Visualized">
-  <meta property="og:description" content="Every LLM inference trick is a statement about tensor shapes. An interactive page that shows b, s and h move through a transformer, split across GPUs, and fill memory.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/02-tensor-split-h.png">
-  <title>See the Shapes: LLM Inference Optimization, Visualized</title>
+  <meta name="description" content="What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.">
+  <meta property="og:title" content="How LLM Inference Works: A Visual Guide to the Core Concepts">
+  <meta property="og:description" content="What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-tensor-split-h.png">
+  <title>How LLM Inference Works: A Visual Guide to the Core Concepts</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
 <article>
 
-<h1>See the Shapes: LLM Inference Optimization, Visualized</h1>
+<h1>How LLM Inference Works: A Visual Guide to the Core Concepts</h1>
 <p class="byline">By ylnhari &middot; November 14, 2026 &middot; llm, inference, transformers, visualization</p>
 
 <!-- === POST CONTENT STARTS HERE === -->
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/02-tensor-split-h.png" alt="A [b, s, h] activation tensor drawn as a 3D block, cut along h into two halves, one per GPU: tensor parallelism halves activation memory with no copies.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-tensor-split-h.png" alt="A [b, s, h] activation tensor drawn as a 3D block, cut along h into two halves, one per GPU: tensor parallelism halves activation memory with no copies.">
 
 <p>Most explanations of LLM inference optimization are written in prose and formulas: "tensor parallelism splits the weight matrices", "sequence parallelism partitions LayerNorm along the sequence dimension", "the KV cache grows linearly with batch and sequence length". Each sentence is correct, and each one hides the same thing: a tensor with a shape, sitting on a particular piece of hardware.</p>
 
@@ -41,7 +41,7 @@
 
 <p>Part I of the page traces one batch from raw text to the next token. Token IDs <code>[b, s]</code> become embeddings <code>[b, s, h]</code>. These are projected into Q, K and V, and Q is cut into heads, <code>[b, n_heads, s, d_head]</code> with <code>h = n_heads × d_head</code>. Then RoPE rotates each head's q and k by position, so word order counts, and each head builds an <code>[s × s]</code> score matrix. Next, the MLP widens to <code>[b, s, ffn]</code> and back, and the LM head produces <code>[b, s, V]</code>. A toggle swaps the toy sizes for real Llama 2 7B numbers.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/01-forward-pass-heads.png" alt="Forward-pass stage 5 of 12: the Q tensor [b, s, h] is cut along h into four colour-coded heads of width d_head. These are the same slices tensor parallelism later hands to different GPUs.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-forward-pass-heads.png" alt="Forward-pass stage 5 of 12: the Q tensor [b, s, h] is cut along h into four colour-coded heads of width d_head. These are the same slices tensor parallelism later hands to different GPUs.">
 
 <p>Once you have watched Q split into heads, tensor parallelism stops being abstract. It is the same cut, with the heads sent to different GPUs.</p>
 
@@ -51,11 +51,11 @@
 
 <p>The total unique data really is the same. The waste is that with two GPUs it is stored twice. LayerNorm treats each token on its own, though, so you can cut along s instead:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/03-sequence-split-s.png" alt="The same [b, s, h] block cut along s instead: GPU 0 holds tokens 0 to 3 and GPU 1 holds tokens 4 to 7. Each GPU holds half the activations for LayerNorm and Dropout, with no copies.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-sequence-split-s.png" alt="The same [b, s, h] block cut along s instead: GPU 0 holds tokens 0 to 3 and GPU 1 holds tokens 4 to 7. Each GPU holds half the activations for LayerNorm and Dropout, with no copies.">
 
 <p>The page then walks one full transformer layer, stage by stage, for each GPU. It shows the shape each GPU holds, which half of each weight matrix it owns, the collective between stages, and a running total of activation memory:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/04-tp-layer-allreduce.png" alt="Layer walk-through at the attention output projection: each GPU holds a partial sum of the full [s, h] and All-Reduce combines them. Activation units per GPU for the whole layer are 12.0 on one GPU, 9.5 with tensor parallelism and 6.0 with tensor plus sequence parallelism.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/04-tp-layer-allreduce.png" alt="Layer walk-through at the attention output projection: each GPU holds a partial sum of the full [s, h] and All-Reduce combines them. Activation units per GPU for the whole layer are 12.0 on one GPU, 9.5 with tensor parallelism and 6.0 with tensor plus sequence parallelism.">
 
 <p>In the page's simplified unit count, one layer comes to 12 units on one GPU, 9.5 per GPU with TP=2, and 6.0 per GPU with TP and sequence parallelism. Communication doesn't grow either. An All-Reduce is a Reduce-Scatter followed by an All-Gather, and sequence parallelism simply runs the cheap per-token ops in between. The paper behind this, <a href="https://arxiv.org/abs/2205.05198">Reducing Activation Recomputation in Large Transformer Models</a>, reports that its two techniques together reduce activation memory by 5× and cut the execution-time overhead of activation recomputation by over 90%.</p>
 
@@ -65,7 +65,7 @@
 
 <p>Inference is mostly a memory problem. The NVIDIA post works through two figures, and the page lets you move them. A 7B model in FP16 needs <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 14 GB</a> for its weights. The KV cache costs <code>batch × seq × 2 × layers × hidden × bytes</code>, which for Llama 2 7B at batch 1 and 4,096 tokens is <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 2 GB</a>. Drag the batch and sequence sliders and watch the cache crowd the weights off an 80 GB GPU. Then switch to the GQA preset and see why grouped-query attention matters.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/05-kv-cache-calculator.png" alt="KV cache calculator for Llama 2 7B at batch 1 and 4,096 tokens: 14 GB of weights plus 2.15 GB of KV cache on an 80 GB GPU, with the formula filled in with live numbers.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/05-kv-cache-calculator.png" alt="KV cache calculator for Llama 2 7B at batch 1 and 4,096 tokens: 14 GB of weights plus 2.15 GB of KV cache on an 80 GB GPU, with the formula filled in with live numbers.">
 
 <p>The rest of Part II gives the same treatment to static vs in-flight batching, pipeline bubbles, MHA vs GQA vs MQA, FlashAttention tiling, PagedAttention block tables, quantization with an outlier, 2:4 sparsity, distillation soft targets and speculative decoding.</p>
 
@@ -73,7 +73,7 @@
 
 <p>The activation-memory problem in Step 2 is really a <em>training</em> problem. The backward pass needs the input that went into every layer, because every weight gradient is the saved input transposed times the incoming gradient. Inference never runs backward, so it can throw activations away as soon as they're used. Part III draws the backward pass with the same shapes and ends on this comparison:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/06-training-vs-inference-memory.png" alt="Memory for a 7B model at 4,096 tokens: about 16 GB for inference (weights plus KV cache) against about 216 GB for training (weights, gradients, fp32 master weights, two Adam moments and stored activations). Training needs several GPUs before activations are even counted.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/06-training-vs-inference-memory.png" alt="Memory for a 7B model at 4,096 tokens: about 16 GB for inference (weights plus KV cache) against about 216 GB for training (weights, gradients, fp32 master weights, two Adam moments and stored activations). Training needs several GPUs before activations are even counted.">
 
 <p>The training bar is an estimate. It assumes 16 bytes per parameter for mixed-precision Adam (2 for weights, 2 for gradients, 4 for fp32 master weights, 4 + 4 for the Adam moments). It also uses the per-layer activation formula <code>s·b·h·(34 + 5·a·s/h)</code> bytes from the <a href="https://arxiv.org/abs/2205.05198">same Megatron paper</a>. A toggle on the page shows how full recomputation collapses the activation term.</p>
 
