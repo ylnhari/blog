@@ -45,7 +45,28 @@
 
 <p>Once you have watched Q split into heads, tensor parallelism stops being abstract. It is the same cut, with the heads sent to different GPUs.</p>
 
-<h2>Step 2: why splitting along s saves memory when splitting along h already did</h2>
+<h2>Step 2: why models get split across GPUs, and the four ways to do it</h2>
+
+<p>Weights alone outgrow a GPU quickly. A 70B-parameter model at 2 bytes per parameter is 140 GB, already more than one 80 GB GPU holds, and that is before any KV cache. A 405B model is 810 GB. So parallelism first exists to make the model <strong>fit</strong>. It also serves two other goals, more <strong>throughput</strong> and lower <strong>latency</strong>, and each strategy helps only some of the three.</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/07-gpus-needed.png" alt="Each box is one 80 GB GPU filled with FP16 weights only. Llama 2 7B and 13B fit on one GPU, Llama 2 70B needs at least two, and Llama 3.1 405B needs at least eleven, before any KV cache.">
+
+<p>Every strategy answers one question: <strong>which dimension of which tensor gets cut, and what has to travel between GPUs as a result?</strong></p>
+
+<ul>
+<li><strong>Data parallelism</strong> copies the whole model and splits the batch <code>b</code>. Throughput scales almost perfectly and GPUs never talk at inference, but it is useless if the model does not fit on one GPU.</li>
+<li><strong>Pipeline parallelism</strong> splits the stack of layers. Each GPU holds a slice of the layers and passes a small <code>[b, s, h]</code> activation to the next. It helps a model fit, but one request still walks through every stage in turn, and stages idle while they wait.</li>
+<li><strong>Tensor parallelism</strong> splits the weight matrices inside every layer: attention by heads, the MLP by columns then rows, the embedding and LM head by vocabulary. Every GPU works on every layer for the same sequences, which makes each request faster. The price is communication inside every layer.</li>
+<li><strong>Sequence parallelism</strong> splits what tensor parallelism leaves copied (Step 3).</li>
+</ul>
+
+<p>Tensor parallelism rests on one neat trick. Split the MLP's first weight by <em>columns</em> and the second by <em>rows</em>. Each GPU can then run both matmuls and the nonlinearity between them on its own half, and a single All-Reduce at the end adds up the partial results:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/08-tp-matmul-trick.png" alt="Tensor parallelism in the MLP: A is split by columns and B by rows, so each GPU computes GeLU on its own half of Y and a partial sum of Z, and one All-Reduce combines them. There is no communication between the two matmuls.">
+
+<p>That All-Reduce happens twice in every layer, so tensor parallelism needs the fast links <em>inside</em> one server. Real deployments therefore mix strategies: tensor parallelism within a server, pipeline parallelism across servers, and data parallelism to add replicas for traffic. The <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">interactive page</a> walks through each one, and how they combine on a 16-GPU cluster.</p>
+
+<h2>Step 3: why splitting along s saves memory when splitting along h already did</h2>
 
 <p>A natural objection to sequence parallelism: whether a GPU holds all the tokens or half of them, the total data is the same, so where does the saving come from? The answer is in what tensor parallelism leaves behind. Inside attention and the MLP, tensor parallelism cuts along h, so each GPU holds <code>[b, s, h/2]</code> and nothing is duplicated (image at the top). Between those blocks, an All-Reduce leaves <em>every</em> GPU with the full <code>[b, s, h]</code>. LayerNorm then needs each token's whole h-vector to compute a mean and variance, so it can't be cut along h. Each GPU therefore stores a complete copy.</p>
 
@@ -61,7 +82,7 @@
 
 <blockquote>The total data is the same. Replication is what you pay for.</blockquote>
 
-<h2>Step 3: put real numbers on memory</h2>
+<h2>Step 4: put real numbers on memory</h2>
 
 <p>Inference is mostly a memory problem. The NVIDIA post works through two figures, and the page lets you move them. A 7B model in FP16 needs <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 14 GB</a> for its weights. The KV cache costs <code>batch × seq × 2 × layers × hidden × bytes</code>, which for Llama 2 7B at batch 1 and 4,096 tokens is <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 2 GB</a>. Drag the batch and sequence sliders and watch the cache crowd the weights off an 80 GB GPU. Then switch to the GQA preset and see why grouped-query attention matters.</p>
 
@@ -69,9 +90,9 @@
 
 <p>The rest of Part II gives the same treatment to static vs in-flight batching, pipeline bubbles, MHA vs GQA vs MQA, FlashAttention tiling, PagedAttention block tables, quantization with an outlier, 2:4 sparsity, distillation soft targets and speculative decoding.</p>
 
-<h2>Step 4: understand why training needs so much more</h2>
+<h2>Step 5: understand why training needs so much more</h2>
 
-<p>The activation-memory problem in Step 2 is really a <em>training</em> problem. The backward pass needs the input that went into every layer, because every weight gradient is the saved input transposed times the incoming gradient. Inference never runs backward, so it can throw activations away as soon as they're used. Part III draws the backward pass with the same shapes and ends on this comparison:</p>
+<p>The activation-memory problem in Step 3 is really a <em>training</em> problem. The backward pass needs the input that went into every layer, because every weight gradient is the saved input transposed times the incoming gradient. Inference never runs backward, so it can throw activations away as soon as they're used. Part III draws the backward pass with the same shapes and ends on this comparison:</p>
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/06-training-vs-inference-memory.png" alt="Memory for a 7B model at 4,096 tokens: about 16 GB for inference (weights plus KV cache) against about 216 GB for training (weights, gradients, fp32 master weights, two Adam moments and stored activations). Training needs several GPUs before activations are even counted.">
 
