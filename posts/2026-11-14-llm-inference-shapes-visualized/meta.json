@@ -1,0 +1,15 @@
+{
+  "title": "See the Shapes: LLM Inference Optimization, Visualized",
+  "date": "2026-11-14",
+  "author": "ylnhari",
+  "description": "Every LLM inference trick is a statement about tensor shapes. An interactive page that shows b, s and h move through a transformer, split across GPUs, and fill memory.",
+  "tags": [
+    "llm",
+    "inference",
+    "transformers",
+    "visualization"
+  ],
+  "status": "draft",
+  "medium_url": null,
+  "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/02-tensor-split-h.png"
+}
