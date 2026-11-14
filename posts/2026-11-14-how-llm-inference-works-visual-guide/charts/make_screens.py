@@ -12,9 +12,11 @@ with sync_playwright() as p:
     pg.goto(SRC); pg.wait_for_timeout(800)
     for _ in range(4): pg.click("#an-next")              # anatomy stage 5: split heads
     pg.locator("#anatomy .fig").screenshot(path=OUT + "01-forward-pass-heads.png")
-    pg.locator("#parallel .fig").first.screenshot(path=OUT + "02-tensor-split-h.png")
+    pg.locator("#par-sp .fig").first.screenshot(path=OUT + "02-tensor-split-h.png")
     pg.click('#cube-seg button:text-is("SP · split s")')
-    pg.locator("#parallel .fig").first.screenshot(path=OUT + "03-sequence-split-s.png")
+    pg.locator("#par-sp .fig").first.screenshot(path=OUT + "03-sequence-split-s.png")
+    pg.locator("#par-why .fig").screenshot(path=OUT + "07-gpus-needed.png")
+    pg.locator("#par-tpc .fig").screenshot(path=OUT + "08-tp-matmul-trick.png")
     for _ in range(3): pg.click("#tp-next")              # TP layer walk: out-proj All-Reduce
     pg.locator("#par-tp").screenshot(path=OUT + "04-tp-layer-allreduce.png")
     pg.locator("#kv .fig").screenshot(path=OUT + "05-kv-cache-calculator.png")
