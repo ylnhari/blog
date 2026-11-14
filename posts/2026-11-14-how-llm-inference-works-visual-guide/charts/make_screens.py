@@ -11,7 +11,10 @@ with sync_playwright() as p:
     pg.emulate_media(reduced_motion="reduce")          # skip entry animations: final frame only
     pg.goto(SRC); pg.wait_for_timeout(800)
     for _ in range(4): pg.click("#an-next")              # anatomy stage 5: split heads
-    pg.locator("#anatomy .fig").screenshot(path=OUT + "01-forward-pass-heads.png")
+    pg.locator("#anatomy .fig").screenshot(path="/tmp/_01.png")
+    from PIL import Image  # Medium's importer drops the full-size PNG; ship a 1400px JPEG
+    im = Image.open("/tmp/_01.png").convert("RGB"); im = im.resize((1400, int(im.height * 1400 / im.width)))
+    im.save(OUT + "01-forward-pass.jpg", quality=88, optimize=True)
     pg.locator("#par-sp .fig").first.screenshot(path=OUT + "02-tensor-split-h.png")
     pg.click('#cube-seg button:text-is("SP · split s")')
     pg.locator("#par-sp .fig").first.screenshot(path=OUT + "03-sequence-split-s.png")
