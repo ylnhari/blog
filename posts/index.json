@@ -1,5 +1,20 @@
 [
   {
+    "slug": "2026-11-14-llm-inference-shapes-visualized",
+    "title": "See the Shapes: LLM Inference Optimization, Visualized",
+    "date": "2026-11-14",
+    "description": "Every LLM inference trick is a statement about tensor shapes. An interactive page that shows b, s and h move through a transformer, split across GPUs, and fill memory.",
+    "tags": [
+      "llm",
+      "inference",
+      "transformers",
+      "visualization"
+    ],
+    "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-llm-inference-shapes-visualized/images/02-tensor-split-h.png",
+    "status": "draft",
+    "medium_url": null
+  },
+  {
     "slug": "2026-08-26-open-weights-vs-proprietary-the-premium-nobody-buys",
     "title": "The Frontier Premium Nobody Is Buying",
     "date": "2026-08-26",
