@@ -41,7 +41,7 @@
 
 <p>Part I of the page traces one batch from raw text to the next token. Token IDs <code>[b, s]</code> become embeddings <code>[b, s, h]</code>. These are projected into Q, K and V, and Q is cut into heads, <code>[b, n_heads, s, d_head]</code> with <code>h = n_heads × d_head</code>. Then RoPE rotates each head's q and k by position, so word order counts, and each head builds an <code>[s × s]</code> score matrix. Next, the MLP widens to <code>[b, s, ffn]</code> and back, and the LM head produces <code>[b, s, V]</code>. A toggle swaps the toy sizes for real Llama 2 7B numbers.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-forward-pass-heads.png" alt="Forward-pass stage 5 of 12: the Q tensor [b, s, h] is cut along h into four colour-coded heads of width d_head. These are the same slices tensor parallelism later hands to different GPUs.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-forward-pass.jpg" alt="Forward-pass stage 5 of 12: the Q tensor [b, s, h] is cut along h into four colour-coded heads of width d_head. These are the same slices tensor parallelism later hands to different GPUs.">
 
 <p>Once you have watched Q split into heads, tensor parallelism stops being abstract. It is the same cut, with the heads sent to different GPUs.</p>
 
