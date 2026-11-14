@@ -1,0 +1,15 @@
+{
+  "title": "How LLM Inference Works: A Visual Guide to the Core Concepts",
+  "date": "2026-11-14",
+  "author": "ylnhari",
+  "description": "What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.",
+  "tags": [
+    "llm",
+    "inference",
+    "transformers",
+    "visualization"
+  ],
+  "status": "draft",
+  "medium_url": null,
+  "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-tensor-split-h.png"
+}
