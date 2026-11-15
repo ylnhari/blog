@@ -6,6 +6,8 @@
 **Medium profile:** https://medium.com/@ylnhari  
 **GitHub:** https://github.com/ylnhari/blog
 
+**Part of the AI-signal pipeline:** [ai-news-aggregator](https://github.com/ylnhari/ai-news-aggregator) collects AI news, a private editorial repo picks what's worth covering, [AI Signal](https://github.com/ylnhari/ai-signal) publishes the daily brief and the [model bench](https://ylnhari.github.io/ai-signal/bench.html), and this blog carries the long-form posts.
+
 ---
 
 ## How This Works
