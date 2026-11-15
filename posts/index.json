@@ -11,8 +11,8 @@
       "pricing"
     ],
     "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-15-open-weights-gap-private-tests/images/intelligence-vs-cost-per-task.jpg",
-    "status": "draft",
-    "medium_url": null
+    "status": "published",
+    "medium_url": "https://ylnhari.medium.com/when-the-test-went-private-the-open-weights-gap-came-back-d9d4aecc020d"
   },
   {
     "slug": "2026-11-14-how-llm-inference-works-visual-guide",
