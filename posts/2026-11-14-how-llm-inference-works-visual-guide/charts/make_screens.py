@@ -27,7 +27,7 @@ with sync_playwright() as p:
     save(pg.locator("#architecture .fig"), "01-architecture")
     save(pg.locator("#attention-explained .fig"), "02-attention")
     for _ in range(4): pg.click("#an-next")                # forward pass stage 5: split heads
-    save(pg.locator("#anatomy .fig"), "03-shapes-heads")
+    save(pg.locator("#anatomy .fig"), "03-tensor-shapes")
     pg.click("#pd-next"); pg.click("#pd-skip")             # prefill, full picture
     save(pg.locator("#phases .fig"), "04-prefill")
     for _ in range(2): pg.click("#pd-next")
