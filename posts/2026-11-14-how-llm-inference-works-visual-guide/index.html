@@ -72,7 +72,11 @@
 
 <h2>2. Three letters you will see everywhere: b, s, h</h2>
 
-<p>Once text is inside the model, everything is a block of numbers with a <strong>shape</strong>. Nearly every paper about LLM systems writes the main block as <code>[b, s, h]</code>:</p>
+<p>Once text is inside the model, everything is a block of numbers with a <strong>shape</strong>. Here is the query block from attention, drawn in 3D and cut into one slice per head:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-tensor-shapes.jpg" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each one head wide, with the shape glossary below.">
+
+<p>Nearly every paper about LLM systems writes the main block as <code>[b, s, h]</code>:</p>
 
 <ul>
 <li><strong>b</strong> is the batch: how many separate conversations are processed together.</li>
@@ -80,9 +84,7 @@
 <li><strong>h</strong> is the hidden size: how many numbers describe one token.</li>
 </ul>
 
-<p>Attention cuts <strong>h</strong> into slices, one per head. Remember this cut: it is the same one that later splits a model across GPUs.</p>
-
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-shapes-heads.jpg" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each one head wide, with the shape glossary below.">
+<p>Attention cuts <strong>h</strong> into the slices you saw above, one per head. Remember this cut: it is the same one that later splits a model across GPUs.</p>
 
 <h2>3. Why writing a reply is slow</h2>
 
