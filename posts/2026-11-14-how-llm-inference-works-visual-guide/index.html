@@ -29,7 +29,7 @@
 <li>what a language model is made of, piece by piece, and how text flows through it</li>
 <li>how <strong>attention</strong> lets one word borrow meaning from the words before it</li>
 <li>why writing a reply is slow, and why the limit is usually memory rather than arithmetic</li>
-<li>the tricks that make serving cheaper: smarter batching, paged memory, lighter attention, smaller numbers, and guessing ahead</li>
+<li>the tricks that make serving cheaper: smarter batching, paged memory, lighter attention, smaller numbers, guessing ahead, and mixture-of-experts models</li>
 <li>how a model too big for one GPU gets split across many, and what each kind of split costs</li>
 <li>why training a model needs many times more memory than running it</li>
 </ul>
@@ -65,7 +65,7 @@
 <li>a <strong>value</strong>: what will I pass on?</li>
 </ul>
 
-<p>The query of "it" is compared with the key of every earlier word. The best matches get the biggest share, and the new vector for "it" becomes a weighted mix of their values:</p>
+<p>The query of "it" is compared with the key of every earlier word. A step called <strong>softmax</strong> turns those match scores into shares that add up to 100%. The best matches get the biggest share, and the new vector for "it" becomes a weighted mix of their values:</p>
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-attention.jpg" alt="Attention for the query "it": arcs show most of the weight, 65%, going to "animal", so the new vector for "it" is mostly the meaning of "animal". Below, the three steps: raw scores, softmax weights, and the mixed output.">
 
@@ -185,7 +185,7 @@
 
 <h2>9. The copies tensor parallelism leaves behind</h2>
 
-<p>Tensor parallelism has a blind spot. Between the split blocks, every GPU holds the <em>same</em> full block of numbers and runs the same normalisation step on it. The same data, stored twice:</p>
+<p>Tensor parallelism has a blind spot. Between the split blocks, every GPU holds the <em>same</em> full block of <strong>activations</strong> (the in-between numbers that flow from one layer to the next) and runs the same normalisation step on it. The same data, stored twice:</p>
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/19-tp-copies.jpg" alt="Under tensor parallelism, LayerNorm runs on an identical full [b, s, h] block on both GPUs: activations at 100% on each, marked as duplicates.">
 
@@ -195,7 +195,15 @@
 
 <p>The research that introduced this pairing reports that, together with smarter recomputation, it <a href="https://arxiv.org/abs/2205.05198">cuts activation memory by 5×</a>.</p>
 
-<h2>10. Why training needs so much more</h2>
+<h2>10. Mixture of experts: a bigger model for the same work</h2>
+
+<p>One more trick changes the model itself. In a <strong>mixture-of-experts</strong> (MoE) model, the single MLP in each block is replaced by several smaller MLPs, called <em>experts</em>, plus a tiny <strong>router</strong> that picks a few experts for each token. Every other expert sits idle for that token:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/23-mixture-of-experts.jpg" alt="A mixture-of-experts layer: the router sends the token 'The' to two of eight experts, expert 0 with weight 0.49 and expert 4 with weight 0.51, while the other six stay idle. The output is the weighted sum of the two chosen experts, and the shape stays [b, s, h].">
+
+<p>Mixtral 8×7B is the well-known example: it has <a href="https://mistral.ai/news/mixtral-of-experts">eight experts per block and uses two of them for each token</a>, so it <a href="https://mistral.ai/news/mixtral-of-experts">stores 46.7B parameters but uses only 12.9B per token</a>. That split matters for serving. The memory you need follows the total, because every expert has to be loaded. The work per token follows the active part, so a token costs about what a much smaller model would. When the experts no longer fit on one GPU, they are spread across several. That is <strong>expert parallelism</strong>, the fifth way to split a model, and it needs its own communication step to send each token to the GPU that holds its experts.</p>
+
+<h2>11. Why training needs so much more</h2>
 
 <p>All of that stored activation memory is mostly a <em>training</em> problem. To learn, a model runs backwards through every layer, and each step backwards needs the numbers that went into that layer on the way forward. Training also stores gradients and optimiser state for every weight. Running a model forward only needs the weights and the KV cache:</p>
 
@@ -205,12 +213,13 @@
 
 <h2>Explore it yourself</h2>
 
-<p>Every figure above is a frozen frame. The <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">interactive page</a> lets you step through each one, change the settings, and see what newer models change: RMSNorm, SwiGLU, mixture of experts and sampling. If you want runnable code for the same ideas, the same repository has notebooks on <a href="https://ylnhari.github.io/ml-scratchpad/attention-transformer/">attention</a>, <a href="https://ylnhari.github.io/ml-scratchpad/rope/">positional encoding</a>, <a href="https://ylnhari.github.io/ml-scratchpad/kv-cache/">the KV cache</a>, <a href="https://ylnhari.github.io/ml-scratchpad/continuous-batching/">batching</a> and <a href="https://ylnhari.github.io/ml-scratchpad/vllm-memory/">GPU memory in vLLM</a>. That last one also has a <a href="https://ylnhari.github.io/ml-scratchpad/vllm-memory/visual/">visual version</a>: it follows one real server, from <code>vllm serve</code> to the thousandth request.</p>
+<p>Every figure above is a frozen frame. The <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">interactive page</a> lets you step through each one, change the settings, and see the other ways newer models differ from the 2017 original: RMSNorm, SwiGLU and sampling. If you want runnable code for the same ideas, the same repository has notebooks on <a href="https://ylnhari.github.io/ml-scratchpad/attention-transformer/">attention</a>, <a href="https://ylnhari.github.io/ml-scratchpad/rope/">positional encoding</a>, <a href="https://ylnhari.github.io/ml-scratchpad/kv-cache/">the KV cache</a>, <a href="https://ylnhari.github.io/ml-scratchpad/continuous-batching/">batching</a> and <a href="https://ylnhari.github.io/ml-scratchpad/vllm-memory/">GPU memory in vLLM</a>. That last one also has a <a href="https://ylnhari.github.io/ml-scratchpad/vllm-memory/visual/">visual version</a>: it follows one real server, from <code>vllm serve</code> to the thousandth request.</p>
 
 <h2>Sources &amp; caveats</h2>
 
 <ul>
 <li><a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">NVIDIA: Mastering LLM Techniques: Inference Optimization</a>: the 14 GB weights and roughly 2 GB KV-cache figures for a 7B model; the 2,048-token reservation example; Llama 2 70B as a GQA model and the ~5% uptraining figure for MQA; "eight or even fewer" bits; the 2:4 pattern; the DistilBERT 40% / 97% / 60% figures; and the overall map of techniques this guide follows.</li>
+<li><a href="https://mistral.ai/news/mixtral-of-experts">Mistral AI, Mixtral of experts</a>: eight experts with two used per token; 46.7B total and 12.9B active parameters.</li>
 <li><a href="https://arxiv.org/abs/2205.05198">Korthikanti et al., Reducing Activation Recomputation in Large Transformer Models</a>: sequence parallelism, the 5× activation-memory reduction, and the activation formula behind the training estimate.</li>
 <li>Figures are drawn from the interactive page. Grid sizes are scaled down so they can be drawn, and the numbers inside the figures (batching steps, paged-memory use, pipeline idle time, quantization error) come from those toy examples, not from measurements of a real server. The training-memory bar is an estimate.</li>
 </ul>

@@ -61,6 +61,8 @@ with sync_playwright() as p:
     pg.click('#cube-seg button:text-is("SP · split s")')
     save(pg.locator("#par-sp .fig").first, "20-sequence-split")
     save(pg.locator("#par-combo .fig").first, "21-combined-parallelism")
+    pg.click('#md-seg button:text-is("Mixture of Experts")'); pg.wait_for_timeout(400)
+    save(pg.locator("#modern .fig").first, "23-mixture-of-experts")
     for _ in range(6): pg.click("#bw-next")                # backward pass: memory stage
     save(pg.locator("#backward .fig"), "22-training-memory")
     b.close()
