@@ -30,6 +30,8 @@
     color-scheme: dark;
   }
   img { opacity: 0.95; }
+  .explore a.star { color: #0a0d16; }
+  .explore a.star small { color: rgba(10, 13, 22, .78); }
 }
 
 html { font-size: 18px; line-height: 1.7; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
