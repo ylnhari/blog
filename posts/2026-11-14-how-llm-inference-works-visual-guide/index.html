@@ -80,7 +80,7 @@
 <li><strong>h</strong> is the hidden size: how many numbers describe one token.</li>
 </ul>
 
-<p>Attention cuts <code>h</code> into slices, one per head, which is the cut that splits a model across GPUs later on:</p>
+<p>Attention cuts <strong>h</strong> into slices, one per head. Remember this cut: it is the same one that later splits a model across GPUs.</p>
 
 <img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-shapes-heads.jpg" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each one head wide, with the shape glossary below.">
 
