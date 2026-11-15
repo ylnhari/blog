@@ -9,7 +9,7 @@
     "transformers",
     "visualization"
   ],
-  "status": "draft",
-  "medium_url": null,
+  "status": "published",
+  "medium_url": "https://ylnhari.medium.com/how-llm-inference-works-a-visual-guide-to-the-core-concepts-09d40a538127",
   "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg"
 }
