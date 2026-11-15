@@ -100,13 +100,16 @@ article strong { color: var(--text); }
 .hero h1 { font-size: clamp(2.6rem, 5.4vw, 5rem); line-height: 1.02; margin: 0 0 1.25rem; letter-spacing: -.035em; }
 .hero h1 em { font-style: normal; color: var(--accent); }
 .lede { font-family: var(--font-body); font-size: 1.2rem; color: var(--muted); max-width: 46ch; margin: 0; }
-.explore { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.explore { display: grid; grid-template-columns: repeat(6, 1fr); gap: .75rem; }
+.explore a { grid-column: span 2; }
 .explore a { display: block; padding: 1rem 1.1rem; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); text-decoration: none; color: var(--text); transition: transform .18s, border-color .18s; }
 .explore a:hover { transform: translateY(-2px); border-color: var(--accent); }
 .explore b { display: block; font: 700 .98rem var(--font-display); margin-bottom: .2rem; }
 .explore small { color: var(--muted); font-size: .8rem; line-height: 1.4; display: block; }
 .explore a.star { background: var(--accent); border-color: var(--accent); color: #fff; grid-column: 1 / -1; }
 .explore a.star small { color: rgba(255, 255, 255, .85); }
+.explore a.bench { grid-column: 1 / -1; border: 2px solid var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.explore a.bench b { color: var(--accent); font-size: 1.05rem; }
 
 .section-label { font: 600 .75rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 2.75rem 0 1rem; }
 .featured a.card { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); text-decoration: none; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
@@ -148,6 +151,7 @@ article strong { color: var(--text); }
 @media (max-width: 600px) {
   html { font-size: 17px; }
   .explore { grid-template-columns: 1fr; }
+  .explore a { grid-column: auto; }
   .home .shell { width: calc(100% - 2rem); }
   .featured .body { padding: 1.4rem; }
 }
