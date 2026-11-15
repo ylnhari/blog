@@ -3,156 +3,137 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Hari's technical blog — AI, automation, and engineering.">
+  <meta name="description" content="Hari's technical blog: AI, automation, and engineering, with interactive figures.">
   <title>ylnhari · Blog</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="blog-index">
-<div class="blog-index">
+<body class="home">
+<div class="shell">
 
-  <header>
-    <h1>ylnhari's Blog</h1>
-    <p>AI, automation, and engineering — written with a little help from machines.</p>
-    <nav class="site-links" style="margin-top:10px;font-size:.9rem;">
-      <a href="https://ylnhari.github.io/ai-signal/bench.html">Model Bench</a> &middot;
-      <a href="posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html">Interactive Frontier Plot</a> &middot;
+  <header class="topbar">
+    <a class="brand" href="./">ylnhari<span>/blog</span></a>
+    <nav aria-label="Site">
+      <a href="https://ylnhari.github.io/ml-scratchpad/">ML scratchpad</a>
+      <a href="https://ylnhari.github.io/ai-signal/bench.html">Model Bench</a>
       <a href="https://ylnhari.github.io/ai-signal/">AI Signal daily</a>
+      <a href="https://github.com/ylnhari">GitHub</a>
     </nav>
   </header>
 
-  <main>
-    <div class="post-filters" role="search">
-      <label for="post-search">Search posts</label>
-      <input id="post-search" type="search" autocomplete="off" placeholder="Title, topic, or tag">
-      <label for="tag-filter">Filter by tag</label>
-      <select id="tag-filter">
-        <option value="">All tags</option>
-      </select>
-      <p id="post-count" class="filter-status" role="status" aria-live="polite">Loading posts…</p>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">LLMs · inference · automation</p>
+      <h1>AI, automation, and engineering, <em>written with a little help from machines.</em></h1>
+      <p class="lede">Hands-on writing about large language models: how they work, how to run them, and how they compare, with interactive figures wherever a picture explains it better.</p>
     </div>
-    <ul class="post-list" id="post-list">
-      <li class="empty-state">Loading posts…</li>
-    </ul>
-  </main>
+    <div class="explore" aria-label="Interactive tools">
+      <a class="star" href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/"><b>LLM Inference, Visualized →</b><small>The transformer, attention, KV cache, parallelism and every serving trick, as live step-through figures.</small></a>
+      <a href="https://ylnhari.github.io/ai-signal/bench.html"><b>Model Bench</b><small>Side-by-side model results in one standing table.</small></a>
+      <a href="posts/2026-07-13-open-source-vs-paid-frontier-llms/interactive.html"><b>Frontier Plot</b><small>Price against intelligence for open and paid models.</small></a>
+      <a href="https://ylnhari.github.io/ai-signal/"><b>AI Signal daily</b><small>A daily digest of what moved in AI.</small></a>
+      <a href="https://ylnhari.github.io/ml-scratchpad/"><b>ML scratchpad</b><small>Runnable notebooks behind the posts.</small></a>
+    </div>
+  </section>
 
+  <p class="section-label">Latest</p>
+  <section class="featured" id="featured" aria-live="polite"></section>
+
+  <p class="section-label">All posts</p>
+  <div class="toolbar" role="search">
+    <input id="post-search" type="search" autocomplete="off" placeholder="Search posts" aria-label="Search posts">
+    <div class="chips" id="tag-chips" aria-label="Filter by tag"></div>
+    <p id="post-count" class="count" role="status" aria-live="polite">Loading…</p>
+  </div>
+  <ul class="post-list" id="post-list"><li class="empty-state">Loading posts…</li></ul>
+
+  <footer class="site-footer">
+    <span>© ylnhari · Posts are also published on Medium.</span>
+    <span><a href="https://github.com/ylnhari/blog">Source on GitHub</a></span>
+  </footer>
 </div>
 
 <script>
   const list = document.getElementById('post-list');
+  const featured = document.getElementById('featured');
   const search = document.getElementById('post-search');
-  const tagFilter = document.getElementById('tag-filter');
+  const chips = document.getElementById('tag-chips');
   const count = document.getElementById('post-count');
-  let posts = [];
+  let posts = [], activeTag = '';
 
-  function postTags(post) {
-    return Array.isArray(post.tags) ? post.tags.filter(tag => typeof tag === 'string') : [];
+  const tagsOf = p => Array.isArray(p.tags) ? p.tags.filter(t => typeof t === 'string') : [];
+  const fmtDate = d => { const x = new Date(`${d || ''}T00:00:00`); return isNaN(x) ? '' : x.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); };
+  const safeUrl = u => { try { const x = new URL(u); return x.protocol === 'https:' ? x.href : null; } catch (_) { return null; } };
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const postHref = p => `posts/${encodeURIComponent(String(p.slug || ''))}/`;
+
+  function meta(p) {
+    const m = el('p', 'meta', fmtDate(p.date));
+    const med = typeof p.medium_url === 'string' ? safeUrl(p.medium_url) : null;
+    if (med) { if (m.textContent) m.append(' · '); const a = el('a', null, 'Read on Medium'); a.href = med; a.target = '_blank'; a.rel = 'noopener'; m.append(a); }
+    return m;
+  }
+  function cover(p, tagName) { const c = el(tagName, 'cover'); const u = safeUrl(p.cover_image); if (u) c.style.backgroundImage = `url("${u.replace(/"/g, '%22')}")`; return c; }
+  function tagRow(p) {
+    const row = el('div', 'tags');
+    for (const t of tagsOf(p)) { const b = el('button', 'tag', t); b.type = 'button'; b.addEventListener('click', e => { e.preventDefault(); setTag(t); }); row.append(b); }
+    return row;
+  }
+
+  function renderFeatured(p) {
+    featured.replaceChildren();
+    if (!p) return;
+    const a = el('a', 'card'); a.href = postHref(p);
+    a.append(cover(p, 'div'));
+    const body = el('div', 'body');
+    body.append(meta(p), el('h2', null, String(p.title || 'Untitled post')), el('p', 'description', String(p.description || '')), tagRow(p));
+    a.append(body); featured.append(a);
   }
 
   function render() {
-    const query = search.value.trim().toLocaleLowerCase();
-    const selectedTag = tagFilter.value;
-    const matches = posts.filter(post => {
-      const tags = postTags(post);
-      const searchable = [post.title, post.description, ...tags]
-        .filter(value => typeof value === 'string')
-        .join(' ')
-        .toLocaleLowerCase();
-      return (!query || searchable.includes(query)) && (!selectedTag || tags.includes(selectedTag));
+    const q = search.value.trim().toLocaleLowerCase();
+    const filtering = !!(q || activeTag);
+    const matches = posts.filter(p => {
+      const hay = [p.title, p.description, ...tagsOf(p)].filter(v => typeof v === 'string').join(' ').toLocaleLowerCase();
+      return (!q || hay.includes(q)) && (!activeTag || tagsOf(p).includes(activeTag));
     });
-
+    featured.parentElement && (featured.style.display = filtering ? 'none' : '');
+    featured.previousElementSibling.style.display = filtering ? 'none' : '';
+    const shown = filtering ? matches : matches.slice(1);
     list.replaceChildren();
-    if (!matches.length) {
-      const empty = document.createElement('li');
-      empty.className = 'empty-state';
-      empty.textContent = posts.length ? 'No posts match these filters.' : 'No posts yet. Check back soon.';
-      list.append(empty);
+    if (!shown.length) list.append(el('li', 'empty-state', posts.length ? 'No posts match these filters.' : 'No posts yet. Check back soon.'));
+    for (const p of shown) {
+      const card = el('li', 'post-card');
+      const link = el('a', 'cover'); link.href = postHref(p); link.setAttribute('aria-hidden', 'true'); link.tabIndex = -1;
+      const u = safeUrl(p.cover_image); if (u) link.style.backgroundImage = `url("${u.replace(/"/g, '%22')}")`;
+      const body = el('div', 'body');
+      const h = el('h2'); const t = el('a', null, String(p.title || 'Untitled post')); t.href = postHref(p); h.append(t);
+      body.append(meta(p), h, el('p', 'description', String(p.description || '')), tagRow(p));
+      card.append(link, body); list.append(card);
     }
-
-    for (const post of matches) {
-      const card = document.createElement('li');
-      card.className = 'post-card';
-
-      const heading = document.createElement('h2');
-      const titleLink = document.createElement('a');
-      titleLink.href = `posts/${encodeURIComponent(String(post.slug || ''))}/`;
-      titleLink.textContent = String(post.title || 'Untitled post');
-      heading.append(titleLink);
-      card.append(heading);
-
-      const meta = document.createElement('p');
-      meta.className = 'meta';
-      const parsedDate = new Date(`${post.date || ''}T00:00:00`);
-      meta.textContent = Number.isNaN(parsedDate.getTime())
-        ? ''
-        : parsedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-      if (typeof post.medium_url === 'string') {
-        try {
-          const mediumUrl = new URL(post.medium_url);
-          if (mediumUrl.protocol === 'https:') {
-            if (meta.textContent) meta.append(' · ');
-            const mediumLink = document.createElement('a');
-            mediumLink.href = mediumUrl.href;
-            mediumLink.target = '_blank';
-            mediumLink.rel = 'noopener';
-            mediumLink.textContent = 'Read on Medium';
-            meta.append(mediumLink);
-          }
-        } catch (_) {
-          // Ignore invalid external links in the post catalog.
-        }
-      }
-      card.append(meta);
-
-      const description = document.createElement('p');
-      description.className = 'description';
-      description.textContent = String(post.description || '');
-      card.append(description);
-
-      const tags = postTags(post);
-      if (tags.length) {
-        const tagList = document.createElement('div');
-        tagList.className = 'tags';
-        for (const tag of tags) {
-          const badge = document.createElement('span');
-          badge.className = 'tag';
-          badge.textContent = tag;
-          tagList.append(badge);
-        }
-        card.append(tagList);
-      }
-      list.append(card);
-    }
-
     count.textContent = `${matches.length} ${matches.length === 1 ? 'post' : 'posts'}`;
+    [...chips.children].forEach(c => c.setAttribute('aria-pressed', String(c.dataset.tag === activeTag)));
   }
 
+  function setTag(t) { activeTag = activeTag === t ? '' : t; render(); document.querySelector('.toolbar').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
   search.addEventListener('input', render);
-  tagFilter.addEventListener('change', render);
 
   fetch('posts/index.json')
-    .then(response => {
-      if (!response.ok) throw new Error('Post catalog request failed');
-      return response.json();
-    })
+    .then(r => { if (!r.ok) throw new Error('catalog'); return r.json(); })
     .then(data => {
-      if (!Array.isArray(data)) throw new Error('Post catalog is invalid');
-      posts = data.filter(post => post && typeof post === 'object');
-      const tags = [...new Set(posts.flatMap(postTags))]
-        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-      for (const tag of tags) {
-        const option = document.createElement('option');
-        option.value = tag;
-        option.textContent = tag;
-        tagFilter.append(option);
-      }
+      if (!Array.isArray(data)) throw new Error('catalog');
+      posts = data.filter(p => p && typeof p === 'object').sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const freq = {};
+      posts.flatMap(tagsOf).forEach(t => { freq[t] = (freq[t] || 0) + 1; });
+      const all = el('button', 'chip', 'All'); all.type = 'button'; all.dataset.tag = ''; all.addEventListener('click', () => { activeTag = ''; render(); }); chips.append(all);
+      Object.entries(freq).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 14).forEach(([t]) => {
+        const c = el('button', 'chip', t); c.type = 'button'; c.dataset.tag = t; c.addEventListener('click', () => setTag(t)); chips.append(c);
+      });
+      renderFeatured(posts[0]);
       render();
     })
     .catch(() => {
-      list.replaceChildren();
-      const error = document.createElement('li');
-      error.className = 'empty-state';
-      error.textContent = 'Could not load posts. Please try again later.';
-      list.append(error);
+      list.replaceChildren(el('li', 'empty-state', 'Could not load posts. Please try again later.'));
       count.textContent = 'Posts are unavailable';
     });
 </script>

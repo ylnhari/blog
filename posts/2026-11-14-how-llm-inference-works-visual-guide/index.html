@@ -7,7 +7,7 @@
   <meta name="description" content="What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.">
   <meta property="og:title" content="How LLM Inference Works: A Visual Guide to the Core Concepts">
   <meta property="og:description" content="What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-tensor-split-h.png">
+  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg">
   <title>How LLM Inference Works: A Visual Guide to the Core Concepts</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
@@ -19,90 +19,136 @@
 
 <!-- === POST CONTENT STARTS HERE === -->
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-tensor-split-h.png" alt="A [b, s, h] activation tensor drawn as a 3D block, cut along h into two halves, one per GPU: tensor parallelism halves activation memory with no copies.">
+<p>Every time you send a message to a chatbot, a model made of billions of numbers writes the reply one small piece at a time, and it runs <em>all</em> of those numbers again for every piece. Doing that for millions of people at once, quickly, and without spending a fortune on hardware, is one of the hardest engineering problems in AI right now. The name for it is <strong>inference</strong>: running a trained model to get answers out of it.</p>
 
-<p>Most explanations of LLM inference optimization are written in prose and formulas: "tensor parallelism splits the weight matrices", "sequence parallelism partitions LayerNorm along the sequence dimension", "the KV cache grows linearly with batch and sequence length". Each sentence is correct, and each one hides the same thing: a tensor with a shape, sitting on a particular piece of hardware.</p>
+<p>Most explanations of inference go straight to the jargon: KV cache, tensor parallelism, FlashAttention. Each term makes sense once you can picture what is happening inside the model, and almost none of them show you that. This guide works the other way round. Every idea starts as a picture, and the words come second.</p>
 
-<p>Once you can see that shape, these techniques stop being a list to memorise and become variations on one question: <strong>which slice of which tensor lives where, and what does moving it cost?</strong> This guide builds that picture from scratch. It starts with the shapes inside a transformer, then shows what each technique from NVIDIA's <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">Mastering LLM Techniques: Inference Optimization</a> does to them. Every figure comes from an interactive companion page where you can step through each stage yourself:</p>
-
-<p><strong><a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">Open the interactive page →</a></strong></p>
-
-<blockquote>Every inference optimization is a statement about which tensor shape lives on which piece of hardware.</blockquote>
-
-<h2>Step 1: learn three letters before anything else</h2>
-
-<p>Almost every paper on LLM systems writes activations as <code>[b, s, h]</code> and assumes you know what that means. Here is what each letter is:</p>
+<p>By the end you will know:</p>
 
 <ul>
-<li><strong>b</strong>: the batch, meaning how many sequences are processed together.</li>
-<li><strong>s</strong>: the sequence length, meaning tokens per sequence.</li>
-<li><strong>h</strong>: the hidden size (d_model), meaning how many numbers represent one token.</li>
+<li>what a language model is made of, piece by piece, and how text flows through it</li>
+<li>how <strong>attention</strong> lets one word borrow meaning from the words before it</li>
+<li>why writing a reply is slow, and why the limit is usually memory rather than arithmetic</li>
+<li>how a model too big for one GPU gets split across many, and what each kind of split costs</li>
+<li>why training a model needs many times more memory than running it</li>
 </ul>
 
-<p>Part I of the page traces one batch from raw text to the next token. Token IDs <code>[b, s]</code> become embeddings <code>[b, s, h]</code>. These are projected into Q, K and V, and Q is cut into heads, <code>[b, n_heads, s, d_head]</code> with <code>h = n_heads × d_head</code>. Then RoPE rotates each head's q and k by position, so word order counts, and each head builds an <code>[s × s]</code> score matrix. Next, the MLP widens to <code>[b, s, ffn]</code> and back, and the LM head produces <code>[b, s, V]</code>. A toggle swaps the toy sizes for real Llama 2 7B numbers.</p>
+<p>You don't need a maths background beyond knowing roughly what a matrix is. Every figure here comes from an interactive companion page where you can click through each stage yourself: <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">LLM Inference, Visualized</a>.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-forward-pass.jpg" alt="Forward-pass stage 5 of 12: the Q tensor [b, s, h] is cut along h into four colour-coded heads of width d_head. These are the same slices tensor parallelism later hands to different GPUs.">
+<blockquote>Every trick that makes inference faster is really about where a block of numbers lives, and how often it has to move.</blockquote>
 
-<p>Once you have watched Q split into heads, tensor parallelism stops being abstract. It is the same cut, with the heads sent to different GPUs.</p>
+<h2>1. What is inside a language model</h2>
 
-<h2>Step 2: why models get split across GPUs, and the four ways to do it</h2>
+<p>A language model has exactly one job: <strong>given the text so far, predict the next token</strong>. A token is a word or a piece of a word. Everything else is machinery for that single prediction. Here is the machinery, in the shape almost every modern model uses (GPT, Llama, Claude, Gemini, Mistral). Data flows from the bottom to the top:</p>
 
-<p>Weights alone outgrow a GPU quickly. A 70B-parameter model at 2 bytes per parameter is 140 GB, already more than one 80 GB GPU holds, and that is before any KV cache. A 405B model is 810 GB. So parallelism first exists to make the model <strong>fit</strong>. It also serves two other goals, more <strong>throughput</strong> and lower <strong>latency</strong>, and each strategy helps only some of the three.</p>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg" alt="The decoder-only transformer, bottom to top: the tokenizer turns text into IDs, the embedding turns IDs into vectors, then a block of norm, attention, add, norm, MLP, add repeats L times, and finally an LM head and softmax pick the next token, which is appended to the input for the next round.">
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/07-gpus-needed.png" alt="Each box is one 80 GB GPU filled with FP16 weights only. Llama 2 7B and 13B fit on one GPU, Llama 2 70B needs at least two, and Llama 3.1 405B needs at least eleven, before any KV cache.">
-
-<p>Every strategy answers one question: <strong>which dimension of which tensor gets cut, and what has to travel between GPUs as a result?</strong></p>
+<p>In plain words:</p>
 
 <ul>
-<li><strong>Data parallelism</strong> copies the whole model and splits the batch <code>b</code>. Throughput scales almost perfectly and GPUs never talk at inference, but it is useless if the model does not fit on one GPU.</li>
-<li><strong>Pipeline parallelism</strong> splits the stack of layers. Each GPU holds a slice of the layers and passes a small <code>[b, s, h]</code> activation to the next. It helps a model fit, but one request still walks through every stage in turn, and stages idle while they wait.</li>
-<li><strong>Tensor parallelism</strong> splits the weight matrices inside every layer: attention by heads, the MLP by columns then rows, the embedding and LM head by vocabulary. Every GPU works on every layer for the same sequences, which makes each request faster. The price is communication inside every layer.</li>
-<li><strong>Sequence parallelism</strong> splits what tensor parallelism leaves copied (Step 3).</li>
+<li>The <strong>tokenizer</strong> cuts text into tokens and gives each one an ID number.</li>
+<li>The <strong>embedding</strong> swaps each ID for a list of numbers, a vector, that the rest of the model can work with.</li>
+<li>Then comes a <strong>block</strong>, repeated many times, which does two things. <strong>Attention</strong> lets each token gather information from the tokens before it. The <strong>MLP</strong> then processes each token on its own. Each step <em>adds</em> its result to a running total called the <strong>residual stream</strong>, rather than replacing it.</li>
+<li>At the top, the <strong>LM head</strong> scores every word in the vocabulary, and the best candidate becomes the next token. That token is appended to the input, and the whole model runs again.</li>
 </ul>
 
-<p>Tensor parallelism rests on one neat trick. Split the MLP's first weight by <em>columns</em> and the second by <em>rows</em>. Each GPU can then run both matmuls and the nonlinearity between them on its own half, and a single All-Reduce at the end adds up the partial results:</p>
+<p>That last loop is the heart of inference. One reply of 500 tokens means running the whole model 500 times, in order, because each new token depends on the one before it.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/08-tp-matmul-trick.png" alt="Tensor parallelism in the MLP: A is split by columns and B by rows, so each GPU computes GeLU on its own half of Y and a partial sum of Z, and one All-Reduce combines them. There is no communication between the two matmuls.">
+<h3>Attention, the one place where words talk to each other</h3>
 
-<p>That All-Reduce happens twice in every layer, so tensor parallelism needs the fast links <em>inside</em> one server. Real deployments therefore mix strategies: tensor parallelism within a server, pipeline parallelism across servers, and data parallelism to add replicas for traffic. The <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">interactive page</a> walks through each one, and how they combine on a 16-GPU cluster.</p>
+<p>Take the sentence "The animal didn't cross the street because it was too tired". What does "it" refer to? Attention is how the model works this out. Each token makes three vectors from its own embedding:</p>
 
-<h2>Step 3: why splitting along s saves memory when splitting along h already did</h2>
+<ul>
+<li>a <strong>query</strong>: what am I looking for?</li>
+<li>a <strong>key</strong>: what do I contain?</li>
+<li>a <strong>value</strong>: what will I pass on?</li>
+</ul>
 
-<p>A natural objection to sequence parallelism: whether a GPU holds all the tokens or half of them, the total data is the same, so where does the saving come from? The answer is in what tensor parallelism leaves behind. Inside attention and the MLP, tensor parallelism cuts along h, so each GPU holds <code>[b, s, h/2]</code> and nothing is duplicated (image at the top). Between those blocks, an All-Reduce leaves <em>every</em> GPU with the full <code>[b, s, h]</code>. LayerNorm then needs each token's whole h-vector to compute a mean and variance, so it can't be cut along h. Each GPU therefore stores a complete copy.</p>
+<p>The query of "it" is compared with the key of every earlier word. The best matches get the biggest share, and the new vector for "it" becomes a weighted mix of their values:</p>
 
-<p>The total unique data really is the same. The waste is that with two GPUs it is stored twice. LayerNorm treats each token on its own, though, so you can cut along s instead:</p>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-attention.jpg" alt="Attention for the query "it": arcs show most of the weight, 65%, going to "animal", so the new vector for "it" is mostly the meaning of "animal". Below, the three steps: raw scores, softmax weights, and the mixed output.">
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-sequence-split-s.png" alt="The same [b, s, h] block cut along s instead: GPU 0 holds tokens 0 to 3 and GPU 1 holds tokens 4 to 7. Each GPU holds half the activations for LayerNorm and Dropout, with no copies.">
+<p>A model runs many of these lookups side by side, called <strong>heads</strong>. Each head has its own query, key and value weights, so each learns to look for something different: one might link pronouns to nouns, another might focus on the previous word. Words in the future are hidden, because a model that predicts the next word cannot be allowed to peek at it.</p>
 
-<p>The page then walks one full transformer layer, stage by stage, for each GPU. It shows the shape each GPU holds, which half of each weight matrix it owns, the collective between stages, and a running total of activation memory:</p>
+<h2>2. Three letters you will see everywhere: b, s, h</h2>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/04-tp-layer-allreduce.png" alt="Layer walk-through at the attention output projection: each GPU holds a partial sum of the full [s, h] and All-Reduce combines them. Activation units per GPU for the whole layer are 12.0 on one GPU, 9.5 with tensor parallelism and 6.0 with tensor plus sequence parallelism.">
+<p>Once text is inside the model, everything is a block of numbers with a <strong>shape</strong>. Nearly every paper about LLM systems writes the main block as <code>[b, s, h]</code>:</p>
 
-<p>In the page's simplified unit count, one layer comes to 12 units on one GPU, 9.5 per GPU with TP=2, and 6.0 per GPU with TP and sequence parallelism. Communication doesn't grow either. An All-Reduce is a Reduce-Scatter followed by an All-Gather, and sequence parallelism simply runs the cheap per-token ops in between. The paper behind this, <a href="https://arxiv.org/abs/2205.05198">Reducing Activation Recomputation in Large Transformer Models</a>, reports that its two techniques together reduce activation memory by 5× and cut the execution-time overhead of activation recomputation by over 90%.</p>
+<ul>
+<li><strong>b</strong> is the batch: how many separate conversations are processed together.</li>
+<li><strong>s</strong> is the sequence length: how many tokens each one has.</li>
+<li><strong>h</strong> is the hidden size: how many numbers describe one token.</li>
+</ul>
 
-<blockquote>The total data is the same. Replication is what you pay for.</blockquote>
+<p>Attention cuts <code>h</code> into slices, one per head, which is the cut that splits a model across GPUs later on:</p>
 
-<h2>Step 4: put real numbers on memory</h2>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-shapes-heads.jpg" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each [b, s, d_head], with the shape glossary below.">
 
-<p>Inference is mostly a memory problem. The NVIDIA post works through two figures, and the page lets you move them. A 7B model in FP16 needs <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 14 GB</a> for its weights. The KV cache costs <code>batch × seq × 2 × layers × hidden × bytes</code>, which for Llama 2 7B at batch 1 and 4,096 tokens is <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 2 GB</a>. Drag the batch and sequence sliders and watch the cache crowd the weights off an 80 GB GPU. Then switch to the GQA preset and see why grouped-query attention matters.</p>
+<h2>3. Why writing a reply is slow</h2>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/05-kv-cache-calculator.png" alt="KV cache calculator for Llama 2 7B at batch 1 and 4,096 tokens: 14 GB of weights plus 2.15 GB of KV cache on an 80 GB GPU, with the formula filled in with live numbers.">
+<p>Running a model happens in two very different phases. First, the whole prompt goes through at once. This phase is called <strong>prefill</strong>. All the prompt tokens form one big matrix, and the GPU's arithmetic units are kept busy:</p>
 
-<p>The rest of Part II gives the same treatment to static vs in-flight batching, pipeline bubbles, MHA vs GQA vs MQA, FlashAttention tiling, PagedAttention block tables, quantization with an outlier, 2:4 sparsity, distillation soft targets and speculative decoding.</p>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/04-prefill.jpg" alt="Prefill: five prompt tokens form a 5-row matrix X that is multiplied by the weights W in one pass, and their keys and values fill the KV cache. The compute bar is nearly full.">
 
-<h2>Step 5: understand why training needs so much more</h2>
+<p>Then the reply is written one token at a time. This phase is called <strong>decode</strong>. Each step multiplies a single row by the <em>same</em> full set of weights, which must be read from GPU memory again every step. The arithmetic is tiny, but the reading is huge, so the GPU spends most of its time waiting on memory:</p>
 
-<p>The activation-memory problem in Step 3 is really a <em>training</em> problem. The backward pass needs the input that went into every layer, because every weight gradient is the saved input transposed times the incoming gradient. Inference never runs backward, so it can throw activations away as soon as they're used. Part III draws the backward pass with the same shapes and ends on this comparison:</p>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/05-decode.jpg" alt="Decode: a single new token is a 1-row matrix multiplied by the full weight matrix. Only one KV entry is added, and the compute bar is nearly empty: the step is limited by memory, not maths.">
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/06-training-vs-inference-memory.png" alt="Memory for a 7B model at 4,096 tokens: about 16 GB for inference (weights plus KV cache) against about 216 GB for training (weights, gradients, fp32 master weights, two Adam moments and stored activations). Training needs several GPUs before activations are even counted.">
+<p>To avoid recomputing the past at every step, the model saves each token's keys and values in a <strong>KV cache</strong>. The cache grows with every token and every conversation. A 7-billion-parameter model in 16-bit precision needs <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 14 GB</a> just for its weights, and one 4,096-token conversation adds <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 2 GB</a> of cache. Multiply that by dozens of users and memory runs out long before arithmetic does:</p>
 
-<p>The training bar is an estimate. It assumes 16 bytes per parameter for mixed-precision Adam (2 for weights, 2 for gradients, 4 for fp32 master weights, 4 + 4 for the Adam moments). It also uses the per-layer activation formula <code>s·b·h·(34 + 5·a·s/h)</code> bytes from the <a href="https://arxiv.org/abs/2205.05198">same Megatron paper</a>. A toggle on the page shows how full recomputation collapses the activation term.</p>
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/06-kv-cache.jpg" alt="KV cache calculator for Llama 2 7B at batch 1 and 4,096 tokens: 14 GB of weights plus 2.15 GB of KV cache on an 80 GB GPU, with the formula filled in.">
 
-<h2>Use it</h2>
+<blockquote>During decode, the GPU is not busy doing maths. It is busy fetching numbers from memory.</blockquote>
 
-<p>The page runs in any browser and needs no setup: <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">ylnhari.github.io/ml-scratchpad/llm-inference-visualized</a>. Each figure has Next and Play controls, so you can go one stage at a time. If you want runnable maths for the same ideas, the same repository has notebooks on <a href="https://ylnhari.github.io/ml-scratchpad/attention-transformer/">attention</a>, <a href="https://ylnhari.github.io/ml-scratchpad/rope/">RoPE</a>, <a href="https://ylnhari.github.io/ml-scratchpad/kv-cache/">the KV cache</a>, <a href="https://ylnhari.github.io/ml-scratchpad/continuous-batching/">continuous batching</a> and <a href="https://ylnhari.github.io/ml-scratchpad/vllm-memory/">vLLM's memory budget</a>.</p>
+<h2>4. When one GPU is not enough</h2>
 
-<p><em>Grid sizes in the figures are scaled down so they can be drawn. Shapes and formulas follow the cited sources, and the utilisation bars are illustrative. The images in this post are regenerated from the live page by <code>charts/make_screens.py</code>.</em></p>
+<p>At two bytes per number, a 70-billion-parameter model is 140 GB of weights, already more than a common 80 GB data-centre GPU holds, before any KV cache. So big models are split across several GPUs. There are a few ways to make the split, and each answers the same question: <strong>which dimension of which block gets cut, and what has to travel between GPUs as a result?</strong></p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/07-gpus-needed.jpg" alt="Each box is one 80 GB GPU filled with weights only: 7B and 13B models fit on one, a 70B model needs at least two, and a 405B model needs at least eleven.">
+
+<p>The simplest is <strong>data parallelism</strong>: copy the whole model onto every GPU and send different conversations to each. It multiplies throughput and needs no communication, but it only works if the model fits on one GPU in the first place:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/08-data-parallel.jpg" alt="Data parallelism: four GPUs each hold a full 14 GB copy of a 7B model and serve different requests, with no traffic between them.">
+
+<p><strong>Pipeline parallelism</strong> gives each GPU a slice of the layers, like an assembly line. It helps a model fit, but a single reply still has to pass through every stage in turn.</p>
+
+<p><strong>Tensor parallelism</strong> splits the weight matrices <em>inside</em> every layer, so all GPUs work on every token together. It rests on one neat trick. Split the MLP's first weight matrix by columns and the second by rows. Each GPU can then do both multiplications on its own half, with no talking in between, and one combining step at the end (an <strong>All-Reduce</strong>) adds the halves up:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/09-tp-matmul-trick.jpg" alt="Tensor parallelism in the MLP: A is split by columns and B by rows, so each GPU computes its own half and a partial sum, and one All-Reduce combines them. There is no communication between the two matrix multiplies.">
+
+<p>That combining step happens twice in every layer, so tensor parallelism needs the very fast links found <em>inside</em> one server. Real systems mix the methods: tensor parallelism inside a server, pipeline parallelism across servers, and data parallelism to add more copies for more users.</p>
+
+<h2>5. The copies tensor parallelism leaves behind</h2>
+
+<p>Tensor parallelism has a blind spot. Between the split blocks, every GPU holds the <em>same</em> full block of numbers and runs the same normalisation step on it. The same data, stored twice:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/10-tp-copies.jpg" alt="Under tensor parallelism, LayerNorm runs on an identical full [b, s, h] block on both GPUs: activations at 100% on each, marked as duplicates.">
+
+<p>Normalisation treats each token on its own, so the fix is to cut that block along the <strong>sequence</strong> instead: each GPU handles half the tokens. This is called <strong>sequence parallelism</strong>, and it removes the copies without adding any communication:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/11-sequence-split.jpg" alt="Sequence parallelism: the same block cut along s, so GPU 0 holds tokens 0 to 3 and GPU 1 holds tokens 4 to 7, each at 50% of the activation memory with no copies.">
+
+<p>The research that introduced this pairing reports that, together with smarter recomputation, it <a href="https://arxiv.org/abs/2205.05198">cuts activation memory by 5×</a>.</p>
+
+<h2>6. Why training needs so much more</h2>
+
+<p>All of that stored activation memory is mostly a <em>training</em> problem. To learn, a model runs backwards through every layer, and each step backwards needs the numbers that went into that layer on the way forward. Training also stores gradients and optimiser state for every weight. Running a model forward only needs the weights and the KV cache:</p>
+
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/12-training-memory.jpg" alt="Estimated memory for a 7B model at 4,096 tokens: about 16 GB to serve (weights plus KV cache) against about 216 GB to train (weights, gradients, optimiser state and stored activations).">
+
+<p>The training bar is an estimate. It assumes the usual 16 bytes per weight for mixed-precision Adam, plus the per-layer activation formula from <a href="https://arxiv.org/abs/2205.05198">the same Megatron paper</a>. The interactive page lets you switch on recomputation and watch the activation bar collapse.</p>
+
+<h2>Explore it yourself</h2>
+
+<p>Every figure above is a frozen frame. The <a href="https://ylnhari.github.io/ml-scratchpad/llm-inference-visualized/">interactive page</a> lets you step through each one, and it covers more: FlashAttention, paged KV memory, quantization, batching, speculative decoding, and what newer models change. If you want runnable code for the same ideas, the same repository has notebooks on <a href="https://ylnhari.github.io/ml-scratchpad/attention-transformer/">attention</a>, <a href="https://ylnhari.github.io/ml-scratchpad/rope/">positional encoding</a>, <a href="https://ylnhari.github.io/ml-scratchpad/kv-cache/">the KV cache</a>, <a href="https://ylnhari.github.io/ml-scratchpad/continuous-batching/">batching</a> and <a href="https://ylnhari.github.io/ml-scratchpad/vllm-memory/">GPU memory in vLLM</a>.</p>
+
+<h2>Sources &amp; caveats</h2>
+
+<ul>
+<li><a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">NVIDIA: Mastering LLM Techniques: Inference Optimization</a>: the 14 GB weights and roughly 2 GB KV-cache figures for a 7B model, and the overall map of techniques this guide expands on.</li>
+<li><a href="https://arxiv.org/abs/2205.05198">Korthikanti et al., Reducing Activation Recomputation in Large Transformer Models</a>: sequence parallelism, the 5× activation-memory reduction, and the activation formula behind the training estimate.</li>
+<li>Figures are drawn from the interactive page. Grid sizes are scaled down so they can be drawn, the utilisation bars are illustrative, and the training-memory bar is an estimate, not a measurement.</li>
+</ul>
 
 <!-- === POST CONTENT ENDS HERE === -->
 
