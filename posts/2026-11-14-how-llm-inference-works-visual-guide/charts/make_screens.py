@@ -12,7 +12,10 @@ os.makedirs(OUT, exist_ok=True)
 CHROME = {"executable_path": "/usr/bin/google-chrome", "args": ["--no-sandbox"]} if os.path.exists("/usr/bin/google-chrome") else {}
 
 def save(locator, name):
+    pg = locator.page
+    pg.evaluate("document.querySelectorAll('.controls, .chips').forEach(e => e.style.display = 'none')")
     locator.screenshot(path="/tmp/_fig.png")
+    pg.evaluate("document.querySelectorAll('.controls, .chips').forEach(e => e.style.display = '')")
     im = Image.open("/tmp/_fig.png").convert("RGB")
     im = im.resize((1400, int(im.height * 1400 / im.width)), Image.LANCZOS)
     im.save(OUT + name + ".jpg", quality=88, optimize=True)
@@ -23,6 +26,7 @@ with sync_playwright() as p:
     pg = b.new_page(viewport={"width": 1240, "height": 900}, device_scale_factor=2, color_scheme="light")
     pg.emulate_media(reduced_motion="reduce")            # skip entry animations: final frame only
     pg.goto(SRC); pg.wait_for_timeout(1000)
+    # save() hides the buttons and chips for each shot: they do nothing in a static image
     for _ in range(4): pg.click("#ar-next")                # architecture: attention highlighted
     save(pg.locator("#architecture .fig"), "01-architecture")
     save(pg.locator("#attention-explained .fig"), "02-attention")
