@@ -1,5 +1,20 @@
 [
   {
+    "slug": "2026-11-15-open-weights-gap-private-tests",
+    "title": "When the Test Went Private, the Open-Weights Gap Came Back",
+    "date": "2026-11-15",
+    "description": "Open models looked three points from the frontier. Then the main index moved to private tests and the gap reopened to 19. What changed, what it costs, and which model to pick now.",
+    "tags": [
+      "LLMs",
+      "open weights",
+      "benchmarks",
+      "pricing"
+    ],
+    "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-15-open-weights-gap-private-tests/images/intelligence-vs-cost-per-task.jpg",
+    "status": "draft",
+    "medium_url": null
+  },
+  {
     "slug": "2026-11-14-how-llm-inference-works-visual-guide",
     "title": "How LLM Inference Works: A Visual Guide to the Core Concepts",
     "date": "2026-11-14",
@@ -13,16 +28,6 @@
     "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg",
     "status": "published",
     "medium_url": "https://ylnhari.medium.com/how-llm-inference-works-a-visual-guide-to-the-core-concepts-09d40a538127"
-  },
-  {
-    "slug": "2026-08-26-open-weights-vs-proprietary-the-premium-nobody-buys",
-    "title": "The Frontier Premium Nobody Is Buying",
-    "date": "2026-08-26",
-    "description": "The open-weight gap closed to 1-3 index points. That is not the story. The story is that buyers stopped paying for the top of the range, and the vendors noticed first.",
-    "tags": ["LLMs", "open weights", "pricing", "economics"],
-    "cover_image": "https://images.unsplash.com/photo-1620266757065-5814239881fd?w=1200&q=80",
-    "status": "draft",
-    "medium_url": null
   },
   {
     "slug": "2026-07-31-jio-prime-lite-lock-escape-guide",
