@@ -82,7 +82,7 @@
 
 <p>Attention cuts <code>h</code> into slices, one per head, which is the cut that splits a model across GPUs later on:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-shapes-heads.jpg" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each [b, s, d_head], with the shape glossary below.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-shapes-heads.jpg" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each one head wide, with the shape glossary below.">
 
 <h2>3. Why writing a reply is slow</h2>
 
