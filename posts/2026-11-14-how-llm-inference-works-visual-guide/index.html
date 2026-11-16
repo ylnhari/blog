@@ -7,7 +7,7 @@
   <meta name="description" content="What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.">
   <meta property="og:title" content="How LLM Inference Works: A Visual Guide to the Core Concepts">
   <meta property="og:description" content="What a transformer computes at each step, and how serving systems make it fast: batching, KV cache, parallelism, attention variants and more, each shown as a visual of tensor shapes.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg?v=4">
+  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg?v=5">
   <title>How LLM Inference Works: A Visual Guide to the Core Concepts</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
@@ -42,7 +42,7 @@
 
 <p>A language model has exactly one job: <strong>given the text so far, predict the next token</strong>. A token is a word or a piece of a word. Everything else is machinery for that single prediction. Here is the machinery, in the shape almost every modern model uses (GPT, Llama, Claude, Gemini, Mistral). Data flows from the bottom to the top:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg?v=4" alt="The decoder-only transformer, bottom to top: the tokenizer turns text into IDs, the embedding turns IDs into vectors, then a block of norm, attention, add, norm, MLP, add repeats L times, and finally an LM head and softmax pick the next token, which is appended to the input for the next round.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/01-architecture.jpg?v=5" alt="The decoder-only transformer, bottom to top: the tokenizer turns text into IDs, the embedding turns IDs into vectors, then a block of norm, attention, add, norm, MLP, add repeats L times, and finally an LM head and softmax pick the next token, which is appended to the input for the next round.">
 
 <p>In plain words:</p>
 
@@ -67,7 +67,7 @@
 
 <p>The query of "it" is compared with the key of every earlier word. A step called <strong>softmax</strong> turns those match scores into shares that add up to 100%. The best matches get the biggest share, and the new vector for "it" becomes a weighted mix of their values:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-attention.jpg?v=4" alt="Attention for the query "it": arcs show most of the weight, 65%, going to "animal", so the new vector for "it" is mostly the meaning of "animal". Below, the three steps: raw scores, softmax weights, and the mixed output.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/02-attention.jpg?v=5" alt="Attention for the query "it": arcs show most of the weight, 65%, going to "animal", so the new vector for "it" is mostly the meaning of "animal". Below, the three steps: raw scores, softmax weights, and the mixed output.">
 
 <p>A model runs many of these lookups side by side, called <strong>heads</strong>. Each head has its own query, key and value weights, so each learns to look for something different: one might link pronouns to nouns, another might focus on the previous word. Words in the future are hidden, because a model that predicts the next word cannot be allowed to peek at it.</p>
 
@@ -75,7 +75,7 @@
 
 <p>Once text is inside the model, everything is a block of numbers with a <strong>shape</strong>. Here is the query block from attention, drawn in 3D and cut into one slice per head:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-tensor-shapes.jpg?v=4" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each one head wide, with the shape glossary below.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/03-tensor-shapes.jpg?v=5" alt="The query tensor [b, s, h] drawn as a 3D block and cut along h into four colour-coded heads, each one head wide, with the shape glossary below.">
 
 <p>Nearly every paper about LLM systems writes the main block as <code>[b, s, h]</code>:</p>
 
@@ -91,15 +91,15 @@
 
 <p>Running a model happens in two very different phases. First, the whole prompt goes through at once. This phase is called <strong>prefill</strong>. All the prompt tokens form one big matrix, and the GPU's arithmetic units are kept busy:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/04-prefill.jpg?v=4" alt="Prefill: five prompt tokens form a 5-row matrix X that is multiplied by the weights W in one pass, and their keys and values fill the KV cache. The compute bar is nearly full.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/04-prefill.jpg?v=5" alt="Prefill: five prompt tokens form a 5-row matrix X that is multiplied by the weights W in one pass, and their keys and values fill the KV cache. The compute bar is nearly full.">
 
 <p>Then the reply is written one token at a time. This phase is called <strong>decode</strong>. Each step multiplies a single row by the <em>same</em> full set of weights, which must be read from GPU memory again every step. The arithmetic is tiny, but the reading is huge, so the GPU spends most of its time waiting on memory:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/05-decode.jpg?v=4" alt="Decode: a single new token is a 1-row matrix multiplied by the full weight matrix. Only one KV entry is added, and the compute bar is nearly empty: the step is limited by memory, not maths.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/05-decode.jpg?v=5" alt="Decode: a single new token is a 1-row matrix multiplied by the full weight matrix. Only one KV entry is added, and the compute bar is nearly empty: the step is limited by memory, not maths.">
 
 <p>To avoid recomputing the past at every step, the model saves each token's keys and values in a <strong>KV cache</strong>. The cache grows with every token and every conversation. A 7-billion-parameter model in 16-bit precision needs <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 14 GB</a> just for its weights, and one 4,096-token conversation adds <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 2 GB</a> of cache. Multiply that by dozens of users and memory runs out long before arithmetic does:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/06-kv-cache.jpg?v=4" alt="KV cache calculator for Llama 2 7B at batch 1 and 4,096 tokens: 14 GB of weights plus 2.15 GB of KV cache on an 80 GB GPU, with the formula filled in.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/06-kv-cache.jpg?v=5" alt="KV cache calculator for Llama 2 7B at batch 1 and 4,096 tokens: 14 GB of weights plus 2.15 GB of KV cache on an 80 GB GPU, with the formula filled in.">
 
 <blockquote>During decode, the GPU is not busy doing maths. It is busy fetching numbers from memory.</blockquote>
 
@@ -109,11 +109,11 @@
 
 <p>If decode spends its time reading the weights, the obvious fix is to make each read count for more. Put several conversations in one <strong>batch</strong>, and every read of the weights serves all of them at once. The catch is that replies finish at different times. In <strong>static batching</strong>, the whole batch waits for its longest reply, and finished slots sit empty. In <strong>in-flight batching</strong> (also called continuous batching), a finished conversation leaves straight away and a waiting one takes its slot on the next step:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/07-batching.jpg?v=4" alt="Two timelines of four batch slots. Static batching takes 31 steps with slots idle 40% of the time while waiting for the longest request; in-flight batching refills each slot as soon as it frees up and finishes the same twelve requests in 23 steps.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/07-batching.jpg?v=5" alt="Two timelines of four batch slots. Static batching takes 31 steps with slots idle 40% of the time while waiting for the longest request; in-flight batching refills each slot as soon as it frees up and finishes the same twelve requests in 23 steps.">
 
 <p>Batching only helps if there is room in memory for many KV caches. Older servers reserved one long, unbroken stretch of memory per conversation, sized for the longest reply it <em>might</em> write. NVIDIA's example: a model with a 2,048-token limit <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">reserves room for all 2,048 tokens</a> even when the reply is short, and the unused part is wasted. <strong>PagedAttention</strong> borrows an idea from operating systems. It cuts the cache into small fixed-size blocks, hands them out only as tokens arrive, and keeps a table of which block lives where, so a conversation's blocks need not sit next to each other:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/08-paged-attention.jpg?v=4" alt="KV memory drawn as 32 physical blocks of 8 token slots, shared by eight requests whose blocks are scattered across memory. A block table maps each request's logical blocks to physical ones; 89% of memory now holds real tokens.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/08-paged-attention.jpg?v=5" alt="KV memory drawn as 32 physical blocks of 8 token slots, shared by eight requests whose blocks are scattered across memory. A block table maps each request's logical blocks to physical ones; 89% of memory now holds real tokens.">
 
 <p>Less waste per conversation means more conversations fit, which means bigger batches, which means each read of the weights does more work. Serving engines such as vLLM and TensorRT-LLM use both ideas.</p>
 
@@ -121,13 +121,13 @@
 
 <p>The KV cache holds a key and a value for every head. But the heads do not each need their own. In <strong>grouped-query attention</strong> (GQA), several query heads share one key head and one value head, so the cache shrinks by the size of the group. <strong>Multi-query attention</strong> (MQA) is the extreme case, where every query head shares a single key and value head. Llama 2 70B is <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">one well-known model that uses GQA</a>:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/09-gqa.jpg?v=4" alt="Eight query heads, Q0 to Q7, wired to only two key/value heads: Q0 to Q3 share K0 and V0, Q4 to Q7 share K1 and V1. The KV cache is 25% of what standard multi-head attention would need.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/09-gqa.jpg?v=5" alt="Eight query heads, Q0 to Q7, wired to only two key/value heads: Q0 to Q3 share K0 and V0, Q4 to Q7 share K1 and V1. The KV cache is 25% of what standard multi-head attention would need.">
 
 <p>Sharing heads costs a little quality, and an existing model can be converted rather than retrained: NVIDIA notes that turning a model into MQA needs fine-tuning on <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">about 5% of the original training volume</a>.</p>
 
 <p>The second cost in attention is less obvious. Standard attention builds the full table of scores, one for every pair of tokens, and writes that table to the GPU's large but slow main memory (HBM) and reads it back. For long inputs that table is enormous. <strong>FlashAttention</strong> never builds it. It works on one small tile at a time inside the GPU's tiny but very fast on-chip memory (SRAM), keeping a running total so the softmax still comes out exactly right:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/10-flash-attention.jpg?v=4" alt="FlashAttention: Q, K and V stay in HBM, but the N by N score matrix is never stored. Only one tile exists at a time, in SRAM, while a running maximum and sum accumulate the output. Score traffic through HBM drops to zero, with the same O(N squared) compute and an exact result.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/10-flash-attention.jpg?v=5" alt="FlashAttention: Q, K and V stay in HBM, but the N by N score matrix is never stored. Only one tile exists at a time, in SRAM, while a running maximum and sum accumulate the output. Score traffic through HBM drops to zero, with the same O(N squared) compute and an exact result.">
 
 <p>The maths is the same, and so is the answer. What changes is how many times data crosses the slow path to main memory. That is the theme of this whole guide again.</p>
 
@@ -137,23 +137,23 @@
 
 <p><strong>Quantization</strong> stores each number with fewer bits. Models are usually trained with 16 or 32 bits per value, but most can be represented <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">with eight or even fewer</a>. Each weight snaps to the nearest of a small set of levels:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/11-quantization.jpg?v=4" alt="Weights from a bell-shaped distribution, top, each snapped down to one of 15 evenly spaced INT4 levels, bottom. The mean error is 0.118, and a 7B model's weights fall to 3.5 GB.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/11-quantization.jpg?v=5" alt="Weights from a bell-shaped distribution, top, each snapped down to one of 15 evenly spaced INT4 levels, bottom. The mean error is 0.118, and a 7B model's weights fall to 3.5 GB.">
 
 <p>Weights are the easy part, because they are fixed after training. The values flowing through the model are harder, because they contain occasional very large <strong>outliers</strong>. One outlier stretches the scale, and every other value loses precision. Much of the research in this area is about handling those outliers.</p>
 
 <p><strong>Sparsity</strong> sets some weights to zero. Random zeros barely help, because the GPU still has to check every position. But recent NVIDIA GPUs have hardware for one fixed pattern: <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">two zeros in every group of four</a>. The zeros are dropped from storage, a small index records where the survivors were, and the hardware skips the missing work:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/12-sparsity.jpg?v=4" alt="A 4 by 16 weight matrix pruned 2:4: in every group of four values, the two smallest are set to zero, shown hatched. 32 non-zero values are stored with a small metadata index.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/12-sparsity.jpg?v=5" alt="A 4 by 16 weight matrix pruned 2:4: in every group of four values, the two smallest are set to zero, shown hatched. 32 non-zero values are stored with a small metadata index.">
 
 <p><strong>Distillation</strong> trains a smaller <em>student</em> model to copy a larger <em>teacher</em>. The trick is to learn from the teacher's whole spread of guesses rather than only the right answer. "Mat" is correct, but "rug" being a close second carries information too. The classic result is DistilBERT, which <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">compresses BERT by 40% while keeping 97% of its language understanding, and runs 60% faster</a>:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/13-distillation.jpg?v=4" alt="Next-word probabilities for 'The cat sat on the ___'. The hard label puts everything on 'mat'; the teacher's soft target gives mat 66%, rug 16%, floor 11%, sofa 6%. The student is trained on a mix of both.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/13-distillation.jpg?v=5" alt="Next-word probabilities for 'The cat sat on the ___'. The hard label puts everything on 'mat'; the teacher's soft target gives mat 66%, rug 16%, floor 11%, sofa 6%. The student is trained on a mix of both.">
 
 <h2>7. Guessing ahead</h2>
 
 <p>Decode is slow because each token waits for the one before it. <strong>Speculative decoding</strong> gets around that. A small, fast <em>draft</em> model guesses the next few tokens. The big model then checks all the guesses in a single pass, which costs about the same as producing one token, because the weights are read once either way. It keeps the guesses up to the first wrong one, and adds its own token at that point:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/14-speculative-decoding.jpg?v=4" alt="After the prompt 'I saw a dog ride', the draft model guesses 'in the bus'. The verifier agrees with 'in the' and replaces 'bus' with 'car', so one pass of the big model produces three tokens.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/14-speculative-decoding.jpg?v=5" alt="After the prompt 'I saw a dog ride', the draft model guesses 'in the bus'. The verifier agrees with 'in the' and replaces 'bus' with 'car', so one pass of the big model produces three tokens.">
 
 <p>The output is exactly what the big model would have written on its own. When the draft guesses well, several tokens come out of each pass of the big model. When it guesses badly, you lose a little time on the draft and nothing else.</p>
 
@@ -163,35 +163,35 @@
 
 <p>At two bytes per number, a 70-billion-parameter model is 140 GB of weights, already more than a common 80 GB data-centre GPU holds, before any KV cache. So big models are split across several GPUs. There are a few ways to make the split, and each answers the same question: <strong>which dimension of which block gets cut, and what has to travel between GPUs as a result?</strong></p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/15-gpus-needed.jpg?v=4" alt="Each box is one 80 GB GPU filled with weights only: 7B and 13B models fit on one, a 70B model needs at least two, and a 405B model needs at least eleven.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/15-gpus-needed.jpg?v=5" alt="Each box is one 80 GB GPU filled with weights only: 7B and 13B models fit on one, a 70B model needs at least two, and a 405B model needs at least eleven.">
 
 <p>The simplest is <strong>data parallelism</strong>: copy the whole model onto every GPU and send different conversations to each. It multiplies throughput and needs no communication, but it only works if the model fits on one GPU in the first place:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/16-data-parallel.jpg?v=4" alt="Data parallelism: four GPUs each hold a full 14 GB copy of a 7B model and serve different requests, with no traffic between them.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/16-data-parallel.jpg?v=5" alt="Data parallelism: four GPUs each hold a full 14 GB copy of a 7B model and serve different requests, with no traffic between them.">
 
 <p><strong>Pipeline parallelism</strong> gives each GPU a slice of the layers, like an assembly line. With four stages, each GPU holds <a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">a quarter of the weights</a>. The problem is waiting: GPU 3 has nothing to do until GPU 0 has finished. Splitting the batch into smaller <strong>microbatches</strong> keeps more stages busy at once, but the idle "bubble" at the start and end never fully goes away:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/17-pipeline-parallel.jpg?v=4" alt="Pipeline parallelism: 32 layers split into four stages on four GPUs. With the batch split into four microbatches, each GPU starts one step after the one before it; hatched areas show idle time, 43% of the total.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/17-pipeline-parallel.jpg?v=5" alt="Pipeline parallelism: 32 layers split into four stages on four GPUs. With the batch split into four microbatches, each GPU starts one step after the one before it; hatched areas show idle time, 43% of the total.">
 
 <p>Pipelining helps a model fit and adds throughput once the pipeline is full. It never makes a single request faster.</p>
 
 <p><strong>Tensor parallelism</strong> splits the weight matrices <em>inside</em> every layer, so all GPUs work on every token together. It rests on one neat trick. Split the MLP's first weight matrix by columns and the second by rows. Each GPU can then do both multiplications on its own half, with no talking in between, and one combining step at the end (an <strong>All-Reduce</strong>) adds the halves up:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/18-tp-matmul-trick.jpg?v=4" alt="Tensor parallelism in the MLP: A is split by columns and B by rows, so each GPU computes its own half and a partial sum, and one All-Reduce combines them. There is no communication between the two matrix multiplies.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/18-tp-matmul-trick.jpg?v=5" alt="Tensor parallelism in the MLP: A is split by columns and B by rows, so each GPU computes its own half and a partial sum, and one All-Reduce combines them. There is no communication between the two matrix multiplies.">
 
 <p>That combining step happens twice in every layer, so tensor parallelism needs the very fast links found <em>inside</em> one server. Real systems mix the methods: tensor parallelism inside a server, pipeline parallelism across servers, and data parallelism to add more copies for more users. Here is one such layout, sixteen GPUs in two servers:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/21-combined-parallelism.jpg?v=4" alt="Two servers of eight GPUs. Inside each server, eight GPUs form one tensor-parallel group sharing the fast NVLink connection; the two servers are independent copies, so data parallelism of 2 doubles throughput.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/21-combined-parallelism.jpg?v=5" alt="Two servers of eight GPUs. Inside each server, eight GPUs form one tensor-parallel group sharing the fast NVLink connection; the two servers are independent copies, so data parallelism of 2 doubles throughput.">
 
 <h2>9. The copies tensor parallelism leaves behind</h2>
 
 <p>Tensor parallelism has a blind spot. Between the split blocks, every GPU holds the <em>same</em> full block of <strong>activations</strong> (the in-between numbers that flow from one layer to the next) and runs the same normalisation step on it. The same data, stored twice:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/19-tp-copies.jpg?v=4" alt="Under tensor parallelism, LayerNorm runs on an identical full [b, s, h] block on both GPUs: activations at 100% on each, marked as duplicates.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/19-tp-copies.jpg?v=5" alt="Under tensor parallelism, LayerNorm runs on an identical full [b, s, h] block on both GPUs: activations at 100% on each, marked as duplicates.">
 
 <p>Normalisation treats each token on its own, so the fix is to cut that block along the <strong>sequence</strong> instead: each GPU handles half the tokens. This is called <strong>sequence parallelism</strong>, and it removes the copies without adding any communication:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/20-sequence-split.jpg?v=4" alt="Sequence parallelism: the same block cut along s, so GPU 0 holds tokens 0 to 3 and GPU 1 holds tokens 4 to 7, each at 50% of the activation memory with no copies.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/20-sequence-split.jpg?v=5" alt="Sequence parallelism: the same block cut along s, so GPU 0 holds tokens 0 to 3 and GPU 1 holds tokens 4 to 7, each at 50% of the activation memory with no copies.">
 
 <p>The research that introduced this pairing reports that, together with smarter recomputation, it <a href="https://arxiv.org/abs/2205.05198">cuts activation memory by 5×</a>.</p>
 
@@ -199,7 +199,7 @@
 
 <p>One more trick changes the model itself. In a <strong>mixture-of-experts</strong> (MoE) model, the single MLP in each block is replaced by several smaller MLPs, called <em>experts</em>, plus a tiny <strong>router</strong> that picks a few experts for each token. Every other expert sits idle for that token:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/23-mixture-of-experts.jpg?v=4" alt="A mixture-of-experts layer: the router sends the token 'The' to two of eight experts, expert 0 with weight 0.49 and expert 4 with weight 0.51, while the other six stay idle. The output is the weighted sum of the two chosen experts, and the shape stays [b, s, h].">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/23-mixture-of-experts.jpg?v=5" alt="A mixture-of-experts layer: the router sends the token 'The' to two of eight experts, expert 0 with weight 0.49 and expert 4 with weight 0.51, while the other six stay idle. The output is the weighted sum of the two chosen experts, and the shape stays [b, s, h].">
 
 <p>Mixtral 8×7B is the well-known example: it has <a href="https://mistral.ai/news/mixtral-of-experts">eight experts per block and uses two of them for each token</a>, so it <a href="https://mistral.ai/news/mixtral-of-experts">stores 46.7B parameters but uses only 12.9B per token</a>. That split matters for serving. The memory you need follows the total, because every expert has to be loaded. The work per token follows the active part, so a token costs about what a much smaller model would. When the experts no longer fit on one GPU, they are spread across several. That is <strong>expert parallelism</strong>, the fifth way to split a model, and it needs its own communication step to send each token to the GPU that holds its experts.</p>
 
@@ -207,7 +207,7 @@
 
 <p>All of that stored activation memory is mostly a <em>training</em> problem. To learn, a model runs backwards through every layer, and each step backwards needs the numbers that went into that layer on the way forward. Training also stores gradients and optimiser state for every weight. Running a model forward only needs the weights and the KV cache:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/22-training-memory.jpg?v=4" alt="Estimated memory for a 7B model at 4,096 tokens: about 16 GB to serve (weights plus KV cache) against about 216 GB to train (weights, gradients, optimiser state and stored activations).">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-14-how-llm-inference-works-visual-guide/images/22-training-memory.jpg?v=5" alt="Estimated memory for a 7B model at 4,096 tokens: about 16 GB to serve (weights plus KV cache) against about 216 GB to train (weights, gradients, optimiser state and stored activations).">
 
 <p>The training bar is an estimate. It assumes the usual 16 bytes per weight for training with the Adam optimiser in mixed precision, plus the per-layer activation formula from <a href="https://arxiv.org/abs/2205.05198">the same sequence-parallelism paper</a>. The interactive page lets you switch on recomputation and watch the activation bar collapse.</p>
 
