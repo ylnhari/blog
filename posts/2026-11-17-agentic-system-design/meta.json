@@ -1,0 +1,10 @@
+{
+  "title": "Agentic System Design: Every Pattern, and How to Choose",
+  "date": "2026-11-17",
+  "author": "ylnhari",
+  "description": "Every agent design pattern from Google, Anthropic, Microsoft, OpenAI and Cognition as one family, plus the decision procedure, context, tools, safety and evals to design any agent.",
+  "tags": ["agents", "llm", "system-design", "architecture"],
+  "status": "draft",
+  "medium_url": null,
+  "cover_image": "https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/03-pattern-gallery.jpg"
+}
