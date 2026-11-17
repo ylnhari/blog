@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="ylnhari">
-  <meta name="description" content="Every agent design pattern from Google, Anthropic, Microsoft, OpenAI and Cognition as one family, plus the decision procedure, context, tools, safety and evals needed to design any agent.">
+  <meta name="description" content="Every agent design pattern from Google, Anthropic, Microsoft and OpenAI as one family, with Cognition's lessons, plus the procedure, context, tools, safety and evals to design any agent.">
   <meta property="og:title" content="Agentic System Design: Every Pattern, and How to Choose">
-  <meta property="og:description" content="Every agent design pattern from Google, Anthropic, Microsoft, OpenAI and Cognition as one family, plus the decision procedure, context, tools, safety and evals needed to design any agent.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/03-pattern-gallery.jpg">
+  <meta property="og:description" content="Every agent design pattern from Google, Anthropic, Microsoft and OpenAI as one family, with Cognition's lessons, plus the procedure, context, tools, safety and evals to design any agent.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/01-autonomy-ladder.jpg?v=2">
   <title>Agentic System Design: Every Pattern, and How to Choose</title>
   <link rel="stylesheet" href="../../assets/style.css">
 </head>
@@ -31,7 +31,7 @@
 
 <p>Every guide opens with the same warning, and it is the most valuable sentence in all of them: do not build an agent if you do not need one. Anthropic's <a href="https://www.anthropic.com/research/building-effective-agents">Building effective agents</a> recommends the simplest approach that works and notes that agentic systems trade latency and cost for better task performance. <a href="https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system">Google's guide</a> says predictable tasks, or ones a single model call can handle, may not need an agentic approach. <a href="https://learn.microsoft.com/azure/architecture/ai-ml/guide/ai-agent-design-patterns">Microsoft's</a> tells you to use the lowest level of complexity that reliably meets your requirements. <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">OpenAI's</a> says that if a use case lacks complex decisions, hard-to-maintain rules or heavy unstructured data, a deterministic solution may be enough.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/01-autonomy-ladder.jpg" alt="The autonomy ladder. Four rungs: a single model call, a workflow where code drives several calls, a single agent where the model loops over tools, and multi-agent systems. Each rung up hands more decisions to the model and costs more calls, latency and failure modes. Start at the lowest rung that works.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/01-autonomy-ladder.jpg?v=2" alt="The autonomy ladder. Four rungs: a single model call, a workflow where code drives several calls, a single agent where the model loops over tools, and multi-agent systems. Each rung up hands more decisions to the model and costs more calls, latency and failure modes. Start at the lowest rung that works.">
 
 <p>The ladder has four rungs, and the line that matters runs between the second and third:</p>
 <ul>
@@ -46,7 +46,7 @@
 
 <p>OpenAI's guide names the three parts of any agent: a <strong>model</strong> for reasoning and decisions, <strong>tools</strong> to act and fetch context, and <strong>instructions</strong> that define behaviour and guardrails. Anthropic describes the running system as an LLM using tools in a loop based on feedback from the environment. Put together:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/02-agent-loop.jpg" alt="The agent loop: the context (instructions, task, history) goes to the model, which either stops or calls a tool; the tool acts on the environment; the result comes back as an observation appended to the context; the loop repeats until an exit condition. Guardrails sit at the input, at the tool call and at the output.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/02-agent-loop.jpg?v=2" alt="The agent loop: the context (instructions, task, history) goes to the model, which either stops or calls a tool; the tool acts on the environment; the result comes back as an observation appended to the context; the loop repeats until an exit condition. Guardrails sit at the input, at the tool call and at the output.">
 
 <p>Three details in this picture decide most of an agent's behaviour:</p>
 <ul>
@@ -60,7 +60,7 @@
 
 <p>Here is every pattern from the four guides, drawn the same way. Purple boxes are model calls, grey diamonds are code, teal boxes are tools, amber is a person. The badge in each card is the first design question: does code or the model pick the next step?</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/03-pattern-gallery.jpg" alt="Gallery of twelve patterns. Code decides the next step in: sequential chain, router, parallel sectioning, voting, loop or refinement, and human in the loop. The model decides in: orchestrator-workers, hierarchical, evaluator-optimizer, single agent (ReAct), handoff, and group chat or swarm. Cost dots rise from two for chains and routers to five for hierarchical and swarm.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/03-pattern-gallery.jpg?v=2" alt="Gallery of twelve patterns. Code decides the next step in: sequential chain, router, parallel sectioning, voting, loop or refinement, and human in the loop. The model decides in: orchestrator-workers, hierarchical, evaluator-optimizer, single agent (ReAct), handoff, and group chat or swarm. Cost dots rise from two for chains and routers to five for hierarchical and swarm.">
 
 <p><strong>Code decides (workflows).</strong> These are cheaper, faster and easier to test, because the path is fixed.</p>
 <ul>
@@ -74,7 +74,7 @@
 
 <p><strong>The model decides (agents).</strong> These handle work whose steps cannot be predicted, at the price of more calls and less predictability.</p>
 <ul>
-<li><strong>Single agent (ReAct).</strong> One model reasons, calls a tool, reads the result and repeats. Google, Microsoft and OpenAI all name it as the place to start once a workflow is not enough.</li>
+<li><strong>Single agent (ReAct, short for reason + act).</strong> One model reasons, calls a tool, reads the result and repeats. Google, Microsoft and OpenAI all name it as the place to start once a workflow is not enough.</li>
 <li><strong>Orchestrator–workers.</strong> A lead model breaks the task down <em>at runtime</em> and hands pieces to workers, then synthesises. Anthropic's distinction from parallelization is the key: here the orchestrator chooses the subtasks for each input.</li>
 <li><strong>Hierarchical decomposition.</strong> Orchestrator–workers applied recursively, for large open-ended problems. Each level adds cost, latency and a place for errors to cascade.</li>
 <li><strong>Evaluator–optimizer.</strong> A generator produces, a critic checks against explicit criteria and sends feedback. Anthropic's condition for using it is worth memorising: clear evaluation criteria, and revisions that add measurable value.</li>
@@ -86,7 +86,7 @@
 
 <p>The naming is where most of the confusion comes from, so here is the map. If you read about "magentic orchestration" in Microsoft's guide and "coordinator" in Google's, they are close cousins of Anthropic's orchestrator–workers. Microsoft's maker-checker loop is Google's review-and-critique and Anthropic's evaluator–optimizer.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/04-pattern-names.jpg" alt="A name map with one row per pattern and columns for Anthropic, Google Cloud, Microsoft and OpenAI. For example, orchestrator-workers is called coordinator by Google, magentic by Microsoft and manager by OpenAI; evaluator-optimizer is review and critique at Google and maker-checker at Microsoft.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/04-pattern-names.jpg?v=2" alt="A name map with one row per pattern and columns for Anthropic, Google Cloud, Microsoft and OpenAI. For example, orchestrator-workers is called coordinator by Google, magentic by Microsoft and manager by OpenAI; evaluator-optimizer is review and critique at Google and maker-checker at Microsoft.">
 
 <p>The mappings are approximate, and the differences are informative. Microsoft's magentic manager keeps an explicit <em>task ledger</em> of goals and subgoals it revises as it goes. OpenAI's manager calls other agents <em>as tools</em> and keeps control of the conversation, while its handoff gives control away. That last distinction matters: with a manager, one agent owns the user conversation; with handoffs, ownership moves.</p>
 
@@ -94,9 +94,9 @@
 
 <p>This is where the guides stop being unanimous, and where the most expensive mistakes are made. Two widely read posts appeared a day apart in June 2025. Cognition's <a href="https://cognition.com/blog/dont-build-multi-agents">Don't Build Multi-Agents</a> argued for a single-threaded agent, and Anthropic's <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a> reported a large win from many agents. Both are right, about different work.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/05-read-vs-write.jpg" alt="Two panels. Left, parallel readers work: a lead agent sends three read-only search agents out and one writer combines their condensed findings, as in Anthropic's Research and Claude Code subagents. Right, parallel writers are fragile: a manager splits a Flappy Bird game into background, bird and pipes, each writing code, and the merge conflicts. Parallelise reading and exploring; keep the writes single-threaded.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/05-read-vs-write.jpg?v=2" alt="Two panels. Left, parallel readers work: a lead agent sends three read-only search agents out and one writer combines their condensed findings, as in Anthropic's Research and Claude Code subagents. Right, parallel writers are fragile: a Flappy Bird game is split between two writers, one building the background and pipes and one the bird, and the merged result conflicts. Parallelise reading and exploring; keep the writes single-threaded.">
 
-<p>Anthropic's numbers show what parallel <em>reading</em> buys. A multi-agent setup with a Claude Opus 4 lead and Claude Sonnet 4 subagents outperformed single-agent Opus 4 by 90.2% on their internal research eval, and parallelism cut research time by up to 90% on complex queries. The cost is just as clear: agents use about 4× the tokens of a chat, and multi-agent systems about 15×. On their BrowseComp analysis, token usage alone explained 80% of the variance in performance. In other words, much of the multi-agent gain comes from spending more tokens in parallel, clean contexts.</p>
+<p>Anthropic's numbers show what parallel <em>reading</em> buys. A multi-agent setup with a Claude Opus 4 lead and Claude Sonnet 4 subagents outperformed single-agent Opus 4 by 90.2% on their internal research eval, and parallelism cut research time by up to 90% on complex queries. The cost is just as clear: agents use about 4× the tokens of a chat, and multi-agent systems about 15×. On BrowseComp, a web-browsing research benchmark, token usage alone explained 80% of the variance in performance. In other words, much of the multi-agent gain comes from spending more tokens in parallel, clean contexts.</p>
 
 <p>Cognition's example shows what parallel <em>writing</em> costs. Split "build a Flappy Bird clone" between two subagents and one builds a Super Mario–style background while the other builds a bird that does not fit it. Their principle: every action carries implicit decisions, and agents that cannot see each other's decisions make conflicting ones. Anthropic draws the same boundary from the other side: domains where agents must share context or depend on each other heavily are poor fits, and most coding tasks have fewer parallelizable parts than research.</p>
 
@@ -110,12 +110,12 @@
 
 <p>Once a design is chosen, almost everything that goes wrong traces back to what the model saw on a given turn. Anthropic's <a href="https://anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a> frames it as an attention budget. Recall degrades as the window fills, an effect known as <em>context rot</em>, so every token has a cost even when it fits. Their guiding principle is to find the smallest set of high-signal tokens that maximises the chance of the outcome you want.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/06-context-budget.jpg" alt="Context budget after a long run, in illustrative thousands of tokens. A naive run fills about 354k with retrieved documents, tool results, conversation and exploration, well past a 200k window limit. With just-in-time retrieval, cleared tool results, compaction, notes in a file and sub-agents, the same run uses about 68k. Below, a curve shows recall falling as the window fills.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/06-context-budget.jpg?v=2" alt="Context budget after a long run, in illustrative thousands of tokens. A naive run fills about 354k with retrieved documents, tool results, conversation and exploration, well past a 200k window limit. With just-in-time retrieval, cleared tool results, compaction, notes in a file and sub-agents, the same run uses about 68k. Below, a curve shows recall falling as the window fills.">
 
 <p>Five techniques do most of the work, and each removes a different kind of bloat:</p>
 <ul>
 <li><strong>Just-in-time retrieval.</strong> Keep references (file paths, saved queries, links) and load content through tools only when needed. Claude Code uses a hybrid: it loads its CLAUDE.md files up front and greps the codebase on demand.</li>
-<li><strong>Clear old tool results.</strong> A tool output that has already been acted on is rarely needed again. This is the lightest form of compaction.</li>
+<li><strong>Clear old tool results.</strong> A tool output that has already been acted on is rarely needed again. It is one of the safest, lightest forms of compaction.</li>
 <li><strong>Compaction.</strong> Near the limit, summarise the history and continue from the summary. Keep decisions, open bugs and implementation details; drop redundant output. Tune for recall first, then precision.</li>
 <li><strong>Structured notes.</strong> The agent writes progress to a file outside the window, such as a to-do list or NOTES.md, and reads it back later.</li>
 <li><strong>Sub-agents.</strong> Exploration happens in a clean window, and only a condensed summary comes back, often 1,000–2,000 tokens. This is why read-only subagents work: they spend tokens where it does not pollute the main context.</li>
@@ -139,24 +139,24 @@
 
 <p>Some tasks take hours and outlive any single context window. Each new session starts with no memory of the last. Anthropic's <a href="https://anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a> found three typical failures. The agent tries to one-shot everything and runs out of context halfway. It sees existing progress and declares the job done. It marks features complete without testing them end to end. Their fix borrows from how human engineers hand over a shift:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/07-long-running-harness.jpg" alt="Long-running harness. Session 1 is an initializer agent that writes feature_list.json with over 200 items all failing, a progress file, an init.sh that starts the app and a first git commit. Every later session reads the progress, git log and feature list, runs a basic end-to-end test, picks one failing feature, builds and tests it, then marks it passing, commits and logs progress.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/07-long-running-harness.jpg?v=2" alt="Long-running harness. Session 1 is an initializer agent that writes feature_list.json with over 200 items all failing, a progress file, an init.sh that starts the app and a first git commit. Every later session reads the progress, git log and feature list, runs a basic end-to-end test, picks one failing feature, builds and tests it, then marks it passing, commits and logs progress.">
 
 <ul>
 <li>A one-time <strong>initializer</strong> session expands the request into a structured feature list (over 200 items for their claude.ai clone, all marked failing), writes a script that starts the app, creates a progress log and makes the first commit.</li>
 <li>Every later <strong>coding</strong> session starts by reading the progress log, git history and feature list, and runs a basic end-to-end check. It then works on <em>one</em> feature, tests it as a user would, flips only that feature's pass flag, commits and writes a progress note.</li>
 </ul>
-<p>The general lesson goes beyond coding: durable state belongs in files, databases and version control, where it survives a context reset, a crash or a deploy. Anthropic's research system follows the same idea in production. It saves the lead agent's plan to memory, resumes from the point of failure rather than restarting, and uses rainbow deployments so that updates do not break agents that are already running.</p>
+<p>The general lesson goes beyond coding: durable state belongs in files, databases and version control, where it survives a context reset, a crash or a deploy. Anthropic's research system follows the same idea in production. It saves the lead agent's plan to memory, resumes from the point of failure rather than restarting, and uses rainbow deployments, where old and new versions run side by side while traffic shifts gradually, so that updates do not break agents that are already running.</p>
 
 <h2>9. Safety is an architecture decision</h2>
 
 <p>An agent reads things you did not write: web pages, emails, issue comments, tool outputs. Any of them can contain instructions, and models cannot yet reliably tell data from commands. Simon Willison's <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">lethal trifecta</a> turns that risk into a design check: if one agent has access to private data, exposure to untrusted content and a way to communicate externally, an attacker can make it leak the data. He calls guardrail products that catch 95% of attacks a failing grade, so the reliable fix is structural: remove one of the three.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/08-safety.jpg" alt="Safety in three parts. A Venn diagram of private data, untrusted content and external communication, with exfiltration in the overlap: an agent with all three needs one leg cut. Tool risk tiers: low for read-only lookups that run freely, medium for reversible writes that are logged and validated, high for irreversible, financial or sending actions that need human approval. Guardrails at four edges: input, tool call, tool result and output.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/08-safety.jpg?v=2" alt="Safety in three parts. A Venn diagram of private data, untrusted content and external communication, with exfiltration in the overlap: an agent with all three needs one leg cut. Tool risk tiers: low for read-only lookups that run freely, medium for reversible writes that are logged and validated, high for irreversible, financial or sending actions that need human approval. Guardrails at four edges: input, tool call, tool result and output.">
 
 <p>Inside whatever the trifecta leaves you, layer the defences. OpenAI's guide suggests:</p>
 <ul>
 <li>Relevance and safety classifiers on input, to catch off-topic requests, jailbreaks and injections.</li>
-<li>Moderation of harmful inputs, and PII filters and output validation on the way out.</li>
+<li>Moderation of harmful inputs, and filters for personal data (PII) plus output validation on the way out.</li>
 <li>Rules-based checks such as blocklists, length limits and regex.</li>
 <li><strong>Tool risk ratings.</strong> Rate each tool low, medium or high, based on read-only versus write, reversibility, permissions and financial impact. High-risk calls trigger extra checks or a person.</li>
 </ul>
@@ -166,7 +166,7 @@
 
 <p>Two open protocols now cover the two kinds of connection an agent makes, and a design should know which one it is using.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/09-mcp-a2a.jpg" alt="Left, MCP: a host application runs one client per server, and each server exposes tools, resources and prompts over JSON-RPC; tool descriptions from untrusted servers are untrusted. Right, A2A: a client agent reads a remote agent's card at /.well-known/agent-card.json, sends a task and receives status and artifacts; task states are submitted and working (active), input-required and auth-required (waiting for the client), and completed, failed, canceled and rejected (terminal).">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/09-mcp-a2a.jpg?v=2" alt="Left, MCP: a host application runs one client per server, and each server exposes tools, resources and prompts over JSON-RPC; tool descriptions from untrusted servers are untrusted. Right, A2A: a client agent reads a remote agent's card at /.well-known/agent-card.json, sends a task and receives status and artifacts; task states are submitted and working (active), input-required and auth-required (waiting for the client), and completed, failed, canceled and rejected (terminal).">
 
 <ul>
 <li><strong>The Model Context Protocol (MCP)</strong> connects an agent to tools and data. In <a href="https://modelcontextprotocol.io/specification/2025-11-25">the specification</a>, a <em>host</em> application runs one <em>client</em> per <em>server</em>, and servers expose tools (functions the model calls), resources (data) and prompts (templates). The spec is explicit that tool descriptions from untrusted servers should be treated as untrusted, which is the trifecta again.</li>
@@ -185,7 +185,7 @@
 <li>The <em>outcome</em>, meaning the actual final state, such as whether the booking exists in the database, rather than whether the agent said it booked it.</li>
 </ul>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/10-pass-at-k.jpg" alt="pass@k versus pass^k for a 75% per-try success rate. pass@k, the chance that at least one of k tries succeeds, climbs to 98% at k equals 3. pass^k, the chance that all k tries succeed, falls to 42% at k equals 3 and keeps falling.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/10-pass-at-k.jpg?v=2" alt="pass@k versus pass^k for a 75% per-try success rate. pass@k, the chance that at least one of k tries succeeds, climbs to 98% at k equals 3. pass^k, the chance that all k tries succeed, falls to 42% at k equals 3 and keeps falling.">
 
 <p>The single most useful idea in it is the difference between two metrics. <strong>pass@k</strong> is the chance that at least one of k tries succeeds. <strong>pass^k</strong> is the chance that all k succeed. At 75% per try, three tries give at least one success 98% of the time, but all three succeed only about 42% of the time. A coding assistant whose user can retry lives on pass@k. A customer-facing agent that must get it right every time lives on pass^k. Measure the one your product actually needs.</p>
 
@@ -205,11 +205,11 @@
 
 <p>Put together, the guides imply one decision tree. Walk it from the top and stop at the first leaf that fits:</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/11-decision-tree.jpg" alt="Decision tree. One model call enough: single call. Otherwise, steps known in advance: if independent, parallel fan-out, if not, a sequential chain. If steps are not known: if one agent with a manageable set of distinct tools in one context can do it, a single agent; if the extra work is mostly reading in independent directions, an orchestrator with read-only workers; if the conversation crosses distinct domains one at a time, handoffs or a router; otherwise one writer with read-only helpers. Then add an evaluator loop, human gate, harness, trifecta cut or pass^k evals as requirements demand.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/11-decision-tree.jpg?v=2" alt="Decision tree. One model call enough: single call. Otherwise, steps known in advance: if independent, parallel fan-out, if not, a sequential chain. If steps are not known: if one agent with a manageable set of distinct tools in one context can do it, a single agent; if the extra work is mostly reading in independent directions, an orchestrator with read-only workers; if the conversation crosses distinct domains one at a time, handoffs (or a router if the domain is clear up front); otherwise one writer with read-only helpers. Then add an evaluator loop, human gate, harness, trifecta cut or pass^k evals as requirements demand.">
 
 <ol>
 <li><strong>Can one model call do it?</strong> Spend real effort on the prompt, retrieval and examples before answering no.</li>
-<li><strong>Are the steps known in advance?</strong> If yes, build a workflow. Fan out if the steps are independent, chain them if they are not, and put a router in front if the inputs fall into distinct groups.</li>
+<li><strong>Are the steps known in advance?</strong> If yes, build a workflow. Fan out if the steps are independent, and chain them if they are not.</li>
 <li><strong>Can one agent hold the job?</strong> One domain, a manageable set of distinct, well-described tools, and a task that fits in one context with compaction. If yes, build a single agent and invest in its tools and context.</li>
 <li><strong>Is the extra work mostly reading in independent directions?</strong> If yes, use an orchestrator with parallel, read-only workers that return condensed findings. Go hierarchical only for very large problems.</li>
 <li><strong>Does the conversation pass through distinct domains, one at a time?</strong> If yes, use specialist agents with handoffs. Use a router instead if the domain is clear from the first message.</li>
@@ -237,7 +237,7 @@
 <li>Reliability is measured with pass^k on real tickets.</li>
 </ul>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/12-example-support.jpg" alt="Customer support design: customer, then guardrails, then a router running on a small model, then one of three specialist agents (orders, billing, tech), each with its own tools; refunds above a limit go to a human for approval.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/12-example-support.jpg?v=2" alt="Customer support design: customer, then guardrails, then a router running on a small model, then one of three specialist agents (orders, billing, tech), each with its own tools; refunds above a limit go to a human for approval.">
 
 <p><strong>Deep research.</strong> The work is exploring many independent directions, which parallelises well.</p>
 <ul>
@@ -247,7 +247,7 @@
 </ul>
 <p>Anthropic's prompts make the effort scale explicit. Simple fact-finding gets one agent with 3–10 tool calls; complex research can use more than 10 subagents. Early versions sometimes spawned 50 subagents for simple queries, which is why the rules exist.</p>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/13-example-research.jpg" alt="Deep research design: a question goes to a lead agent that plans and synthesises, keeps its plan in memory, fans out to four parallel read-only search workers using web and document tools, and hands the draft to a citation pass.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/13-example-research.jpg?v=2" alt="Deep research design: a question goes to a lead agent that plans and synthesises, keeps its plan in memory, fans out to four parallel read-only search workers using web and document tools, and hands the draft to a citation pass.">
 
 <p><strong>Coding agent.</strong> Every edit carries implicit decisions, so the tree ends at "keep one writer".</p>
 <ul>
@@ -258,9 +258,9 @@
 <li>Shell commands and pushes sit behind a permission gate.</li>
 </ul>
 
-<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/14-example-coding.jpg" alt="Coding agent design: one coding agent is the only writer; read-only code-search and web-search sub-agents feed it; it edits files and runs tests, while shell and git push need approval; a reviewer with a fresh context sends findings back; progress notes, the feature list and git history carry state across sessions.">
+<img src="https://raw.githubusercontent.com/ylnhari/blog/main/posts/2026-11-17-agentic-system-design/images/14-example-coding.jpg?v=2" alt="Coding agent design: one coding agent is the only writer; read-only code-search and web-search sub-agents feed it; it edits files and runs tests, while shell and git push need approval; a reviewer with a fresh context sends findings back; progress notes, the feature list and git history carry state across sessions.">
 
-<p>None of the three uses a swarm, and only one uses parallel agents. That is typical. Most production systems are a workflow or a single agent with excellent tools and context. A small part of them is multi-agent, and that part is almost always read-only.</p>
+<p>None of the three uses a swarm, and only one fans out in parallel. In my reading of these guides that is typical: most systems are a workflow or a single agent with excellent tools and context, and where they do use several agents, Cognition observes that in practice this is <a href="https://cognition.com/blog/multi-agents-working">mostly read-only subagents</a>.</p>
 
 <h2>Explore it yourself</h2>
 

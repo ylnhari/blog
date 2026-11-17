@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agentic System Design, Visualized</title>
-<meta name="description" content="Every agent design pattern from Anthropic, Google, Microsoft, OpenAI and Cognition on one page, with a chooser that turns your requirements into an architecture.">
+<meta name="description" content="Every agent design pattern from Anthropic, Google, Microsoft and OpenAI, with Cognition's lessons, on one page, with a chooser that turns your requirements into an architecture.">
 <style>
 :root{--bg:#fbfaf7;--surface:#ffffff;--surface-2:#f1eff8;--ink:#1d1b26;--muted:#5d5a6b;--line:#d9d5e6;
---llm:#6a4fd0;--code:#6b7184;--tool:#16806f;--human:#b46a08;--env:#2f6fae;--bad:#c9302c;--ok:#1f7d52;--on:#ffffff;
+--llm:#6a4fd0;--code:#6b7184;--tool:#16806f;--human:#a8620a;--env:#2f6fae;--bad:#c9302c;--ok:#1f7d52;--on:#ffffff;
 --f-sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 @media(prefers-color-scheme:dark){:root{--bg:#14131a;--surface:#1c1b24;--surface-2:#272534;--ink:#ecebf3;--muted:#a6a3b6;--line:#3a3749;
---llm:#8f78ee;--code:#7d8397;--tool:#2aa58f;--human:#d08a2c;--env:#4b8fd0;--bad:#e05a55;--ok:#3fae7a;--on:#ffffff}}
+--llm:#8f78ee;--code:#7d8397;--tool:#2aa58f;--human:#d08a2c;--env:#4b8fd0;--bad:#e05a55;--ok:#3fae7a;--on:#14131a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-sans)}
 main{max-width:980px;margin:0 auto;padding:28px 20px 80px}
@@ -43,7 +43,7 @@ a{color:var(--llm)}
 footer{color:var(--muted);font-size:13.5px;margin-top:50px;border-top:1px solid var(--line);padding-top:14px}
 .toc{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
 .toc a{font:600 12.5px var(--f-sans);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--ink);background:var(--surface)}
-@media(max-width:700px){h1{font-size:27px}.fig{padding:10px;overflow-x:auto}.fig svg{min-width:640px}}
+@media(max-width:700px){.fig::before{content:'swipe sideways to see the whole figure →';display:block;font:600 11px var(--f-mono);color:var(--muted);margin-bottom:6px}h1{font-size:27px}.fig{padding:10px;overflow-x:auto}.fig svg{min-width:640px}}
 </style>
 </head>
 <body>
@@ -71,14 +71,14 @@ footer{color:var(--muted);font-size:13.5px;margin-top:50px;border-top:1px solid 
 <h2><span class="n">03</span>The twelve patterns</h2>
 <p class="cap">Every published pattern, drawn the same way. Purple boxes are model calls, grey diamonds are code, teal boxes are tools, amber is a person. The badge says who picks the next step. Click a pattern for when to use it and when not to.</p>
 <div class="fig">
-<svg id="sv-patterns" viewBox="0 0 760 860" role="img" aria-label="Gallery of twelve agent design patterns"></svg>
+<svg id="sv-patterns" viewBox="-4 0 768 860" role="img" aria-label="Gallery of twelve agent design patterns"></svg>
 <div class="note" id="pt-note"></div></div>
 </section>
 
 <section id="rosetta">
 <h2><span class="n">04</span>One idea, four names</h2>
 <p class="cap">The vendors name the same structures differently. This map lines them up, so a pattern you read about in one guide can be found in the others.</p>
-<div class="fig"><svg id="sv-rosetta" viewBox="0 0 760 470" role="img" aria-label="Pattern names across Anthropic, Google, Microsoft and OpenAI"></svg></div>
+<div class="fig"><svg id="sv-rosetta" viewBox="0 0 760 486" role="img" aria-label="Pattern names across Anthropic, Google, Microsoft and OpenAI"></svg></div>
 </section>
 
 <section id="readwrite">
@@ -91,7 +91,7 @@ footer{color:var(--muted);font-size:13.5px;margin-top:50px;border-top:1px solid 
 <h2><span class="n">06</span>Context is the budget</h2>
 <p class="cap">Every token in the context window competes for the model's attention, and recall degrades as the window fills. Turn the techniques on to see how a long run stays inside its budget. Token counts are illustrative.</p>
 <div class="fig"><div class="chips" id="cx-chips"></div>
-<svg id="sv-context" viewBox="0 0 760 326" role="img" aria-label="Context window budget with and without context engineering"></svg>
+<svg id="sv-context" viewBox="0 0 760 342" role="img" aria-label="Context window budget with and without context engineering"></svg>
 <div class="note" id="cx-note"></div></div>
 </section>
 
@@ -136,7 +136,7 @@ footer{color:var(--muted);font-size:13.5px;margin-top:50px;border-top:1px solid 
 <div class="note" id="ex-note"></div></div>
 </section>
 
-<footer>Sources: <a href="https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system">Google Cloud: choose a design pattern for an agentic AI system</a> · <a href="https://www.anthropic.com/research/building-effective-agents">Anthropic: Building effective agents</a> · <a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: multi-agent research system</a> · <a href="https://anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: context engineering</a> · <a href="https://anthropic.com/engineering/writing-tools-for-agents">Anthropic: writing tools for agents</a> · <a href="https://anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic: harnesses for long-running agents</a> · <a href="https://anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic: evals for agents</a> · <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">OpenAI: a practical guide to building agents</a> · <a href="https://learn.microsoft.com/azure/architecture/ai-ml/guide/ai-agent-design-patterns">Microsoft: AI agent orchestration patterns</a> · <a href="https://cognition.com/blog/dont-build-multi-agents">Cognition: Don't build multi-agents</a> · <a href="https://cognition.com/blog/multi-agents-working">Cognition: what's actually working</a> · <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison: the lethal trifecta</a> · <a href="https://modelcontextprotocol.io/specification/2025-11-25">MCP specification</a> · <a href="https://aaif.io/blog/a2a-v1-0-a-builder-s-guide-part-1-discovery-tasks-and-clients">A2A v1.0 guide (AAIF)</a>. Cost and token figures marked illustrative are not measurements. Companion to the post <a href="https://ylnhari.github.io/blog/posts/2026-11-17-agentic-system-design/">Agentic System Design</a>.</footer>
+<footer>Sources: <a href="https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system">Google Cloud: choose a design pattern for an agentic AI system</a> · <a href="https://www.anthropic.com/research/building-effective-agents">Anthropic: Building effective agents</a> · <a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic: multi-agent research system</a> · <a href="https://anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic: context engineering</a> · <a href="https://anthropic.com/engineering/writing-tools-for-agents">Anthropic: writing tools for agents</a> · <a href="https://anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic: harnesses for long-running agents</a> · <a href="https://anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic: evals for agents</a> · <a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf">OpenAI: a practical guide to building agents</a> · <a href="https://learn.microsoft.com/azure/architecture/ai-ml/guide/ai-agent-design-patterns">Microsoft: AI agent orchestration patterns</a> · <a href="https://cognition.com/blog/dont-build-multi-agents">Cognition: Don't build multi-agents</a> · <a href="https://cognition.com/blog/multi-agents-working">Cognition: what's actually working</a> · <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison: the lethal trifecta</a> · <a href="https://modelcontextprotocol.io/specification/2025-11-25">MCP specification</a> · <a href="https://a2a-protocol.org/latest/specification/">A2A specification</a> · <a href="https://aaif.io/blog/a2a-v1-0-a-builder-s-guide-part-1-discovery-tasks-and-clients">A2A v1.0 guide (AAIF)</a>. Cost and token figures marked illustrative are not measurements. Companion to the post <a href="https://ylnhari.github.io/blog/posts/2026-11-17-agentic-system-design/">Agentic System Design</a>.</footer>
 </main>
 
 <script>
@@ -153,13 +153,13 @@ function edge(p,x1,y1,x2,y2,o){o=o||{};const c=o.c||'muted';const svg=p.ownerSVG
 const KIND={llm:'var(--llm)',cpill:'var(--code)',code:'var(--code)',tool:'var(--tool)',human:'var(--human)',env:'var(--env)',plain:'var(--surface-2)'};
 function node(p,x,y,w,h,s,k,o){o=o||{};const g=S('g',{},p);
   if(k==='code'){S('path',{d:`M${x+w/2},${y} L${x+w},${y+h/2} L${x+w/2},${y+h} L${x},${y+h/2} Z`,style:`fill:${KIND.code}`},g);}
-  else S('rect',{x,y,width:w,height:h,rx:o.rx==null?7:o.rx,style:`fill:${KIND[k]};${o.dash?'stroke:var(--muted);stroke-dasharray:4 3;':''}${o.hl?'stroke:var(--ink);stroke-width:2.5;':''}`},g);
+  else S('rect',{x,y,width:w,height:h,rx:o.rx==null?7:o.rx,style:`fill:${KIND[k]};${k==='plain'?'stroke:var(--line);':''}${o.dash?'stroke:var(--muted);stroke-dasharray:4 3;':''}${o.hl?'stroke:var(--ink);stroke-width:2.5;':''}`},g);
   const fs=o.fs||11.5,lines=String(s).split('\n');lines.forEach((ln,i)=>T(g,x+w/2,y+h/2+fs*.36+(i-(lines.length-1)/2)*(fs+2),ln,{'text-anchor':'middle',style:`font:700 ${fs}px var(--f-sans);fill:${k==='plain'?'var(--ink)':'var(--on)'}`}));return g;}
 function flow(p,pathEl,dur,col,delay){if(RM)return;const c=S('circle',{r:4,visibility:'hidden',style:`fill:var(--${col||'llm'})`},p);S('set',{attributeName:'visibility',to:'visible',begin:(delay||0)/SPEED+'s'},c);const a=S('animateMotion',{dur:(dur/SPEED)+'s',repeatCount:'indefinite',begin:(delay||0)/SPEED+'s'},c);const mp=S('mpath',{},a);if(!pathEl.id)pathEl.id='p'+Math.random().toString(36).slice(2);mp.setAttribute('href','#'+pathEl.id);}
 function seg(box,opts,init,cb){box.innerHTML='';opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='btn';b.textContent=o.l;b.setAttribute('aria-pressed',String(o.v===init));b.onclick=()=>{[...box.children].forEach(c=>c.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');cb(o.v);};box.appendChild(b);});}
-const RENDER=[];function onSpeed(f){RENDER.push(f);}
+const RENDER=[],RESTART=[];function onSpeed(f){RENDER.push(f);}
 document.querySelectorAll('.spd').forEach(sp=>{sp.innerHTML='speed '+[0.5,1,2,3].map(v=>`<button type="button" data-v="${v}" aria-pressed="${v===1}">${v}×</button>`).join('');});
-document.addEventListener('click',e=>{const b=e.target.closest('.spd button');if(!b)return;SPEED=+b.dataset.v;document.querySelectorAll('.spd button').forEach(x=>x.setAttribute('aria-pressed',String(+x.dataset.v===SPEED)));RENDER.forEach(f=>f());});
+document.addEventListener('click',e=>{const b=e.target.closest('.spd button');if(!b)return;SPEED=+b.dataset.v;document.querySelectorAll('.spd button').forEach(x=>x.setAttribute('aria-pressed',String(+x.dataset.v===SPEED)));RENDER.forEach(f=>f());RESTART.forEach(f=>f());});
 
 /* ---------- 01 ladder ---------- */
 (function(){const svg=$('#sv-ladder');defs(svg);
@@ -182,20 +182,22 @@ document.addEventListener('click',e=>{const b=e.target.closest('.spd button');if
     ['model','Next turn: the model sees the observation and decides again. Most tasks go round several times.'],
     ['exit','The loop ends on an exit condition: a final answer, a structured output, an error, a handoff to another agent or a person, or a maximum number of turns.']];
   function draw(){clear(svg);defs(svg);const on=k>=0?ST[k][0]:'';
-    const P={context:[40,140,150,70],model:[300,40,170,70],tool:[560,140,160,70],env:[560,260,160,62],obs:[300,240,170,70],exit:[300,140,170,56]};
+    const P={context:[20,140,174,70],model:[300,40,170,70],tool:[560,140,160,70],env:[560,260,160,62],obs:[300,240,170,70],exit:[300,140,170,56]};
     node(svg,...P.context,'Context\ninstructions · task · history','plain',{hl:on==='context',fs:12});
     node(svg,...P.model,'Model\ndecide: answer or tool?','llm',{hl:on==='model',fs:12.5});
     node(svg,...P.tool,'Tool call\nsearch_orders(...)','tool',{hl:on==='tool',fs:12});
     node(svg,...P.env,'Environment\nDB · API · browser · files','env',{hl:on==='env',fs:11.5});
     node(svg,...P.obs,'Observation\nresult appended','plain',{hl:on==='obs',fs:12});
-    node(svg,...P.exit,'Exit?\nanswer · max turns · handoff','human',{hl:on==='exit',fs:11.5});
-    const e1=edge(svg,190,160,298,80,{c:'llm'}),e2=edge(svg,470,80,600,138,{c:'llm'}),e3=edge(svg,640,210,640,258,{c:'tool'}),e4=edge(svg,558,290,472,280,{c:'env'}),e5=edge(svg,300,270,190,195,{c:'muted'}),e6=edge(svg,385,110,385,138,{c:'human',dash:1});
-    lbl(svg,520,100,'tool call',{fs:11,b:1,c:'var(--llm)'});lbl(svg,230,258,'next turn',{fs:11,b:1});lbl(svg,394,130,'stop?',{fs:11,b:1,c:'var(--human)'});
-    [[150,32,'GUARDRAIL: input check'],[660,118,'GUARDRAIL: tool check'],[460,348,'GUARDRAIL: output check']].forEach(([x,y,s])=>lbl(svg,x,y,s,{fs:10.5,b:1,mono:1,c:'var(--bad)',a:'middle'}));
+    node(svg,...P.exit,'Exit?\nanswer · max turns · error','human',{hl:on==='exit',fs:11.5});
+    const e1=edge(svg,194,160,298,80,{c:'llm'}),e2=edge(svg,470,80,600,138,{c:'llm'}),e3=edge(svg,640,210,640,258,{c:'tool'}),e4=edge(svg,558,290,472,280,{c:'env'}),e5=edge(svg,300,270,194,198,{c:'muted'}),e6=edge(svg,385,110,385,138,{c:'human',dash:1});
+    lbl(svg,520,100,'tool call',{fs:11,b:1,c:'var(--llm)'});lbl(svg,296,296,'next turn',{fs:11,b:1,a:'end'});lbl(svg,394,130,'stop?',{fs:11,b:1,c:'var(--human)'});
+    [[200,100,'GUARDRAIL: input check'],[660,118,'GUARDRAIL: tool check'],[385,222,'GUARDRAIL: output check']].forEach(([x,y,s])=>lbl(svg,x,y,s,{fs:10.5,b:1,mono:1,c:'var(--bad)',a:'middle'}));
     [e1,e2,e3,e4,e5].forEach((e,i)=>flow(svg,e,2.5,'llm',i*.5));
     $('#lp-note').innerHTML=k<0?'<b class="h">MODEL + TOOLS + INSTRUCTIONS, IN A LOOP</b>OpenAI\'s guide names the three parts; Anthropic calls the result an LLM using tools in a loop based on environmental feedback. Press Play to follow one task.':`<b class="h">${k+1}/${ST.length}</b>${ST[k][1]}`;}
   function stop(){clearInterval(timer);timer=null;$('#lp-play').textContent='Play';}
-  $('#lp-play').onclick=()=>{if(timer){stop();return;}k=0;draw();$('#lp-play').textContent='Pause';timer=setInterval(()=>{k++;if(k>=ST.length){k=-1;draw();stop();return;}draw();},(RM?400:2200)/SPEED);};
+  const tick=()=>{k++;if(k>=ST.length){k=-1;draw();stop();return;}draw();};
+  $('#lp-play').onclick=()=>{if(timer){stop();return;}k=0;draw();$('#lp-play').textContent='Pause';timer=setInterval(tick,(RM?400:2200)/SPEED);};
+  RESTART.push(()=>{if(timer){clearInterval(timer);timer=setInterval(tick,(RM?400:2200)/SPEED);}});
   onSpeed(draw);draw();
 })();
 
@@ -205,25 +207,26 @@ const PATTERNS=[
   what:'Fixed steps, each consuming the previous output. Code can check the output between steps (a gate) and stop early.',use:'The task splits cleanly into known steps: extract → clean → load; outline → check → write.',avoid:'Steps must change, be skipped or loop back at runtime.',watch:'An early mistake flows through every later step; one slow step slows the whole chain.'},
  {k:'router',n:'Router',by:'code',cost:2,draw:g=>{node(g,8,58,58,34,'classify','llm',{fs:10.5});[24,75,126].forEach((y,i)=>{node(g,150,y-12,80,26,['refunds','tech','general'][i],'llm',{fs:10.5});edge(g,66,75,148,y+1);});},
   what:'One call (or a classic classifier) sorts the input; code then sends it down a dedicated path.',use:'Inputs fall into distinct categories that are easy to tell apart; also easy queries to a small model, hard ones to a big model.',avoid:'The category is only discovered while working (use handoffs) or the classes blur together.',watch:'A misroute is silent. Log the route and evaluate the classifier on its own.'},
- {k:'parallel',n:'Parallel (sectioning)',by:'code',cost:3,draw:g=>{node(g,8,60,34,30,'in','plain');[22,75,128].forEach((y,i)=>{node(g,82,y-13,62,26,['sentiment','topic','urgency'][i],'llm',{fs:10});edge(g,42,75,80,y);edge(g,144,y,180,75);});node(g,180,57,58,36,'merge','code',{fs:10});},
+ {k:'parallel',n:'Parallel (sectioning)',by:'code',cost:3,draw:g=>{node(g,8,60,34,30,'in','plain');[22,75,128].forEach((y,i)=>{node(g,82,y-13,62,26,['sentiment','topic','urgency'][i],'llm',{fs:10});edge(g,42,75,80,y);edge(g,144,y,174,75+(y-75)*.3);});node(g,174,57,58,36,'merge','code',{fs:10});},
   what:'Independent subtasks run at the same time; code merges the results.',use:'Subtasks do not depend on each other and latency matters.',avoid:'Agents build on each other\'s work, or there is no clear way to reconcile conflicting outputs.',watch:'Tokens multiply with the number of branches; merging conflicting answers is the hard part.'},
- {k:'vote',n:'Voting',by:'code',cost:3,draw:g=>{node(g,8,60,34,30,'in','plain');[22,75,128].forEach((y,i)=>{node(g,82,y-13,62,26,'same task','llm',{fs:10});edge(g,42,75,80,y);edge(g,144,y,180,75);});node(g,180,57,58,36,'vote','code',{fs:10.5});},
+ {k:'vote',n:'Voting',by:'code',cost:3,draw:g=>{node(g,8,60,34,30,'in','plain');[22,75,128].forEach((y,i)=>{node(g,82,y-13,62,26,'same task','llm',{fs:10});edge(g,42,75,80,y);edge(g,144,y,174,75+(y-75)*.3);});node(g,174,57,58,36,'vote','code',{fs:10.5});},
   what:'The same task runs several times (or with several prompts) and the answers are combined by majority or threshold.',use:'You need confidence more than speed: flagging vulnerable code, moderation with a vote threshold.',avoid:'Cost is tight, or answers cannot be compared.',watch:'Correlated mistakes: five copies of the same model can be wrong together.'},
- {k:'orch',n:'Orchestrator–workers',by:'model',cost:4,draw:g=>{node(g,78,8,84,30,'orchestrator','llm',{fs:10.5});[22,92,162].forEach((x,i)=>{node(g,x,96,58,28,'worker','llm',{fs:10,dash:i===2});edge(g,120,38,x+29,94,{c:'llm'});edge(g,x+29,96,120+(i-1)*14,40,{c:'muted',dash:1,noarr:0,bend:i===1?18:0});});lbl(g,120,142,'subtasks chosen at runtime',{fs:10,a:'middle'});},
+ {k:'orch',n:'Orchestrator–workers',by:'model',cost:4,draw:g=>{node(g,78,8,84,30,'orchestrator','llm',{fs:10.5});[22,92,162].forEach((x,i)=>{node(g,x,96,58,28,'worker','llm',{fs:10,dash:i===2});edge(g,120,38,x+29,94,{c:'llm'});edge(g,x+41,96,132+(i-1)*14,40,{c:'muted',dash:1,bend:i===1?-10:0});});lbl(g,120,142,'subtasks chosen at runtime',{fs:10,a:'middle'});},
   what:'A lead model breaks the task down at runtime, hands pieces to workers, and synthesises what they return. Workers are often agents with their own context window.',use:'You cannot predict the subtasks in advance: research across many sources, a change spanning many files.',avoid:'The split is fixed (use parallel) or the workers would need to share lots of state.',watch:'Vague delegation causes duplicate work and gaps; tell each worker its goal, output format, tools and boundaries.'},
  {k:'hier',n:'Hierarchical',by:'model',cost:5,draw:g=>{node(g,90,4,60,26,'root','llm',{fs:10.5});[[40,'lead A'],[140,'lead B']].forEach(([x,s])=>{node(g,x,58,60,24,s,'llm',{fs:10});edge(g,120,30,x+30,56,{c:'llm'});[x-14,x+34].forEach(wx=>{node(g,wx,112,40,22,'work','llm',{fs:9.5});edge(g,x+30,82,wx+20,110,{c:'llm'});});});},
   what:'Orchestrator–workers applied recursively: a root delegates to leads, which delegate again, until workers execute.',use:'Large, ambiguous, open-ended problems that need planning at several levels.',avoid:'Anything smaller; the structure itself adds calls, latency and failure points.',watch:'Cost grows with every level, and errors at the top cascade down.'},
- {k:'evalopt',n:'Evaluator–optimizer',by:'model',cost:3,draw:g=>{node(g,14,52,80,34,'generator','llm',{fs:11});node(g,146,52,80,34,'critic','llm',{fs:11});edge(g,94,62,144,62,{c:'llm',bend:-14});edge(g,146,78,96,78,{c:'bad',bend:-14});lbl(g,120,40,'draft',{fs:10,a:'middle'});lbl(g,120,108,'feedback',{fs:10,a:'middle',c:'var(--bad)'});edge(g,186,86,186,120,{c:'ok'});lbl(g,190,134,'approved',{fs:10,c:'var(--ok)',b:1});},
+ {k:'evalopt',n:'Evaluator–optimizer',by:'model',cost:3,draw:g=>{node(g,14,52,80,34,'generator','llm',{fs:11});node(g,146,52,80,34,'critic','llm',{fs:11});edge(g,94,62,144,62,{c:'llm',bend:14});edge(g,146,78,96,78,{c:'bad',bend:14});lbl(g,120,48,'draft',{fs:10,a:'middle'});lbl(g,120,108,'feedback',{fs:10,a:'middle',c:'var(--bad)'});edge(g,186,86,186,120,{c:'ok'});lbl(g,190,134,'approved',{fs:10,c:'var(--ok)',b:1});},
   what:'One model produces, another checks against explicit criteria and either approves or sends feedback for another round.',use:'Clear criteria exist and a revision measurably helps: code that must pass tests or a security review, a translation critiqued for nuance.',avoid:'Extra calls and latency are not acceptable, or "good" cannot be written down.',watch:'Cap the rounds and define what happens at the cap (ship with a warning, or ask a person).'},
- {k:'loop',n:'Loop / refinement',by:'code',cost:3,draw:g=>{node(g,10,54,70,34,'agent(s)','llm',{fs:10.5});node(g,112,48,84,46,'good\nenough?','code',{fs:9.5});edge(g,80,71,110,71);edge(g,154,94,45,90,{c:'muted',bend:-30});lbl(g,112,136,'no: repeat · max N rounds',{fs:10,a:'middle'});edge(g,196,71,226,71,{c:'ok'});lbl(g,211,62,'yes',{fs:9.5,a:'middle',c:'var(--ok)',b:1});},
+ {k:'loop',n:'Loop / refinement',by:'code',cost:3,draw:g=>{node(g,10,54,70,34,'agent(s)','llm',{fs:10.5});node(g,112,48,84,46,'good\nenough?','code',{fs:9.5});edge(g,80,71,110,71);edge(g,154,94,45,90,{c:'muted',bend:22});lbl(g,112,138,'no: repeat · max N rounds',{fs:10,a:'middle'});edge(g,196,71,226,71,{c:'ok'});lbl(g,211,62,'yes',{fs:9.5,a:'middle',c:'var(--ok)',b:1});},
   what:'A fixed sequence repeats, improving a result kept in shared state, until a threshold or an iteration limit is reached.',use:'Progressive polishing: debugging until tests pass, revising a long document.',avoid:'One pass is good enough, or no reliable exit condition exists.',watch:'Infinite loops and runaway cost; always set a maximum.'},
- {k:'react',n:'Single agent (ReAct)',by:'model',cost:3,draw:g=>{node(g,70,10,100,32,'think → act','llm',{fs:11});[30,120,190].forEach((x,i)=>{node(g,x-20,98,58,26,['search','db','email'][i],'tool',{fs:10});edge(g,120,42,x+9,96,{c:'llm'});});edge(g,48,96,96,44,{c:'muted',dash:1});lbl(g,120,142,'observe, then decide again',{fs:10,a:'middle'});},
+ {k:'react',n:'Single agent (ReAct)',by:'model',cost:3,draw:g=>{node(g,70,10,100,32,'think → act','llm',{fs:11});[30,120,190].forEach((x,i)=>{node(g,x-20,98,58,26,['search','db','email'][i],'tool',{fs:10});edge(g,120,42,x+9,96,{c:'llm'});});edge(g,58,96,104,44,{c:'muted',dash:1,bend:-12});lbl(g,120,142,'observe, then decide again',{fs:10,a:'middle'});},
   what:'One model loops: reason, call a tool, read the observation, repeat, until it answers or hits a turn limit.',use:'Open-ended tasks that need adapting to what the tools return. The recommended default once a workflow is not enough.',avoid:'A fixed workflow or a single call would do.',watch:'Too many or overlapping tools cause wrong choices; one bad tool result can steer the whole run.'},
  {k:'handoff',n:'Handoff',by:'model',cost:3,draw:g=>{node(g,6,56,62,32,'triage','llm',{fs:10.5});node(g,90,56,62,32,'billing','llm',{fs:10.5});node(g,174,56,62,32,'tech','llm',{fs:10.5});edge(g,68,72,88,72,{c:'llm'});edge(g,152,72,172,72,{c:'llm',dash:1});lbl(g,120,112,'one agent active at a time',{fs:10,a:'middle'});lbl(g,120,128,'control moves, with the conversation',{fs:10,a:'middle'});},
   what:'The active agent decides to transfer the conversation, one way, to a peer better suited; the peer takes over the state.',use:'The right specialist only becomes clear during the conversation; several domains, one at a time.',avoid:'The right agent is obvious from the input (route instead), or work must run concurrently.',watch:'Handoff ping-pong; cap transfers and log why each happened.'},
- {k:'swarm',n:'Group chat / swarm',by:'model',cost:5,draw:g=>{const P=[[120,18],[196,68],[160,122],[80,122],[44,68]];P.forEach(([x,y],i)=>P.forEach(([x2,y2],j)=>{if(j>i)S('line',{x1:x,y1:y,x2,y2,style:'stroke:var(--line);stroke-width:1.2'},g);}));P.forEach(([x,y],i)=>i===4?node(g,x-34,y-16,68,32,'manager\nor dispatch','code',{fs:8.5}):node(g,x-24,y-12,48,24,['market','eng','finance','design'][i],'llm',{fs:9.5}));},
+ {k:'swarm',n:'Group chat / swarm',by:'model',cost:5,draw:g=>{const P=[[120,18],[196,68],[160,122],[80,122],[54,68]];P.forEach(([x,y],i)=>P.forEach(([x2,y2],j)=>{if(j>i)S('line',{x1:x,y1:y,x2,y2,style:'stroke:var(--line);stroke-width:1.2'},g);}));P.forEach(([x,y],i)=>i===4?node(g,x-40,y-18,80,36,'manager or\ndispatcher','code',{fs:8}):node(g,x-24,y-12,48,24,['market','eng','finance','design'][i],'llm',{fs:9.5}));},
   what:'Several agents build on each other with no fixed path. In Microsoft\'s group chat a manager picks who speaks next; in Google\'s swarm agents hand off peer-to-peer with no central coordinator (a dispatcher only routes the first request).',use:'Debate-style problems with real trade-offs, where cost is secondary. Keep agents mostly read-only.',avoid:'You cannot define an exit condition, or cost and latency must stay low. Microsoft suggests three or fewer agents.',watch:'The most expensive pattern; loops and failure to converge.'},
- {k:'hitl',n:'Human in the loop',by:'code',cost:2,draw:g=>{node(g,8,58,58,32,'agent','llm',{fs:11});node(g,92,58,58,32,'approve?','human',{fs:10.5});node(g,176,58,58,32,'act','tool',{fs:11});edge(g,66,74,90,74,{c:'llm'});edge(g,150,74,174,74,{c:'ok'});edge(g,121,90,40,92,{c:'bad',bend:-22});lbl(g,80,128,'reject / correct',{fs:10,a:'middle',c:'var(--bad)'});},
+ {k:'writer',hide:1,n:'One writer + helpers',by:'model',cost:3,draw:g=>{node(g,70,52,100,34,'writer agent','llm',{fs:11});[[6,'search'],[180,'review']].forEach(([x,n])=>{node(g,x,8,56,26,n,'llm',{fs:10,dash:1});edge(g,x+28+(x<100?20:-20),34,x<100?84:156,50,{c:'muted',dash:1});});node(g,90,118,60,24,'edit','tool',{fs:10});edge(g,120,86,120,116,{c:'tool'});lbl(g,232,134,'helpers only read',{fs:10,a:'end'});}},
+ {k:'hitl',n:'Human in the loop',by:'code',cost:2,draw:g=>{node(g,8,58,58,32,'agent','llm',{fs:11});node(g,92,58,58,32,'approve?','human',{fs:10.5});node(g,176,58,58,32,'act','tool',{fs:11});edge(g,66,74,90,74,{c:'llm'});edge(g,150,74,174,74,{c:'ok'});edge(g,121,92,40,92,{c:'bad',bend:22});lbl(g,80,128,'reject / correct',{fs:10,a:'middle',c:'var(--bad)'});},
   what:'At predefined checkpoints the run pauses and a person approves, corrects or supplies input. Combines with any other pattern.',use:'High-stakes or irreversible actions (payments, large refunds, cancellations) and subjective sign-off.',avoid:'Low-risk steps; gating everything trains people to click approve.',watch:'The run must persist its state while it waits; scope gates to the risky tools only.'}];
 function drawMini(g,p,w){const tag=p.by==='model'?'MODEL':'CODE';S('rect',{x:0,y:0,width:240,height:190,rx:12,style:'fill:var(--surface);stroke:var(--line)'},g);
   T(g,12,22,p.n,{style:'font:800 13.5px var(--f-sans);fill:var(--ink)'});
@@ -231,7 +234,7 @@ function drawMini(g,p,w){const tag=p.by==='model'?'MODEL':'CODE';S('rect',{x:0,y
   const c=S('g',{transform:'translate(0,44)'},g);p.draw(c);
   lbl(g,226,42,'cost',{fs:9.5,a:'end',mono:1});for(let i=0;i<5;i++)S('circle',{cx:176+i*9,cy:24,r:3.4,style:`fill:${i<p.cost?'var(--bad)':'var(--line)'}`},g);}
 (function(){const svg=$('#sv-patterns');let sel='react';
-  function draw(){clear(svg);defs(svg);PATTERNS.forEach((p,i)=>{const x=(i%3)*260,y=Math.floor(i/3)*206+8;const g=S('g',{transform:`translate(${x},${y})`,style:'cursor:pointer'},svg);drawMini(g,p);
+  function draw(){clear(svg);defs(svg);PATTERNS.filter(q=>!q.hide).forEach((p,i)=>{const x=(i%3)*260,y=Math.floor(i/3)*206+8;const g=S('g',{transform:`translate(${x},${y})`,style:'cursor:pointer'},svg);drawMini(g,p);
       if(p.k===sel)S('rect',{x:0,y:0,width:240,height:190,rx:12,style:'fill:none;stroke:var(--llm);stroke-width:3'},g);g.addEventListener('click',()=>{sel=p.k;draw();});});
     lbl(svg,0,850,'cost dots: relative number of model calls and tokens, illustrative',{fs:10.5,mono:1});
     const p=PATTERNS.find(q=>q.k===sel);$('#pt-note').innerHTML=`<b class="h">${p.n.toUpperCase()}</b>${p.what}<ul><li><b>Use when:</b> ${p.use}</li><li><b>Avoid when:</b> ${p.avoid}</li><li><b>Watch for:</b> ${p.watch}</li></ul>`;}
@@ -240,40 +243,40 @@ function drawMini(g,p,w){const tag=p.by==='model'?'MODEL':'CODE';S('rect',{x:0,y
 
 /* ---------- 04 rosetta ---------- */
 (function(){const svg=$('#sv-rosetta');const C=['Pattern','Anthropic','Google Cloud','Microsoft','OpenAI'],X=[0,160,318,472,618];
-  const R=[['Sequential chain','prompt chaining','sequential','sequential','—'],['Router','routing','—','dispatcher','—'],['Parallel / voting','parallelization','parallel','concurrent','—'],['Orchestrator–workers','orchestrator-workers','coordinator','magentic','manager'],['Hierarchical','(research system)','hierarchical decomp.','(magentic, closest)','—'],['Evaluator–optimizer','evaluator-optimizer','review and critique','maker-checker','—'],['Loop / refinement','(evaluator loop)','loop · refinement','maker-checker','run loop + exit'],['Single agent','autonomous agent','single-agent · ReAct','single agent + tools','single-agent system'],['Handoff','—','swarm (handoffs)','handoff','handoffs'],['Group chat / swarm','—','swarm (no manager)','group chat (manager)','—'],['Human in the loop','checkpoints','human-in-the-loop','HITL','human intervention']];
+  const R=[['Sequential chain','prompt chaining','sequential','sequential','—'],['Router','routing','—','dispatcher','—'],['Parallel / voting','parallelization','parallel','concurrent','—'],['Orchestrator–workers','orchestrator-workers','coordinator','magentic','manager'],['Hierarchical','—','hierarchical decomp.','(magentic, closest)','—'],['Evaluator–optimizer','evaluator-optimizer','review and critique','maker-checker','—'],['Loop / refinement','(evaluator loop)','loop · refinement','maker-checker','—'],['Single agent','autonomous agent','single-agent · ReAct','single agent + tools','single-agent system'],['Handoff','—','swarm (handoffs)','handoff','handoffs'],['Group chat / swarm','—','swarm (no manager)','group chat (manager)','—'],['Human in the loop','checkpoints','human-in-the-loop','HITL','human intervention']];
   C.forEach((c,i)=>T(svg,X[i]+8,22,c,{style:`font:800 12.5px var(--f-sans);fill:${i?'var(--llm)':'var(--ink)'}`}));
   R.forEach((r,j)=>{const y=34+j*38;S('rect',{x:0,y,width:760,height:34,rx:6,style:`fill:${j%2?'var(--surface)':'var(--surface-2)'}`},svg);
     r.forEach((s,i)=>T(svg,X[i]+8,y+21,s,{style:`font:${i?500:700} ${i?11:12.5}px ${i?'var(--f-mono)':'var(--f-sans)'};fill:${s==='—'?'var(--muted)':'var(--ink)'}`}));});
-  lbl(svg,0,452,'"—": no named equivalent in that guide. Mappings are approximate: Microsoft\'s magentic keeps a task ledger, Google\'s coordinator',{fs:10.5});lbl(svg,0,467,'routes with a model, Microsoft\'s dispatcher is its simpler alternative to handoff, and OpenAI\'s manager calls other agents as tools.',{fs:10.5});
+  lbl(svg,0,462,'"—": no named equivalent in that guide. Mappings are approximate: Microsoft\'s magentic keeps a task ledger, Google\'s coordinator',{fs:10.5});lbl(svg,0,477,'routes with a model, Microsoft\'s dispatcher is its simpler alternative to handoff, and OpenAI\'s manager calls other agents as tools.',{fs:10.5});
 })();
 
 /* ---------- 05 read vs write ---------- */
 (function(){const svg=$('#sv-readwrite');defs(svg);
   [[0,'PARALLEL READERS: works','var(--ok)'],[390,'PARALLEL WRITERS: fragile','var(--bad)']].forEach(([x,t,c])=>{S('rect',{x,y:0,width:370,height:330,rx:12,style:`fill:var(--surface-2);stroke:${c};stroke-width:2`},svg);T(svg,x+16,26,t,{style:`font:800 13px var(--f-mono);fill:${c}`});});
-  node(svg,120,46,130,34,'lead agent','llm');[30,140,250].forEach((x,i)=>{node(svg,x,126,90,42,'search '+(i+1)+'\nread-only','llm',{fs:11});edge(svg,185,80,x+45,124,{c:'llm'});edge(svg,x+45,168,185,232,{c:'muted',dash:1});});
+  node(svg,120,46,130,34,'lead agent','llm');[30,140,250].forEach((x,i)=>{node(svg,x,126,90,42,'search '+(i+1)+'\nread-only','llm',{fs:11});edge(svg,185,80,x+45,124,{c:'llm'});edge(svg,x+45,168,150+i*35,232,{c:'muted',dash:1});});
   node(svg,120,234,130,34,'one writer','human');lbl(svg,185,292,'condensed findings in, one author out',{a:'middle',fs:11,b:1,c:'var(--ink)'});lbl(svg,185,310,'Anthropic Research · Claude Code subagents',{a:'middle',fs:10.5});
-  node(svg,510,46,130,34,'manager','llm');[420,530,640].forEach((x,i)=>{node(svg,x,126,90,42,['background','bird','pipes'][i]+'\nwrites code','llm',{fs:11});edge(svg,575,80,x+45,124,{c:'llm'});});
-  S('path',{d:'M465,196 L575,234 L685,196',style:'fill:none;stroke:var(--bad);stroke-width:2;stroke-dasharray:5 4'},svg);node(svg,510,234,130,34,'merge: conflicts','plain');
-  lbl(svg,575,292,'each write hides a style or API choice',{a:'middle',fs:11,b:1,c:'var(--ink)'});lbl(svg,575,310,'Cognition\'s Flappy Bird example',{a:'middle',fs:10.5});
+  node(svg,510,46,130,34,'manager','llm');[[426,'background + pipes'],[600,'bird']].forEach(([x,n])=>{node(svg,x,126,x<500?132:110,42,n+'\nwrites code','llm',{fs:10.5});edge(svg,575,80,x+(x<500?66:55),124,{c:'llm'});});
+  edge(svg,492,168,560,232,{c:'bad',dash:1});edge(svg,655,168,590,232,{c:'bad',dash:1});S('rect',{x:510,y:234,width:130,height:34,rx:7,style:'fill:var(--surface);stroke:var(--bad);stroke-width:2'},svg);T(svg,575,256,'merge: conflicts',{'text-anchor':'middle',style:'font:700 11.5px var(--f-sans);fill:var(--bad)'});
+  lbl(svg,575,292,'each write hides a style or API choice',{a:'middle',fs:11,b:1,c:'var(--ink)'});lbl(svg,575,310,'after Cognition\'s Flappy Bird example (two writers)',{a:'middle',fs:10.5});
   lbl(svg,380,362,'Parallelise reading and exploring. Keep the writes single-threaded.',{a:'middle',fs:14,b:1,c:'var(--ink)'});
 })();
 
 /* ---------- 06 context budget ---------- */
 (function(){const svg=$('#sv-context');const TECH=[['jit','Just-in-time retrieval'],['clear','Clear old tool results'],['compact','Compaction'],['notes','Notes in a file'],['sub','Sub-agents']];const on=new Set();
   const box=$('#cx-chips');TECH.forEach(([k,n])=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=n;b.setAttribute('aria-pressed','false');b.onclick=()=>{on.has(k)?on.delete(k):on.add(k);b.setAttribute('aria-pressed',String(on.has(k)));draw();};box.appendChild(b);});
-  const NOTE={jit:'Keep references (paths, queries, links) and load content with tools only when needed, instead of pasting every document up front.',clear:'Tool outputs already acted on are rarely needed again; dropping them is the lightest form of compaction.',compact:'Near the limit, summarise the history and restart from the summary, keeping decisions, open bugs and key details.',notes:'The agent writes progress to a file (a to-do list, NOTES.md) and reloads it later, so it survives a context reset.',sub:'Exploration happens in sub-agents with clean windows; each returns a condensed summary, often 1,000–2,000 tokens.'};
+  const NOTE={jit:'Keep references (paths, queries, links) and load content with tools only when needed, instead of pasting every document up front.',clear:'Tool outputs already acted on are rarely needed again; dropping them is one of the safest, lightest forms of compaction.',compact:'Near the limit, summarise the history and restart from the summary, keeping decisions, open bugs and key details.',notes:'The agent writes progress to a file (a to-do list, NOTES.md) and reloads it later, so it survives a context reset.',sub:'Exploration happens in sub-agents with clean windows; each returns a condensed summary, often 1,000–2,000 tokens.'};
   function draw(){clear(svg);const L=200,sc=600/320;
     const mk=a=>{const v=[['system + tools',14,'var(--code)'],['retrieved docs',a.has('jit')?18:90,'var(--env)'],['tool results',a.has('clear')?20:120,'var(--tool)'],['conversation',a.has('compact')?16:70,'var(--llm)'],['exploration',a.has('sub')?6:60,'var(--human)']];if(a.has('notes'))v[3][1]=Math.max(10,v[3][1]-8);return v;};
     const bar=(seg,y,name)=>{let x=110;lbl(svg,102,y+24,name,{a:'end',b:1,fs:11.5,c:'var(--ink)'});seg.forEach(([n,v,c])=>{const w=v*sc*0.84;S('rect',{x,y,width:Math.max(w-1,1),height:38,rx:3,style:`fill:${c}`},svg);if(w>80)T(svg,x+w/2,y+24,n,{'text-anchor':'middle',style:'font:700 11px var(--f-sans);fill:var(--on)'});x+=w;});return seg.reduce((a,s)=>a+s[1],0);};
-    lbl(svg,20,22,'TOKENS IN THE CONTEXT WINDOW AFTER A LONG RUN (thousands, illustrative)',{b:1,mono:1,fs:11});
+    lbl(svg,20,20,'TOKENS IN CONTEXT AFTER A LONG RUN (k, illustrative)',{b:1,mono:1,fs:11});
     const t0=bar(mk(new Set()),34,'naive'),tot=bar(mk(on),82,'engineered');
-    const lx=110+L*sc*0.84;S('line',{x1:lx,x2:lx,y1:28,y2:126,style:'stroke:var(--bad);stroke-width:2.5'},svg);lbl(svg,lx+6,138,'← window limit 200k',{b:1,c:'var(--bad)',fs:11.5});
-    lbl(svg,110,138,`naive ${t0}k: over the limit · engineered ${tot}k${tot>L?': still over':': fits'}`,{b:1,c:tot>L?'var(--bad)':'var(--ok)',fs:12});
-    [['system + tools','var(--code)'],['retrieved docs','var(--env)'],['tool results','var(--tool)'],['conversation','var(--llm)'],['exploration','var(--human)']].forEach(([n,c],k)=>{S('rect',{x:110+k*124,y:150,width:11,height:11,rx:2,style:`fill:${c}`},svg);lbl(svg,126+k*124,160,n,{fs:10.5});});
-    lbl(svg,20,196,'RECALL AS THE WINDOW FILLS ("context rot", shape illustrative)',{b:1,mono:1,fs:11});
-    const pts=[...Array(41)].map((_,i)=>{const f=i/40;return [20+f*600,300-80*(1-.55*f*f)];});S('path',{d:'M'+pts.map(p=>p.join(',')).join(' L'),style:'fill:none;stroke:var(--llm);stroke-width:2.5'},svg);
-    const fx=20+Math.min(tot,320)/320*600,fy=300-80*(1-.55*Math.pow(Math.min(tot,320)/320,2));S('circle',{cx:fx,cy:fy,r:6,style:`fill:${tot>L?'var(--bad)':'var(--ok)'}`},svg);
-    lbl(svg,20,318,'empty',{fs:10.5,mono:1});lbl(svg,620,318,'full',{fs:10.5,mono:1,a:'end'});
+    const lx=110+L*sc*0.84;S('line',{x1:lx,x2:lx,y1:30,y2:126,style:'stroke:var(--bad);stroke-width:2.5'},svg);lbl(svg,lx+6,156,'↑ window limit 200k',{b:1,c:'var(--bad)',fs:11.5});
+    lbl(svg,110,140,`naive ${t0}k: over the limit`,{b:1,c:'var(--bad)',fs:12});lbl(svg,110,156,`engineered ${tot}k${tot>L?': still over':': fits'}`,{b:1,c:tot>L?'var(--bad)':'var(--ok)',fs:12});
+    [['system + tools','var(--code)'],['retrieved docs','var(--env)'],['tool results','var(--tool)'],['conversation','var(--llm)'],['exploration','var(--human)']].forEach(([n,c],k)=>{S('rect',{x:110+k*124,y:168,width:11,height:11,rx:2,style:`fill:${c}`},svg);lbl(svg,126+k*124,178,n,{fs:10.5});});
+    lbl(svg,20,212,'RECALL AS THE WINDOW FILLS ("context rot", shape illustrative)',{b:1,mono:1,fs:11});
+    const pts=[...Array(41)].map((_,i)=>{const f=i/40;return [20+f*600,316-80*(1-.55*f*f)];});S('path',{d:'M'+pts.map(p=>p.join(',')).join(' L'),style:'fill:none;stroke:var(--llm);stroke-width:2.5'},svg);
+    const fx=20+Math.min(tot,320)/320*600,fy=316-80*(1-.55*Math.pow(Math.min(tot,320)/320,2));S('circle',{cx:fx,cy:fy,r:6,style:`fill:${tot>L?'var(--bad)':'var(--ok)'}`},svg);lbl(svg,fx+10,fy-10,on.size?'engineered run':'naive run',{fs:11,b:1,c:tot>L?'var(--bad)':'var(--ok)'});
+    lbl(svg,20,334,'empty',{fs:10.5,mono:1});lbl(svg,620,334,'full',{fs:10.5,mono:1,a:'end'});
     $('#cx-note').innerHTML=on.size?[...on].map(k=>`<b>${TECH.find(t=>t[0]===k)[1]}:</b> ${NOTE[k]}`).join('<br>'):'<b class="h">NO TECHNIQUES ON</b>Every document, tool result and exploration step stays in the window. Turn the techniques on one by one.';}
   draw();
 })();
@@ -302,7 +305,7 @@ function drawMini(g,p,w){const tag=p.by==='model'?'MODEL':'CODE';S('rect',{x:0,y
   lbl(svg,330,26,'TOOL RISK TIERS (rating: OpenAI guide; actions illustrative)',{b:1,mono:1,fs:11});
   [['low','read-only lookups','run freely','var(--ok)'],['medium','reversible writes','log + validate','var(--human)'],['high','irreversible · money · sending','human approval','var(--bad)']].forEach(([t,d,a,c],i)=>{const y=40+i*50;S('rect',{x:330,y,width:410,height:42,rx:8,style:`fill:var(--surface-2);stroke:${c};stroke-width:2`},svg);T(svg,344,y+26,t,{style:`font:800 12.5px var(--f-mono);fill:${c}`});lbl(svg,420,y+26,d,{fs:12,c:'var(--ink)',b:1});lbl(svg,728,y+26,a,{fs:11.5,a:'end'});});
   lbl(svg,330,214,'GUARDRAILS AT EVERY EDGE, LAYERED',{b:1,mono:1,fs:11});
-  const L=['input: relevance, jailbreak, PII','tool call: allow-list, args, risk tier','tool result: treat as untrusted','output: PII, moderation, format'];
+  const L=['input: relevance, jailbreak','tool call: allow-list, args, risk tier','tool result: treat as untrusted','output: PII, moderation, format'];
   L.forEach((s,i)=>{const x=330+i*104;node(svg,x,226,96,58,s.split(': ')[0],'plain',{fs:12});lbl(svg,x+48,302,s.split(': ')[1].split(', ')[0],{a:'middle',fs:10});lbl(svg,x+48,316,(s.split(': ')[1].split(', ').slice(1).join(', ')),{a:'middle',fs:10});if(i<3)edge(svg,x+96,255,x+104,255);});
   lbl(svg,330,346,'No single check is enough. Add authentication, least privilege',{fs:11.5,c:'var(--ink)'});lbl(svg,330,364,'and audit logs, as for any software.',{fs:11.5,c:'var(--ink)'});
 })();
@@ -312,16 +315,16 @@ function drawMini(g,p,w){const tag=p.by==='model'?'MODEL':'CODE';S('rect',{x:0,y
   S('rect',{x:0,y:0,width:370,height:360,rx:12,style:'fill:var(--surface-2)'},svg);T(svg,16,26,'MCP · agent ↔ tools and data',{style:'font:800 13px var(--f-mono);fill:var(--tool)'});
   S('rect',{x:16,y:42,width:338,height:100,rx:10,style:'fill:var(--surface);stroke:var(--line)'},svg);lbl(svg,28,62,'HOST (your agent app)',{b:1,fs:11,mono:1});
   [0,1,2].forEach(i=>{node(svg,30+i*108,76,96,30,'client '+(i+1),'plain',{fs:11});node(svg,30+i*108,190,96,40,['files + git','database','SaaS API'][i],'tool',{fs:11});edge(svg,78+i*108,106,78+i*108,188,{c:'tool'});});
-  lbl(svg,185,160,'one client per server, JSON-RPC',{a:'middle',fs:10.5});
+  lbl(svg,185,134,'one client per server, JSON-RPC',{a:'middle',fs:10.5});
   ['tools: functions the model can call','resources: data to read','prompts: reusable templates'].forEach((s,i)=>lbl(svg,30,262+i*22,s,{fs:12,c:'var(--ink)'}));
   lbl(svg,30,334,'tool descriptions from untrusted servers are untrusted',{fs:10.5,c:'var(--bad)',b:1});
   S('rect',{x:390,y:0,width:370,height:360,rx:12,style:'fill:var(--surface-2)'},svg);T(svg,406,26,'A2A · agent ↔ agent',{style:'font:800 13px var(--f-mono);fill:var(--llm)'});
   node(svg,410,48,120,40,'client agent','llm',{fs:12});node(svg,620,48,120,40,'remote agent','llm',{fs:12,dash:1});edge(svg,530,60,618,60,{c:'llm'});edge(svg,618,78,532,78,{c:'muted',dash:1});
-  lbl(svg,575,52,'1 read card, 2 send task',{a:'middle',fs:10});lbl(svg,575,98,'3 status + artifacts',{a:'middle',fs:10});
+  lbl(svg,575,40,'1 read card · 2 send task',{a:'middle',fs:10});lbl(svg,575,98,'3 status + artifacts',{a:'middle',fs:10});
   node(svg,410,110,330,30,'/.well-known/agent-card.json: skills · endpoint · auth','plain',{fs:10.5,rx:5});
-  lbl(svg,410,166,'TASK STATES (v1.0)',{b:1,mono:1,fs:11});lbl(svg,740,200,'active',{a:'end',fs:10.5});lbl(svg,740,254,'waits for client',{a:'end',fs:10.5});lbl(svg,740,324,'terminal',{a:'end',fs:10.5});
+  lbl(svg,410,166,'TASK STATES (v1.0)',{b:1,mono:1,fs:11});lbl(svg,740,200,'active',{a:'end',fs:10.5});lbl(svg,740,254,'waits for client',{a:'end',fs:10.5});lbl(svg,740,284,'terminal ↓',{a:'end',fs:10.5});
   [['submitted',410,182,'env'],['working',520,182,'env'],['input-required',410,236,'human'],['auth-required',540,236,'human'],['completed',410,290,'ok'],['failed',510,290,'bad'],['canceled',590,290,'bad'],['rejected',670,290,'bad']].forEach(([s,x,y,c])=>{S('rect',{x,y,width:s.length*7.2+14,height:28,rx:14,style:`fill:var(--${c})`},svg);T(svg,x+7,y+18,s,{style:'font:700 11px var(--f-mono);fill:var(--on)'});});
-  edge(svg,494,196,518,196);lbl(svg,410,338,'the remote agent stays opaque: no view of its tools or memory',{fs:10.5,c:'var(--ink)',b:1});
+  edge(svg,494,196,518,196);lbl(svg,410,344,'the remote agent stays opaque: no view of its tools or memory',{fs:10.5,c:'var(--ink)',b:1});
 })();
 
 /* ---------- 10 evals ---------- */
@@ -334,7 +337,7 @@ function drawMini(g,p,w){const tag=p.by==='model'?'MODEL':'CODE';S('rect',{x:0,y
       [...Array(K)].forEach((_,i)=>S('circle',{cx:x0+i/(K-1)*W,cy:y0-f(i+1)*H,r:3.5,style:`fill:${c}`},svg));lbl(svg,530,40+j*24,n,{b:1,c,fs:12.5});});
     const v3=hat(3);lbl(svg,530,100,`at k = 3: pass^3 = ${(v3*100).toFixed(0)}%`,{fs:12.5,c:'var(--ink)',b:1});lbl(svg,530,120,`pass@3 = ${(at(3)*100).toFixed(0)}%`,{fs:12.5,c:'var(--ink)'});
     lbl(svg,530,160,'EVAL ANATOMY',{b:1,mono:1,fs:11});['task: input + success criteria','trial: one attempt (run several)','grader: code, model or human','transcript: every call and result','outcome: the final state, not','what the agent claims'].forEach((s,i)=>lbl(svg,530,182+i*18,s,{fs:11.5,c:'var(--ink)'}));
-    $('#ev-note').innerHTML=`With p = ${p.toFixed(2)}, three tries give at least one success ${(at(3)*100).toFixed(0)}% of the time, but all three succeed only ${(v3*100).toFixed(0)}% of the time. Anthropic\'s eval guide uses exactly this case: 75% per trial gives about 42% for pass^3.`;}
+    $('#ev-note').innerHTML=`With p = ${p.toFixed(2)}, three tries give at least one success ${(at(3)*100).toFixed(0)}% of the time, but all three succeed ${v3>.9?'':'only '}${(v3*100).toFixed(0)}% of the time.${Math.abs(p-.75)<.005?' Anthropic\'s eval guide uses exactly this case: 75% per trial gives about 42% for pass^3.':''}`;}
   $('#ev-p').addEventListener('input',draw);draw();
 })();
 
@@ -352,7 +355,7 @@ const RES={single:{n:'No agent: one model call',base:null,d:'Optimise the prompt
  react:{n:'Single agent with tools (ReAct loop)',base:'react',d:'The default for open-ended work. Invest in tool design and context engineering before adding agents.'},
  orch:{n:'Orchestrator with parallel read-only workers',base:'orch',d:'A lead agent plans and synthesises; workers explore in clean contexts and return condensed findings. Go hierarchical only for very large problems.'},
  handoff:{n:'Specialist agents with handoffs (or a router in front)',base:'handoff',d:'One active agent at a time; transfers carry the conversation. Use a router instead if the domain is clear from the first message.'},
- writer:{n:'Single-threaded writer + read-only helpers',base:'react',d:'Keep every write in one agent so its implicit decisions stay consistent; give it sub-agents that only search or review.'}};
+ writer:{n:'Single-threaded writer + read-only helpers',base:'writer',d:'Keep every write in one agent so its implicit decisions stay consistent; give it sub-agents that only search or review.'}};
 const MODS=[['crit','Output must meet strict, checkable criteria','add an evaluator–optimizer loop with a round cap'],['risk','It takes irreversible or high-cost actions','gate high-risk tools with human approval'],['long','It runs for hours or overflows one context','add a harness: progress file, compaction, checkpoints'],['tri','It reads private data, sees untrusted content and can send data out','break the lethal trifecta: remove one capability'],['scale','It must be reliable for customers every time','measure pass^k, not pass@k, before launch']];
 (function(){const box=$('#ch-box');let cur='q1',path=[],res=null;const mods=new Set();
   function draw(){let h='';
@@ -376,14 +379,14 @@ const MODS=[['crit','Output must meet strict, checkable criteria','add an evalua
   const no=(x1,y1,x2,y2,lx,ly)=>{edge(svg,x1,y1,x2,y2,{c:'bad'});lbl(svg,lx,ly,'no',{fs:10.5,c:'var(--bad)',b:1});};
   leaf(590,17,160,'single call','plain');yes(510,38,588,38,540,30);
   no(380,66,380,94,388,84);
-  yes(250,124,140,188,172,150);no(510,124,440,188,486,150);
+  yes(250,124,140,188,172,150);no(510,124,440,188,498,150);
   leaf(10,292,104,'parallel\nfan-out','cpill');leaf(126,292,104,'sequential\nchain','cpill');
-  yes(90,246,62,290,56,272);no(150,246,178,290,170,272);
+  yes(90,246,62,290,38,272);no(150,246,178,290,170,272);
   leaf(590,197,160,'single agent','llm');yes(550,218,588,218,560,210);
   no(420,246,420,282,428,268);
   leaf(590,291,160,'orchestrator +\nread-only workers','llm');yes(550,312,588,312,560,304);
   no(420,340,420,376,428,362);
-  leaf(590,385,160,'handoffs / router','llm');yes(550,406,588,406,560,398);
+  leaf(590,385,160,'handoffs (router if\nclear up front)','llm');yes(550,406,588,406,560,398);
   no(420,434,420,470,428,456);leaf(340,472,160,'one writer +\nread-only helpers','llm');
   lbl(svg,10,380,'THEN ADD, WHEREVER YOU LANDED:',{b:1,mono:1,fs:10.5});['evaluator loop · strict criteria','human gate · risky tools','harness · long runs','cut the trifecta · security','pass^k evals · reliability'].forEach((s2,k)=>lbl(svg,10,400+k*17,'+ '+s2,{fs:11.5,c:'var(--ink)'}));
 })();
@@ -392,13 +395,13 @@ const MODS=[['crit','Output must meet strict, checkable criteria','add an evalua
 (function(){const svg=$('#sv-examples');let ex='support';
   const EX={support:{n:'Customer support',note:'<b class="h">ROUTER → SPECIALIST AGENTS → HUMAN GATE</b>Inputs fall into clear groups, so a cheap router picks the specialist; each specialist is a single agent with a few tools for its domain; refunds above a limit and cancellations go to a person. Guardrails check relevance and PII on the way in and out. Measured with pass^k on real tickets.',
      draw:()=>{node(svg,10,170,90,40,'customer','human');node(svg,130,170,90,40,'guardrails','plain',{fs:11});node(svg,250,170,100,40,'router\n(small model)','llm',{fs:11});
-      [['orders agent',60,['order_lookup','track']],['billing agent',170,['invoice','refund ≤ limit']],['tech agent',280,['kb_search','reset']]].forEach(([s,y,t])=>{node(svg,400,y,120,40,s,'llm',{fs:11.5});edge(svg,350,190,398,y+20,{c:'llm'});t.forEach((tt,i)=>node(svg,550+i*104,y+6,96,28,tt,'tool',{fs:10.5}));edge(svg,520,y+20,548,y+20,{c:'tool'});});
-      edge(svg,100,190,128,190);edge(svg,220,190,248,190);node(svg,550,340,200,40,'refund > limit: human approves','human',{fs:11});edge(svg,700,210,650,338,{c:'bad',dash:1});
+      [['orders agent',60,['order_lookup','track']],['billing agent',170,['invoice','refund ≤ limit']],['tech agent',280,['kb_search','reset']]].forEach(([s,y,t])=>{node(svg,400,y,120,40,s,'llm',{fs:11.5});edge(svg,350,190,398,y+20,{c:'llm'});t.forEach((tt,i)=>node(svg,548+i*110,y+6,92,28,tt,'tool',{fs:10.5}));edge(svg,520,y+20,548,y+20,{c:'tool'});});
+      edge(svg,100,190,128,190);edge(svg,220,190,248,190);node(svg,555,334,195,40,'refund > limit: human approves','human',{fs:11});edge(svg,650,206,650,332,{c:'bad',dash:1});
       lbl(svg,10,30,'Router + single agents + human-in-the-loop',{b:1,c:'var(--ink)',fs:14});}},
    research:{n:'Deep research',note:'<b class="h">ORCHESTRATOR + PARALLEL READ-ONLY WORKERS + CITATION PASS</b>The work is exploring many independent directions, which parallelises. A lead agent plans and saves its plan to memory, spawns search workers in clean contexts (more for harder questions), and synthesises; a final pass attaches citations. Anthropic reports this beat a single agent by 90.2% on its internal eval, at roughly 15× the tokens of a chat.',
      draw:()=>{node(svg,30,170,90,40,'question','human');node(svg,170,160,130,60,'lead agent\nplan → synthesise','llm',{fs:11.5});node(svg,180,300,110,36,'plan in memory','plain',{fs:11});edge(svg,235,220,235,298,{c:'muted',dash:1});
       [80,150,220,290].forEach((y,i)=>{node(svg,380,y,120,34,'search worker '+(i+1),'llm',{fs:11});edge(svg,300,190,378,y+17,{c:'llm'});edge(svg,500,y+17,520,y+17,{c:'tool'});node(svg,522,y+3,80,28,'web · docs','tool',{fs:10.5});});
-      node(svg,630,170,110,40,'citation pass','llm',{fs:11.5});edge(svg,300,175,628,186,{c:'muted',dash:1,bend:-60});edge(svg,120,190,168,190);
+      node(svg,630,170,110,40,'citation pass','llm',{fs:11.5});edge(svg,270,160,712,168,{c:'muted',dash:1,bend:290});edge(svg,120,190,168,190);
       lbl(svg,10,30,'Orchestrator–workers, read-only fan-out',{b:1,c:'var(--ink)',fs:14});lbl(svg,380,360,'workers return condensed summaries, not raw pages',{fs:11});}},
    coding:{n:'Coding agent',note:'<b class="h">ONE WRITER + READ-ONLY SUB-AGENTS + REVIEWER LOOP + HARNESS</b>Code changes carry implicit decisions, so one agent does all the writing. Sub-agents only search the codebase or the web and return summaries. A reviewer with a fresh context critiques the diff (Cognition reports its reviewer finds about 2 bugs per PR). For long tasks, a harness keeps a feature list, progress file and git commits; the shell and git push sit behind a permission gate.',
      draw:()=>{node(svg,280,160,170,60,'coding agent\nthe only writer','llm',{fs:12});

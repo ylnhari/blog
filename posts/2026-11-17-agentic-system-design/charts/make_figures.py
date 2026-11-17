@@ -29,8 +29,8 @@ with sync_playwright() as p:
             save("#sv-tree", name); continue
         if sid == "context":   # show the engineered state: every technique on
             for c in pg.locator("#cx-chips .chip").all(): c.click()
-        save(f"#{sid} .fig", name, hide="#lp-play,#ex-seg,#cx-chips" if sid in ("loop", "examples", "context") else "")
+        save(f"#{sid} .fig", name, hide={"loop": "#lp-play,#lp-note", "examples": "#ex-seg", "context": "#cx-chips"}.get(sid, ""))
         if sid == "examples":
             for v, n in (("Deep research", "13-example-research"), ("Coding agent", "14-example-coding")):
-                pg.click(f'#ex-seg button:text-is("{v}")'); save("#examples .fig", n, hide="#ex-seg")
+                pg.evaluate("v=>[...document.querySelectorAll('#ex-seg button')].find(b=>b.textContent===v).click()", v); save("#examples .fig", n, hide="#ex-seg")
     b.close()
